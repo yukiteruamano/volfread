@@ -22,6 +22,11 @@
     "lang": "TypeScript",
     "stack": ["React 19", "Vite 8", "Tailwind 4", "astronomy-engine", "WGS84", "Vitest"],
     "repo": "https://github.com/yukiteruamano/EclipseScope",
+    "demoUrl": "https://eclipse.observatorioblockchain.com/",
+    "hostingNote": "Alojada en Observatorio Blockchain",
+    "hostingNoteEn": "Hosted on Observatorio Blockchain",
+    "hostingDescription": "Parte del esfuerzo por difundir el Software Libre y la Ciencia.",
+    "hostingDescriptionEn": "Part of an effort to spread Free Software and Science.",
     "featured": true
   },
   {
@@ -47,6 +52,7 @@
     "lang": "TypeScript",
     "stack": ["Angular 19", "TypeScript", "RxJS", "Bootstrap", "Web Workers"],
     "repo": "https://github.com/yukiteruamano/yukiteruamano.github.io",
+    "demoUrl": "https://yukiteruamano.github.io/#/",
     "featured": true
   },
   {

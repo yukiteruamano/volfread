@@ -14,7 +14,9 @@ const s = (stats as any).projects?.[project.slug]
 const alternates = getAlternateUrls(Astro.url.pathname)
 const t = useTranslations('en')
 const isWeb = project.type === 'web'
-const appUrl = `/proyectos/${project.slug}/app/`
+const demoUrl: string | undefined = (project as any).demoUrl
+const hostingNoteEn: string | undefined = (project as any).hostingNoteEn
+const hostingDescriptionEn: string | undefined = (project as any).hostingDescriptionEn
 const locFormatted = s ? s.loc.toLocaleString('en-US') : '—'
 const divulgativa: string = (project as any).divulgativaEn ?? (project as any).divulgativa ?? (project as any).longDescription ?? project.description
 const tecnica: string = (project as any).tecnicaEn ?? (project as any).tecnica ?? (project as any).longDescription ?? ''
@@ -43,12 +45,27 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
         <h1 class="mt-3 font-display text-3xl md:text-4xl font-black tracking-tight">{project.title}</h1>
       </div>
       <div class="flex flex-col gap-2 shrink-0">
-        {isWeb && <a href={appUrl} class="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-br from-volf-orange to-volf-amber px-6 py-2.5 text-sm font-bold text-white shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg text-center">Open {project.title} →</a>}
+        {isWeb && demoUrl && <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-br from-volf-orange to-volf-amber px-6 py-2.5 text-sm font-bold text-white shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg text-center">Open {project.title} ↗</a>}
         <a href={project.repo} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center justify-center rounded-full border border-volf-border bg-volf-surface px-6 py-2.5 text-sm font-semibold text-center hover:border-volf-border-strong hover:bg-volf-surface-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange text-center">
           {t('projects.repo')} →
         </a>
       </div>
     </div>
+
+    {
+      demoUrl && project.slug === 'eclipsescope' && hostingNoteEn && hostingDescriptionEn && (
+        <section aria-labelledby="hosting-heading" class="mt-6 rounded-2xl border border-volf-orange/30 bg-volf-orange/5 backdrop-blur p-5">
+          <h2 id="hosting-heading" class="text-xs tracking-widest text-volf-orange uppercase font-semibold">{hostingNoteEn}</h2>
+          <p class="mt-2 text-sm leading-relaxed text-volf-muted text-pretty">
+            This app is hosted on{' '}
+            <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="font-semibold text-volf-orange hover:underline">
+              eclipse.observatorioblockchain.com
+            </a>{' '}
+            — {hostingDescriptionEn}
+          </p>
+        </section>
+      )
+    }
 
     <section aria-labelledby="divulgativa-heading" class="mt-6 rounded-2xl border border-volf-glass-border bg-volf-surface/60 backdrop-blur p-5">
       <h2 id="divulgativa-heading" class="text-xs tracking-widest text-volf-muted uppercase font-semibold">{t('projects.divulgative')}</h2>

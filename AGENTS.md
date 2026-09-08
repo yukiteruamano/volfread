@@ -5,7 +5,7 @@ Este archivo es la **única fuente de verdad operativa** para agentes IA. Léelo
 ## 1. Proyecto
 
 - **Dominio:** `volfread.xyz` (Cloudflare, zona ya creada)
-- **Objetivo 1:** Web personal + portafolio. Proyectos web estáticos embebidos en `volfread.xyz/proyectos/<slug>/` dentro del mismo deploy.
+- **Objetivo 1:** Web personal + portafolio. Proyectos con fichas + enlaces externos a demos (no embebidos en el mismo deploy).
 - **Objetivo 2:** Blog multi-idioma ES (default sin prefijo) + EN (`/en/`) en MDX.
 - **Stack:** Astro 5.x `output: static` + Tailwind 4 + TypeScript strict + pnpm workspaces + Cloudflare Pages (migrar a Workers Static Assets si se necesita SSR).
 - **Tema:** Dark fijo — negro `#0A0A0A` + naranja `#FF6B00` (`--color-volf-*` en `src/styles/theme.css`).
@@ -19,7 +19,7 @@ volfread.xyz/ (root private, pnpm-workspace.yaml: packages/*)
 ├── AGENTS.md / SPECS.md / CHANGELOG.md / README.md
 ├── tsconfig.json / .editorconfig / .prettierrc / .gitignore
 ├── scripts/
-│   ├── copy-dist.mjs               # fusiona dist/ (main + webs)
+│   ├── copy-dist.mjs               # copia main/dist → dist/
 │   └── collect-project-stats.mjs   # LOC + git log → projects.stats.json
 └── packages/
     ├── main/                       # Astro — el sitio
@@ -33,8 +33,6 @@ volfread.xyz/ (root private, pnpm-workspace.yaml: packages/*)
     │   │   ├── i18n/{ui.ts, utils.ts}
     │   │   └── styles/{global.css, theme.css}
     │   └── public/{favicon.svg, _headers, _redirects}
-    ├── eclipsescope/               # Vite+React — base /proyectos/eclipsescope/app/
-    ├── simulador-blockchain/       # Angular 19 — baseHref /proyectos/simulador-blockchain/app/
     └── _template-static/           # plantilla futuros webs
 ```
 
@@ -42,11 +40,11 @@ No duplicar `pnpm-lock.yaml` por package. Un solo lock en root. No usar `npm`/`y
 
 ## 3. Proyectos
 
-| slug | tipo | fuente | build |
-|------|------|--------|-------|
-| `eclipsescope` | web | `file:../../EclipseCalculator` (repo `EclipseScope`) o copia | `vite build` con `base: '/proyectos/eclipsescope/app/'` |
-| `simulador-blockchain` | web | `file:../../yukiteruamano.github.io` | `ng build --base-href /proyectos/simulador-blockchain/app/` |
-| `fast-levenshtein` | lib | Go | ficha + stats (no embebido) |
+| slug | tipo | fuente | demo |
+|------|------|--------|------|
+| `eclipsescope` | web | `https://github.com/yukiteruamano/EclipseScope` | `https://eclipse.observatorioblockchain.com/` (alojada en Observatorio Blockchain — Software Libre y Ciencia) |
+| `simulador-blockchain` | web | `https://github.com/yukiteruamano/yukiteruamano.github.io` | `https://yukiteruamano.github.io/#/` |
+| `fast-levenshtein` | lib | Go | ficha + stats |
 | `gache` | lib | Go | ficha |
 | `koma` | cli/tui | Go | ficha |
 | `mangodex` | lib | Go | ficha |
@@ -60,29 +58,27 @@ Fichas no-web: `src/data/proyectos.json` (metadata) + `projects.stats.json` (gen
 ```bash
 pnpm install                    # root — instala todo
 pnpm dev                        # main → http://localhost:4321
-pnpm dev:eclipse                # eclipsescope → http://localhost:5173
-pnpm build                      # main + webs + merge dist/ (make build usa real si EC_SOURCE/SB_SOURCE existen)
+pnpm build                      # main + copy dist/ (sin builds embebidos)
 pnpm build:main                 # solo Astro
-pnpm build:web                  # solo webs (placeholder)
-make build-real                 # build real eclipsescope+simulador desde EC_SOURCE/SB_SOURCE con --base /app/ (explícito)
-make build                      # auto real si vecinos existen, fallback placeholder en CI
 ```
 pnpm build:stats                # regenera projects.stats.json
 pnpm --filter main astro check  # typecheck Astro
-pnpm build && pnpm --filter main preview # o make build && make preview (recomendado: preview sirve dist fusionado con apps en /app/ — dev solo sirve fichas)
+pnpm build && pnpm --filter main preview # o make build && make preview
 ```
 
 Dev con múltiples Astro: si la toolbar falla, añadir `vite.server.fs.allow: [path.resolve('../..')]` en `astro.config.mjs`.
 
 ## 5. Añadir un nuevo proyecto web
 
-1. Crear `packages/<slug>/` con su stack, `package.json` name `<slug>`, `vite.config` `base: '/proyectos/<slug>/app/'` (o `baseHref` Angular con `/app/`).
-2. Añadir a `scripts/copy-dist.mjs` en `WEB_PACKAGES = ['eclipsescope', 'simulador-blockchain', '<slug>']` — copia a `dist/proyectos/<slug>/app/`.
-3. Añadir entrada en `packages/main/src/data/proyectos.json` con `type: 'web'`.
-4. `pnpm install` en root, `pnpm --filter <slug> build`, `pnpm build` y verificar `dist/proyectos/<slug>/index.html`.
-5. No olvidar `_redirects` SPA fallback si el web es SPA con router: ` /proyectos/<slug>/app/*  /proyectos/<slug>/app/index.html  200`.
+Proyectos web ahora son **fichas con enlaces externos** (no embebidos). Para añadir uno:
 
-Añadir proyecto no-web (ficha): solo paso 3 con `type: 'lib'|'cli'` + `repo`, `lang`, y regenerar stats `pnpm build:stats`.
+1. Añadir entrada en `packages/main/src/data/proyectos.json` con `type: 'web'`, `repo` y `demoUrl` (URL externa de la app).
+2. Si el web necesita nota de hosting (ej. EclipseScope en Observatorio Blockchain), añadir `hostingNote` / `hostingDescription` (+ variantes `En`).
+3. Regenerar stats si aplica: `pnpm build:stats`.
+
+Legacy embebido (ya no usado): antes se creaba `packages/<slug>/` con `base: '/proyectos/<slug>/app/'` y se registraba en `WEB_PACKAGES` de `copy-dist.mjs` para copiar a `dist/proyectos/<slug>/app/` + SPA fallback en `_redirects`.
+
+Añadir proyecto no-web (ficha): solo paso 1 con `type: 'lib'|'cli'` + `repo`, `lang`, y regenerar stats `pnpm build:stats`.
 
 ## 6. i18n
 
@@ -132,7 +128,7 @@ Fuente: Lighthouse Best Practices + OWASP. Ver `SPECS.md §4.1` y `_headers`.
 - **Vuln libs:** `pnpm audit`, `pnpm update`, evitar `_.merge`/`$.extend(true)` con input no confiable, usar `Object.create(null)` o `structuredClone`.
 - **Sanitización:** `textContent` sobre `innerHTML`; si HTML necesario, `DOMPurify.sanitize`. No `eval`/`Function`/`setTimeout(string)`/`document.write`.
 - **Cookies:** no tracking; si se añade `Set-Cookie`, `Secure; HttpOnly; SameSite=Strict`.
-- **Source maps:** `build.sourcemap: false` explícito en los 3 `vite.config`/`astro.config.mjs` (no exponer `sourcesContent`).
+- **Source maps:** `build.sourcemap: false` explícito en `astro.config.mjs` (no exponer `sourcesContent`).
 - **Compat:** `<!DOCTYPE html>` uppercase, `charset` primero en `<head>`, `viewport` sin `user-scalable=no`, no APIs deprecadas, `passive: true` en listeners de scroll/touch.
 
 ## 11. Commits & Releases

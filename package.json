@@ -11,10 +11,8 @@
   "scripts": {
     "dev": "pnpm --filter main dev",
     "dev:main": "pnpm --filter main dev",
-    "dev:eclipse": "pnpm --filter eclipsescope dev",
-    "build": "pnpm build:main && pnpm build:web && node scripts/copy-dist.mjs",
+    "build": "pnpm build:main && node scripts/copy-dist.mjs",
     "build:main": "node scripts/generate-blog-map.mjs && pnpm --filter main build",
-    "build:web": "pnpm --filter eclipsescope build && pnpm --filter simulador-blockchain build",
     "build:stats": "node scripts/collect-project-stats.mjs",
     "preview": "pnpm --filter main preview",
     "lint": "pnpm -r lint",

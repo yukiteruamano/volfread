@@ -2,7 +2,7 @@
 
 ## 1. Visión
 
-Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proyectos heterogéneos, blog multi-idioma y webs estáticas embebidas bajo el mismo dominio y deploy. Objetivo: marca personal coherente, SEO técnico impecable, performance >95 y mantenimiento mínimo (estático, sin backend).
+Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proyectos heterogéneos, blog multi-idioma y fichas con demos externas. Objetivo: marca personal coherente, SEO técnico impecable, performance >95 y mantenimiento mínimo (estático, sin backend).
 
 - **Dominio:** `volfread.xyz` + `www.volfread.xyz` (Cloudflare zona ya existente)
 - **Público:** ES (primario) + EN, desarrolladores, reclutadores, usuarios de los proyectos.
@@ -13,9 +13,9 @@ Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proye
 ### 2.1 Dentro de alcance (v1)
 
 - Landing `/` (ES) + `/en/` con hero, proyectos destacados, últimos posts, about breve.
-- Listado `/proyectos` (ES) + `/en/projects` (EN) + detalle `/proyectos/<slug>` / `/en/projects/<slug>` por cada proyecto (8).
-- Embebido web estático: `EclipseScope` (React+Vite) en `/proyectos/eclipsescope/app/`, `Simulador Blockchain` (Angular 19) en `/proyectos/simulador-blockchain/app/`.
-- Fichas no-web (6): `fast-levenshtein`, `gache`, `koma`, `mangodex`, `pkgcheck`, `simple-markdown-crawler` — con stats LOC, breakdown lenguajes, commit activity sparkline, repo links.
+- Listado `/proyectos` (ES) + `/en/projects` (EN) + detalle `/proyectos/<slug>` / `/en/projects/<slug>` por cada proyecto.
+- Fichas web con demo externa: `EclipseScope` → `https://eclipse.observatorioblockchain.com/` (alojada en Observatorio Blockchain — Software Libre y Ciencia), `Simulador Blockchain` → `https://yukiteruamano.github.io/#/`.
+- Resto de fichas (`fast-levenshtein`, `gache`, `koma`, `mangodex`, `pkgcheck`, `simple-markdown-crawler`, etc.) — con stats LOC, breakdown lenguajes, commit activity sparkline, repo links.
 - Blog MDX multi-idioma: `/blog/<slug>` (ES) y `/en/blog/<slug>` (EN), paginación, tags, RSS por idioma, sitemap i18n.
 - Comentarios: Giscus (GitHub Discussions) en posts.
 - Analytics: Cloudflare Web Analytics beacon.
@@ -34,7 +34,7 @@ Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proye
 |----|-----------|---------------------|
 | RF01 | Home ES/EN | `/` renderiza ES, `/en/` EN; `LanguageSwitcher` persiste preferencia; `hreflang` presentes. |
 | RF02 | Portafolio listado | `/proyectos` lista 8 proyectos, filtro por `type: web/lib/cli` y `lang`; cards con cover, badges `Go/Python/React/Angular`, stats resumidos. |
-| RF03 | Detalle proyecto web | `/proyectos/eclipsescope` y `/proyectos/simulador-blockchain` muestran ficha + CTA `Abrir app → /proyectos/<slug>/` (SPA fusionada). `dist/proyectos/<slug>/index.html` existe tras `pnpm build`. SPA router fallback vía `_redirects` si aplica. |
+| RF03 | Detalle proyecto web | `/proyectos/eclipsescope` y `/proyectos/simulador-blockchain` muestran ficha + CTA externo (`https://eclipse.observatorioblockchain.com/` y `https://yukiteruamano.github.io/#/`) con `target=_blank`. EclipseScope destaca nota "Alojada en Observatorio Blockchain — Software Libre y Ciencia". |
 | RF04 | Ficha proyecto no-web | `/proyectos/<slug>` (ej: `koma`) muestra: descripción, `repo` link, `install` snippet (`go get`/`pip install`), LOC + donut/bar lenguajes, sparkline 52 semanas, badges licencia/stars si disponible. Datos vía `projects.stats.json` generado en build. |
 | RF05 | Blog ES/EN | Collections `blog` con `lang`. `getStaticPaths` genera rutas por idioma. `draft: true` oculto en prod. Paginación `blog/`, `blog/tag/[tag]`. |
 | RF06 | SEO blog | `<html lang>`, `canonical`, `hreflang` alternates, OG tags, sitemap i18n (`/sitemap-index.xml`), RSS `/rss.xml` (ES) y `/en/rss.xml`. |
@@ -54,7 +54,7 @@ Ver `AGENTS.md §10.1` (fuente única operativa). Resumen:
 - **Vuln libs:** `pnpm audit --audit-level moderate` + `pnpm update`; evitar `_.merge`/`$.extend(true)` con input no confiable (prototype pollution); usar `Object.create(null)`/`structuredClone`.
 - **Sanitización:** `textContent` > `innerHTML`; si HTML, `DOMPurify.sanitize`; no `eval`/`Function`/`setTimeout(string)`/`document.write`.
 - **Cookies:** sin tracking; si `Set-Cookie` → `Secure; HttpOnly; SameSite=Strict`.
-- **Source maps:** `build.sourcemap: false` en los 3 configs (no exponer `sourcesContent`).
+- **Source maps:** `build.sourcemap: false` en `astro.config.mjs` (no exponer `sourcesContent`).
 - **Compat/Calidad:** `<!DOCTYPE html>` uppercase, `charset` primero, `viewport` sin `user-scalable=no`, no APIs deprecadas, `passive:true` listeners.
 
 ## 4. Requisitos no funcionales
@@ -76,13 +76,11 @@ Ver `AGENTS.md §10.1` (fuente única operativa). Resumen:
 ```
 root (private) ── pnpm-workspace.yaml (packages/*, catalog)
 ├── packages/main (Astro 5, output: static)
-├── packages/eclipsescope (Vite React, base /proyectos/eclipsescope/app/)
-├── packages/simulador-blockchain (Angular, baseHref /proyectos/simulador-blockchain/app/)
-├── scripts/copy-dist.mjs (fusiona dist/)
+├── scripts/copy-dist.mjs (copia main/dist → dist/)
 └── scripts/collect-project-stats.mjs (tokei/git log → projects.stats.json)
 ```
 
-Build: `pnpm build:main` + `pnpm build:web` → `copy-dist` copia cada web `dist` a `dist/proyectos/<slug>/app/` (ficha queda en `/proyectos/<slug>/`). Deploy único `dist`.
+Build: `pnpm build:main` → `copy-dist` copia `packages/main/dist` a `dist/`. Demos web son externas (no embebidas). Deploy único `dist`.
 
 ### 5.2 Decisions (ADR)
 
@@ -99,10 +97,8 @@ Build: `pnpm build:main` + `pnpm build:web` → `copy-dist` copia cada web `dist
 | `/about` | `src/pages/about.astro` | es |
 | `/proyectos` | `src/pages/proyectos/index.astro` | es |
 | `/proyectos/<slug>` | `src/pages/proyectos/[slug].astro` (ficha) | es |
-| `/proyectos/eclipsescope/*` | `packages/main/dist` (ficha) | — |
-| `/proyectos/eclipsescope/app/*` | `packages/eclipsescope/dist` fusionado | — |
-| `/proyectos/simulador-blockchain/*` | `packages/main/dist` (ficha) | — |
-| `/proyectos/simulador-blockchain/app/*` | `packages/simulador-blockchain/dist` | — |
+| `/proyectos/eclipsescope` | ficha + CTA → `https://eclipse.observatorioblockchain.com/` + nota Observatorio Blockchain | es |
+| `/proyectos/simulador-blockchain` | ficha + CTA → `https://yukiteruamano.github.io/#/` | es |
 | `/blog`, `/blog/<slug>`, `/blog/tag/<tag>` | `src/pages/blog/...` | es |
 | `/en/`, `/en/about`, `/en/projects`, `/en/projects/<slug>`, `/en/blog/*` | `src/pages/en/...` | en |
 | `/rss.xml`, `/en/rss.xml`, `/sitemap*.xml` | `@astrojs/rss/sitemap` | — |
@@ -175,9 +171,9 @@ Tipografía: sans `Inter/Geist`, mono `JetBrains Mono`. Accent: naranja para CTA
 - **Cloudflare Pages:** Repo GitHub → Build `pnpm install && pnpm build` → Output `dist`. Vars: `NODE_VERSION=20`, `PNPM_VERSION=11`.
 - **Workers alternative:** `wrangler.toml` con `assets.directory = "./dist"`, `not_found_handling = "single-page-application"`.
 - **Dominio:** Pages → Custom domain `volfread.xyz` + `www` → SSL auto.
-- **Archivos:** `public/_headers` (cache + security), `public/_redirects` (SPA fallback `/proyectos/<slug>/app/* /proyectos/<slug>/app/index.html 200` si SPA con router).
+- **Archivos:** `public/_headers` (cache + security), `public/_redirects` (compat redirects `eclipsecalculator → eclipsescope`, `en/proyectos → en/projects`).
 - **Analytics:** CF Dashboard → Web Analytics → `volfread.xyz` → beacon auto-inyectado o manual en `BaseLayout`.
-- **Preview:** `make build && make preview` (sirve `dist` fusionado con `app/`) o `pnpm build && pnpm --filter main preview`. Dev (`pnpm dev`) solo sirve fichas; apps requieren `dist`.
+- **Preview:** `make build && make preview` o `pnpm build && pnpm --filter main preview`.
 
 ## 9. Calidad y testing
 
@@ -185,7 +181,7 @@ Tipografía: sans `Inter/Geist`, mono `JetBrains Mono`. Accent: naranja para CTA
 - Lint: `oxlint`/`eslint`/`prettier` por package.
 - A11y: `axe-core` (script opcional).
 - Lighthouse CI manual en `preview`.
-- No tests unit obligatorios en v1 (blog estático); webs embebidas mantienen sus propios tests.
+- No tests unit obligatorios en v1 (blog estático).
 
 ## 10. Roadmap
 
@@ -201,7 +197,6 @@ Tipografía: sans `Inter/Geist`, mono `JetBrains Mono`. Accent: naranja para CTA
 
 ## 11. Riesgos
 
-- Angular `baseHref` debe coincidir con `/proyectos/simulador-blockchain/app/` o assets 404.
 - `ASSETS` es binding reservado CF — no usar.
 - Giscus requiere repo público + Discussions enabled antes de activar comentarios.
 - `git log` stats dependen de repos vecinos disponibles en build CI → fallback GitHub API con cache.

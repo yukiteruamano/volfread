@@ -11,8 +11,9 @@
   "scripts": {
     "dev": "pnpm --filter main dev",
     "dev:main": "pnpm --filter main dev",
-    "build": "pnpm build:main && node scripts/copy-dist.mjs",
+    "build": "pnpm build:main && pnpm build:csp && node scripts/copy-dist.mjs",
     "build:main": "node scripts/generate-blog-map.mjs && pnpm --filter main build",
+    "build:csp": "node scripts/generate-csp.mjs",
     "build:stats": "node scripts/collect-project-stats.mjs",
     "preview": "pnpm --filter main preview",
     "lint": "pnpm -r lint",

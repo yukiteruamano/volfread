@@ -73,15 +73,20 @@ stats build-stats: ## Regenera projects.stats.json (LOC + git log 52w)
 # ── Build ───────────────────────────────────────────────────────────────────
 .PHONY: build build-main check typecheck astro-check
 
-build: ## Build completo: main → dist/ (copy-dist)
-	$(call banner,build,main + copy-dist)
+build: ## Build completo: main → dist/ (copy-dist + CSP hashes)
+	$(call banner,build,main + copy-dist + CSP)
 	$(PNPM) run build:main
+	$(PNPM) run build:csp
 	$(NODE) scripts/copy-dist.mjs
 	@echo -e "$(GREEN)✓$(RESET) dist/ listo → $(BOLD)make preview$(RESET) o $(BOLD)make deploy$(RESET)"
 
 build-main: ## Solo Astro main → packages/main/dist
 	$(call banner,build,main)
 	$(PNPM) run build:main
+
+build-csp: ## Genera hashes CSP para scripts inline (ClientRouter + JSON-LD)
+	$(call banner,build,generate-csp)
+	$(PNPM) run build:csp
 
 check typecheck astro-check: ## Typecheck Astro (astro check)
 	$(call banner,check,astro check)

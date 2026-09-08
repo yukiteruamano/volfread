@@ -48,7 +48,7 @@ Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proye
 Ver `AGENTS.md §10.1` (fuente única operativa). Resumen:
 
 - **HTTPS:** sin mixed content; evitar `//` protocol-relative; `Strict-Transport-Security: max-age=31536000; includeSubDomains` (sin `preload`, sin mixed `http://` en prod).
-- **CSP enforcement (vía `_headers` `/*`):** `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` — `report-only` no se usa (estático). Giscus inline externalizado a `public/scripts/giscus-loader.js` para no requerir `unsafe-inline` en `script-src`.
+- **CSP enforcement (vía `_headers` `/*`):** `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com` + hashes `sha256-…` generados por `scripts/generate-csp.mjs` (ClientRouter + JSON-LD + 404); `style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` — `report-only` no se usa (estático). Giscus inline externalizado a `public/scripts/giscus-loader.js` para no requerir `unsafe-inline` fijo en `script-src` (hashes dinámicos vía post-build).
 - **SRI:** `https://giscus.app/client.js` con `integrity="sha384-…"` + `crossorigin="anonymous"` (rotar hash al actualizar, ver `Giscus.astro`); igual para beacon si se activa.
 - **Headers:** `X-Frame-Options: SAMEORIGIN` (legacy junto a CSP `frame-ancestors`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=()`, `Cross-Origin-Opener-Policy: same-origin`, `X-XSS-Protection: 0`.
 - **Vuln libs:** `pnpm audit --audit-level moderate` + `pnpm update`; evitar `_.merge`/`$.extend(true)` con input no confiable (prototype pollution); usar `Object.create(null)`/`structuredClone`.
@@ -64,7 +64,7 @@ Ver `AGENTS.md §10.1` (fuente única operativa). Resumen:
 | RNF01 | Performance | Lighthouse Perf >95, LCP <2.5s (dist estático CF). |
 | RNF02 | Accesibilidad | WCAG 2.2 AA, `axe-core` 0 violaciones. |
 | RNF03 | SEO | Indexable, `hreflang` válido, sitemap/rutas sin duplicados. |
-| RNF04 | Seguridad | **Headers `/*` (ver `AGENTS.md §10.1`):** `Strict-Transport-Security: max-age=31536000; includeSubDomains` (sin `preload`), `Content-Security-Policy` enforcement `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` , `X-Frame-Options: SAMEORIGIN` + `frame-ancestors`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=()`, `Cross-Origin-Opener-Policy: same-origin`, `X-XSS-Protection: 0`. SRI pin `giscus.app/client.js`; `sourcemap: false`; sin mixed content; `pnpm audit`. Ver `SPECS.md §4.1` detalle. |
+| RNF04 | Seguridad | **Headers `/*` (ver `AGENTS.md §10.1`):** `Strict-Transport-Security: max-age=31536000; includeSubDomains` (sin `preload`), `Content-Security-Policy` enforcement `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com` + `sha256-…` (ClientRouter + JSON-LD); `style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` , `X-Frame-Options: SAMEORIGIN` + `frame-ancestors`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=()`, `Cross-Origin-Opener-Policy: same-origin`, `X-XSS-Protection: 0`. SRI pin `giscus.app/client.js`; `sourcemap: false`; sin mixed content; `pnpm audit`. Ver `SPECS.md §4.1` detalle. |
 | RNF05 | i18n | `prefixDefaultLocale: false`, URLs canónicas correctas, no redirecciones fantasma. |
 | RNF06 | Mantenibilidad | Monorepo pnpm, un lockfile, CI `pnpm build` determinista. |
 | RNF07 | Privacidad | Sin cookies tracking; analytics CF beacon (sin banner). Giscus requiere auth GitHub opt-in. |
@@ -77,10 +77,11 @@ Ver `AGENTS.md §10.1` (fuente única operativa). Resumen:
 root (private) ── pnpm-workspace.yaml (packages/*, catalog)
 ├── packages/main (Astro 5, output: static)
 ├── scripts/copy-dist.mjs (copia main/dist → dist/)
+├── scripts/generate-csp.mjs (hashes CSP para scripts inline)
 └── scripts/collect-project-stats.mjs (tokei/git log → projects.stats.json)
 ```
 
-Build: `pnpm build:main` → `copy-dist` copia `packages/main/dist` a `dist/`. Demos web son externas (no embebidas). Deploy único `dist`.
+Build: `pnpm build:main` → `generate-csp` (hashes ClientRouter + JSON-LD + 404) → `copy-dist` copia `packages/main/dist` a `dist/`. Demos web son externas (no embebidas). Deploy único `dist`.
 
 ### 5.2 Decisions (ADR)
 

@@ -20,6 +20,7 @@ volfread.xyz/ (root private, pnpm-workspace.yaml: packages/*)
 ├── tsconfig.json / .editorconfig / .prettierrc / .gitignore
 ├── scripts/
 │   ├── copy-dist.mjs               # copia main/dist → dist/
+│   ├── generate-csp.mjs            # hashes CSP para scripts inline (ClientRouter + JSON-LD)
 │   └── collect-project-stats.mjs   # LOC + git log → projects.stats.json
 └── packages/
     ├── main/                       # Astro — el sitio
@@ -58,8 +59,9 @@ Fichas no-web: `src/data/proyectos.json` (metadata) + `projects.stats.json` (gen
 ```bash
 pnpm install                    # root — instala todo
 pnpm dev                        # main → http://localhost:4321
-pnpm build                      # main + copy dist/ (sin builds embebidos)
+pnpm build                      # main + CSP hashes + copy dist/ (sin builds embebidos)
 pnpm build:main                 # solo Astro
+pnpm build:csp                  # hashes CSP para scripts inline (ClientRouter + JSON-LD)
 ```
 pnpm build:stats                # regenera projects.stats.json
 pnpm --filter main astro check  # typecheck Astro
@@ -123,7 +125,7 @@ Fuente: Lighthouse Best Practices + OWASP. Ver `SPECS.md §4.1` y `_headers`.
 
 - **HTTPS:** sin mixed content (`http://` solo `xmlns`/`localhost` dev). Evitar `//` protocol-relative.
 - **Headers (vía `packages/main/public/_headers` `/*`):** `Strict-Transport-Security: max-age=31536000; includeSubDomains` (sin `preload`), `Content-Security-Policy` enforcement (ver SPECS), `X-Frame-Options: SAMEORIGIN` + CSP `frame-ancestors 'self'`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=()`, `Cross-Origin-Opener-Policy: same-origin`, `X-XSS-Protection: 0` (desactivar auditor legacy).
-- **CSP:** `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` — report-only no se usa (estático). Giscus inline externalizado a `public/scripts/giscus-loader.js` para no requerir `unsafe-inline` en `script-src`.
+- **CSP:** `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com` + hashes `sha256-…` generados por `scripts/generate-csp.mjs` (ClientRouter + JSON-LD + 404); `style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` — report-only no se usa (estático). Giscus inline externalizado a `public/scripts/giscus-loader.js` para no requerir `unsafe-inline` fijo en `script-src` (hashes dinámicos vía post-build).
 - **SRI:** pin `https://giscus.app/client.js` con `integrity` + `crossorigin="anonymous"` (rotar hash en cada update, documentado en `src/components/Giscus.astro`). Igual para beacon si se descomenta.
 - **Vuln libs:** `pnpm audit`, `pnpm update`, evitar `_.merge`/`$.extend(true)` con input no confiable, usar `Object.create(null)` o `structuredClone`.
 - **Sanitización:** `textContent` sobre `innerHTML`; si HTML necesario, `DOMPurify.sanitize`. No `eval`/`Function`/`setTimeout(string)`/`document.write`.

@@ -1,0 +1,36 @@
+---
+import type { Locale } from '../i18n/ui'
+import { getAlternateUrls } from '../i18n/utils'
+interface Props { lang: Locale }
+const { lang } = Astro.props
+const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
+---
+
+<div
+  class="flex items-center rounded-full border border-volf-glass-border bg-volf-surface/80 backdrop-blur p-0.5 text-xs"
+  role="group"
+  aria-label={lang === 'en' ? 'Language' : 'Idioma'}
+>
+  <a
+    href={esHref}
+    class:list={[
+      'rounded-full px-3 py-1.5 font-medium transition min-h-8 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange',
+      lang === 'es' ? 'bg-volf-orange text-white shadow-sm' : 'text-volf-muted hover:text-volf-text',
+    ]}
+    aria-current={lang === 'es' ? 'page' : undefined}
+    lang="es"
+  >
+    ES
+  </a>
+  <a
+    href={enHref}
+    class:list={[
+      'rounded-full px-3 py-1.5 font-medium transition min-h-8 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange',
+      lang === 'en' ? 'bg-volf-orange text-white shadow-sm' : 'text-volf-muted hover:text-volf-text',
+    ]}
+    aria-current={lang === 'en' ? 'page' : undefined}
+    lang="en"
+  >
+    EN
+  </a>
+</div>

@@ -1,0 +1,41 @@
+---
+interface Props {
+  lang?: string
+}
+const { lang = 'es' } = Astro.props
+// Repo Giscus final: yukiteruamano/volfread (sin .xyz) con Discussions habilitado.
+// IDs obtenidos de https://giscus.app (giscus config): R_kgDOUSrDtw / DIC_kwDOUSrDt84DFKoX
+// Docs: https://giscus.app
+// SRI hash: sha384-UwLZGbJGvkTzz0719+xEzUm/idqwzs0yZN8aB9Se5vUXHbyRyDWw9yqZTIsOsJ7x
+//   curl -sL https://giscus.app/client.js | openssl dgst -sha384 -binary | openssl base64 -A
+// Rotar hash al actualizar giscus (ver public/scripts/giscus-loader.js).
+const GISCUS_REPO = 'yukiteruamano/volfread'
+const GISCUS_REPO_ID = 'R_kgDOUSrDtw'
+const GISCUS_CATEGORY = 'General'
+const GISCUS_CATEGORY_ID = 'DIC_kwDOUSrDt84DFKoX'
+---
+
+<div
+  class="giscus-wrapper mt-10 rounded-2xl border border-volf-border bg-volf-surface p-4 md:p-6"
+  data-repo={GISCUS_REPO}
+  data-repo-id={GISCUS_REPO_ID}
+  data-category={GISCUS_CATEGORY}
+  data-category-id={GISCUS_CATEGORY_ID}
+  data-lang={lang}
+>
+  <h3 class="text-sm font-semibold tracking-widest text-volf-muted uppercase">
+    {lang === 'en' ? 'Comments' : 'Comentarios'}
+  </h3>
+  <p class="mt-1 text-xs text-volf-muted-2">
+    {lang === 'en' ? 'Via GitHub Discussions — requires a GitHub account.' : 'Vía GitHub Discussions — necesitas cuenta de GitHub.'}
+  </p>
+  <div class="giscus mt-4"></div>
+  <script is:inline src="/scripts/giscus-loader.js" defer></script>
+</div>
+<!-- Alternativa Disqus (no usada, documentada):
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config=function(){this.page.url=window.location.href;this.page.identifier=window.location.pathname};
+  (function(){var d=document,s=d.createElement('script');s.src='https://TU_SHORTNAME.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})()
+</script>
+-->

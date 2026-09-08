@@ -1,0 +1,45 @@
+---
+interface Props {
+  lang?: string
+}
+const { lang = 'es' } = Astro.props
+const placeholder = lang === 'en' ? 'Search posts…' : 'Buscar posts…'
+const ariaLabel = lang === 'en' ? 'Search' : 'Buscar'
+---
+
+<div class="relative" data-search-box>
+  <button
+    type="button"
+    data-search-toggle
+    aria-label={ariaLabel}
+    aria-expanded="false"
+    aria-controls="search-panel"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-volf-border bg-volf-surface text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="M21 21l-4.35-4.35"></path>
+    </svg>
+    <span class="sr-only">{ariaLabel}</span>
+  </button>
+  <div
+    id="search-panel"
+    hidden
+    class="absolute right-0 top-full mt-2 w-[min(22rem,calc(100vw-1rem))] rounded-2xl border border-volf-glass-border bg-volf-surface/95 backdrop-blur-xl shadow-glass p-3 z-50"
+    role="search"
+  >
+    <label class="sr-only" for="blog-search-input">{ariaLabel}</label>
+    <input
+      id="blog-search-input"
+      data-search-input
+      type="search"
+      placeholder={placeholder}
+      autocomplete="off"
+      class="w-full rounded-xl border border-volf-border bg-volf-bg px-3 py-2 text-sm text-volf-text placeholder:text-volf-muted-2 focus:outline-none focus:ring-2 focus:ring-volf-orange"
+    />
+    <ul data-search-results class="mt-2 max-h-[40vh] overflow-auto space-y-1 hidden" aria-live="polite"></ul>
+    <p data-search-empty class="hidden mt-2 text-xs text-volf-muted"> {lang === 'en' ? 'No results.' : 'Sin resultados.'} </p>
+  </div>
+</div>
+
+<script is:inline src="/scripts/search.js" defer></script>

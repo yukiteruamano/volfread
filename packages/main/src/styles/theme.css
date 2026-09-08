@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-volf-bg: #0a0a0a;
+  --color-volf-surface: #141414;
+  --color-volf-surface-2: #1a1a1a;
+  --color-volf-border: #262626;
+  --color-volf-border-strong: #333333;
+  --color-volf-orange: #ff6b00;
+  --color-volf-orange-soft: #ff8533;
+  --color-volf-amber: #ffb84d;
+  --color-volf-text: #f5f5f5;
+  --color-volf-muted: #a3a3a3;
+  --color-volf-muted-2: #737373;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Geist', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-volf-glass: rgba(20, 20, 20, 0.6);
+  --color-volf-glass-border: rgba(255, 255, 255, 0.08);
+  --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 30px rgba(255, 107, 0, 0.22);
+  --shadow-glow-strong: 0 0 40px rgba(255, 107, 0, 0.35);
+
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 28px;
+
+  --gradient-volf: linear-gradient(135deg, #ff6b00 0%, #ff8533 50%, #ffb84d 100%);
+  --gradient-mesh: radial-gradient(at 20% 30%, rgba(255, 107, 0, 0.22), transparent 60%),
+    radial-gradient(at 80% 70%, rgba(255, 184, 77, 0.12), transparent 60%);
+}

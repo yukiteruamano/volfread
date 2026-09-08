@@ -1,0 +1,16 @@
+packages:
+  - 'packages/*'
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+catalog:
+  astro: ^5.18.2
+  tailwindcss: ^4.3.3
+  typescript: ^5.9.0
+
+catalogs:
+  react:
+    react: ^19.2.8
+    react-dom: ^19.2.8

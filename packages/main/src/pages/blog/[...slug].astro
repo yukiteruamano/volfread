@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content'
+import BlogLayout from '../../layouts/BlogLayout.astro'
+import { getAlternateUrls } from '../../i18n/utils'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !import.meta.env.PROD || !data.draft)
+  const esPosts = posts.filter((p) => p.data.lang === 'es')
+  return esPosts.map((post) => ({
+    params: { slug: post.slug.replace(/^es\//, '') },
+    props: { post },
+  }))
+}
+
+const { post } = Astro.props
+const { Content } = await post.render()
+// readingTime Casper-style: ~200 wpm
+const readingTime = Math.max(1, Math.round((post.body?.split(/\s+/).length ?? 0) / 200))
+// Blog 1:1 ES/EN via translationKey (hola-mundo <-> hello-world)
+let alternates = getAlternateUrls(Astro.url.pathname)
+if (post.data.translationKey) {
+  const allPosts = await getCollection('blog', ({ data }) => !import.meta.env.PROD || !data.draft)
+  const counterpart = allPosts.find(
+    (p) => p.slug.replace(/^(es|en)\//, '') === post.data.translationKey && p.data.lang !== post.data.lang,
+  )
+  if (counterpart) {
+    const enPath = `/en/blog/${counterpart.slug.replace(/^en\//, '')}`
+    const esPath = `/blog/${post.slug.replace(/^es\//, '')}`
+    alternates = { es: esPath, en: enPath }
+  }
+}
+const canonical = new URL(Astro.url.pathname, Astro.site).toString()
+---
+
+<BlogLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate!}
+  updatedDate={post.data.updatedDate}
+  lang="es"
+  tags={post.data.tags}
+  categories={post.data.categories}
+  canonical={canonical}
+  alternates={alternates}
+  cover={post.data.cover}
+  coverAlt={post.data.coverAlt}
+  author={post.data.author}
+  readingTime={readingTime}
+  math={post.data.math}
+>
+  <Content />
+</BlogLayout>

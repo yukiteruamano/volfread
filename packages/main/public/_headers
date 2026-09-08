@@ -1,0 +1,31 @@
+# Security headers — ver AGENTS.md §10.1 y SPECS.md §4.1 (fuente única)
+# Best Practices: HSTS (sin preload), CSP enforcement, COOP, Permissions-Policy. Sin Report-Only (estático).
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  X-XSS-Protection: 0
+
+# Cache static assets — Astro hashed + Vite + public
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+/proyectos/*/app/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/noise.png
+  Cache-Control: public, max-age=31536000, immutable
+/noise.webp
+  Cache-Control: public, max-age=31536000, immutable
+/scripts/*
+  Cache-Control: public, max-age=3600
+/*.js
+  Cache-Control: public, max-age=3600
+/*.css
+  Cache-Control: public, max-age=3600

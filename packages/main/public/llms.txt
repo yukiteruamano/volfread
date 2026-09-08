@@ -1,0 +1,43 @@
+# volfread.xyz
+
+> Yukiteru (Jose Maldonado "Yukiteru Amano") — Free software activist in Venezuela, Bitcoiner, GNU/Linux power user & Sysadmin, Tech content specialist. Astro 5 static site on Cloudflare Pages, 20 projects, bilingual ES/EN.
+
+## About
+- [About (ES)](https://volfread.xyz/about): Activista SL Venezuela, Bitcoiner, poweruser Linux
+- [About (EN)](https://volfread.xyz/en/about): Free software activist, Bitcoiner, GNU/Linux power user
+- Author: Jose Maldonado "Yukiteru Amano" — sameAs: https://github.com/yukiteruamano, https://x.com/yukiteru_amano
+
+## Projects
+- [EclipseScope](https://volfread.xyz/proyectos/eclipsescope): React 19, astronomy-engine, WGS84 — solar eclipse calculator
+- [Simulador Blockchain](https://volfread.xyz/proyectos/simulador-blockchain): Angular 19, SHA-256, PoW, UTXO, ECDSA
+- [Koma](https://volfread.xyz/proyectos/koma): Go, Bubbletea TUI manga downloader, Anilist
+- [pkgcheck](https://volfread.xyz/proyectos/pkgcheck): Python, Slackware integrity checker, ripgrep, ldd
+- [MangoDex](https://volfread.xyz/proyectos/mangodex): Go, MangaDx API v5 typed client
+- [Gache](https://volfread.xyz/proyectos/gache): Go, generic file/memory cache
+- [fast-levenshtein](https://volfread.xyz/proyectos/fast-levenshtein): Go, Myers bit-parallel
+- [simple-markdown-crawler](https://volfread.xyz/proyectos/simple-markdown-crawler): Python, RAG Markdown crawler
+- [harden.yml](https://volfread.xyz/proyectos/harden-yml): Ansible hardening
+- [kernel-hardening-checker](https://volfread.xyz/proyectos/kernel-hardening-checker): Python, kernel CIS
+- [picom](https://volfread.xyz/proyectos/picom): C, X11 compositor
+- [apparmor.d](https://volfread.xyz/proyectos/apparmor-d): Go, 1500 AppArmor profiles
+- [doomemacs](https://volfread.xyz/proyectos/doomemacs): Emacs Lisp, Doom Emacs
+- [Knots-Banlist](https://volfread.xyz/proyectos/knots-banlist): Python, Bitcoin Knots banlist
+- [bearer](https://volfread.xyz/proyectos/bearer): Go, SAST
+- [AppJail](https://volfread.xyz/proyectos/appjail): Shell, FreeBSD jails
+- [OpenRiot](https://volfread.xyz/proyectos/openriot): Go, OpenBSD desktop
+- [cc-skills-golang](https://volfread.xyz/proyectos/cc-skills-golang): Go, agent skills
+- [manga-tui](https://volfread.xyz/proyectos/manga-tui): Rust, terminal manga
+- [horusec](https://volfread.xyz/proyectos/horusec): Go, SAST
+
+## Blog (ES)
+- [Hola, mundo — nace volfread.xyz](https://volfread.xyz/blog/hola-mundo): why static, how built [2026-09-06]
+- [Cómo embeber una SPA Vite en Astro sin dolor](https://volfread.xyz/blog/segundo-post): pnpm workspaces + base + copy-dist [2026-09-05]
+
+## Blog (EN)
+- [Hello, world — volfread.xyz is live](https://volfread.xyz/en/blog/hello-world): why static, how built [2026-09-06]
+
+## Tech
+- Stack: Astro 5, Tailwind 4, pnpm workspaces, Cloudflare Pages, trailingSlash: never, i18n ES (default) / EN (/en/projects)
+- Sitemap: https://volfread.xyz/sitemap-index.xml
+- RSS: https://volfread.xyz/rss.xml (ES), https://volfread.xyz/en/rss.xml (EN)
+- Contact: https://github.com/yukiteruamano, https://x.com/yukiteru_amano

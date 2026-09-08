@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import ProjectCard from '../../components/ProjectCard.astro'
+import { getAlternateUrls } from '../../i18n/utils'
+import proyectos from '../../data/proyectos.json'
+
+const alternates = getAlternateUrls(Astro.url.pathname)
+const all = proyectos
+---
+
+<BaseLayout title="Proyectos" description="Portafolio de volfread — webs, librerías y CLIs open-source." lang="es" alternates={alternates}>
+  <section class="mx-auto max-w-6xl px-6 py-10">
+    <h1 class="text-3xl font-black tracking-tight">Proyectos</h1>
+    <p class="mt-2 max-w-2xl text-volf-muted">Conoce mis principales proyectos de desarrollo — webs interactivas, librerías y herramientas open-source.</p>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {all.map((p) => <ProjectCard {...(p as any)} locale="es" />)}
+    </div>
+  </section>
+</BaseLayout>

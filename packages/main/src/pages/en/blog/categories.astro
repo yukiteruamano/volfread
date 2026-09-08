@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { getAlternateUrls } from '../../../i18n/utils'
+
+const alternates = getAlternateUrls(Astro.url.pathname)
+const allPosts = await getCollection('blog', ({ data }) => data.lang === 'en' && (!import.meta.env.PROD || !data.draft))
+const catCounts = new Map<string, number>()
+for (const p of allPosts) for (const c of p.data.categories ?? ['general']) catCounts.set(c, (catCounts.get(c) ?? 0) + 1)
+const sorted = [...catCounts.entries()].sort((a, b) => b[1] - a[1])
+const canonical = new URL(Astro.url.pathname, Astro.site).toString()
+---
+
+<BaseLayout title="Categories" description="All categories on volfread blog." lang="en" canonical={canonical} alternates={alternates}>
+  <section class="mx-auto max-w-3xl px-6 py-10">
+    <nav class="flex items-center gap-1.5 text-xs text-volf-muted">
+      <a href="/en/blog" class="hover:text-volf-orange hover:underline">Blog</a>
+      <span aria-hidden="true">›</span>
+      <span class="text-volf-text">Categories</span>
+    </nav>
+    <h1 class="mt-4 text-3xl font-black tracking-tight">Categories</h1>
+    <p class="mt-2 text-volf-muted">{sorted.length} categories · sorted by count</p>
+    {sorted.length === 0 ? (
+      <p class="mt-10 rounded-xl border border-dashed border-volf-border bg-volf-surface p-6 text-sm text-volf-muted">No categories yet.</p>
+    ) : (
+      <div class="mt-8 flex flex-wrap gap-2">
+        {sorted.map(([cat, count]) => (
+          <a href={`/en/blog/category/${encodeURIComponent(cat)}`} class="group inline-flex items-center gap-1.5 rounded-full border border-volf-glass bg-volf-surface px-4 py-2 text-sm font-medium text-volf-muted hover:border-volf-orange/30 hover:text-volf-orange hover:bg-volf-surface-2 transition">
+            {cat} <span class="text-xs text-volf-muted-2">· {count}</span>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

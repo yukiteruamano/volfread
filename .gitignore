@@ -1,0 +1,45 @@
+# Deps
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+packages/*/dist/
+packages/main/.astro/
+packages/main/dist/
+
+# Astro
+.astro/
+
+# Wrangler
+.wrangler/
+.dev.vars
+wrangler.toml.bak
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+*.log
+
+# Generated stats (commit to repo? no, regenerated on build)
+# packages/main/src/data/projects.stats.json  -> keep but gitignore if you want live regen
+# Uncomment to ignore live stats:
+# packages/main/src/data/projects.stats.json
+
+# Coverage
+coverage/

@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import CommitActivity from '../../components/CommitActivity.astro'
+import { getAlternateUrls, useTranslations } from '../../i18n/utils'
+import proyectos from '../../data/proyectos.json'
+import stats from '../../data/projects.stats.json'
+
+export async function getStaticPaths() {
+  return proyectos.map((p) => ({ params: { slug: p.slug }, props: { project: p } }))
+}
+
+const { project } = Astro.props
+const s = (stats as any).projects?.[project.slug]
+const alternates = getAlternateUrls(Astro.url.pathname)
+const t = useTranslations('es')
+const isWeb = project.type === 'web'
+const appUrl = `/proyectos/${project.slug}/app/`
+const locFormatted = s ? s.loc.toLocaleString('es-ES') : '—'
+const divulgativa: string = (project as any).divulgativa ?? (project as any).longDescription ?? project.description
+const tecnica: string = (project as any).tecnica ?? (project as any).longDescription ?? ''
+const highlights: string[] = (project as any).highlights ?? []
+const idx = proyectos.findIndex((p) => p.slug === project.slug)
+const prev = idx > 0 ? proyectos[idx - 1] : null
+const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
+---
+
+<BaseLayout title={project.title} description={project.description} lang="es" alternates={alternates}>
+  <section class="mx-auto max-w-4xl px-6 py-10">
+    <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-xs text-volf-muted">
+      <a href="/" class="hover:text-volf-orange hover:underline">Inicio</a><span aria-hidden="true">›</span>
+      <a href="/proyectos" class="hover:text-volf-orange hover:underline">Proyectos</a><span aria-hidden="true">›</span>
+      <span aria-current="page" class="text-volf-text font-medium">{project.title}</span>
+    </nav>
+
+    <div class="mt-4 flex flex-wrap items-start justify-between gap-4">
+      <div class="flex-1 min-w-[280px]">
+        <div class="flex items-center gap-2">
+          <span class:list={['rounded-full border px-3 py-1 text-xs font-bold tracking-widest', isWeb ? 'border-transparent bg-gradient-to-br from-volf-orange to-volf-amber text-white' : 'border-volf-border bg-volf-surface text-volf-muted']}>
+            {isWeb ? 'WEB' : project.type === 'lib' ? 'LIB' : 'CLI'} · {project.lang}
+          </span>
+          {project.featured && <span class="rounded-full bg-volf-amber px-2.5 py-1 text-xs font-bold text-black">Destacado</span>}
+        </div>
+        <h1 class="mt-3 font-display text-3xl md:text-4xl font-black tracking-tight">{project.title}</h1>
+      </div>
+      <div class="flex flex-col gap-2 shrink-0">
+        {
+          isWeb && (
+            <a
+              href={appUrl}
+              class="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-br from-volf-orange to-volf-amber px-6 py-2.5 text-sm font-bold text-white shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg text-center"
+            >
+              Abrir {project.title} →
+            </a>
+          )
+        }
+        <a
+          href={project.repo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-11 items-center justify-center rounded-full border border-volf-border bg-volf-surface px-6 py-2.5 text-sm font-semibold text-center hover:border-volf-border-strong hover:bg-volf-surface-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
+        >
+          {t('projects.repo')} →
+        </a>
+      </div>
+    </div>
+
+    <section aria-labelledby="divulgativa-heading" class="mt-6 rounded-2xl border border-volf-glass-border bg-volf-surface/60 backdrop-blur p-5">
+      <h2 id="divulgativa-heading" class="text-xs tracking-widest text-volf-muted uppercase font-semibold">{t('projects.divulgative')}</h2>
+      <p class="mt-2 text-[15px] leading-relaxed text-volf-text text-pretty">{divulgativa}</p>
+    </section>
+
+    {
+      tecnica && (
+        <section aria-labelledby="tecnica-heading" class="mt-4 rounded-2xl border border-volf-border bg-volf-bg/60 p-5">
+          <h2 id="tecnica-heading" class="text-xs tracking-widest text-volf-muted uppercase font-semibold">{t('projects.technical')}</h2>
+          <p class="mt-2 text-sm leading-relaxed text-volf-muted text-pretty">{tecnica}</p>
+        </section>
+      )
+    }
+
+    <div class="mt-6 flex flex-wrap gap-2">
+      {project.stack.map((tech: string) => <span class="rounded-full bg-volf-surface/60 border border-volf-border px-3 py-1.5 text-xs font-medium text-volf-muted">{tech}</span>)}
+    </div>
+
+    {
+      highlights.length > 0 && (
+        <section aria-labelledby="highlights-heading" class="mt-6 rounded-2xl border border-volf-glass-border bg-volf-surface/60 backdrop-blur p-5">
+          <h2 id="highlights-heading" class="text-xs tracking-widest text-volf-muted uppercase font-semibold">{t('projects.highlights')}</h2>
+          <ul class="mt-3 space-y-2">
+            {highlights.map((h) => (
+              <li class="flex gap-2 text-sm leading-relaxed text-volf-muted">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-volf-orange to-volf-amber" />
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      project.pkg && (
+        <section aria-labelledby="install-heading" class="mt-6 rounded-xl border border-volf-border bg-volf-surface p-4">
+          <div class="flex items-center justify-between gap-2">
+            <h2 id="install-heading" class="text-xs tracking-widest text-volf-muted uppercase font-semibold">{t('projects.install')}</h2>
+            <button
+              type="button"
+              data-copy={project.pkg}
+              class="copy-btn inline-flex min-h-8 items-center gap-1.5 rounded-full border border-volf-border bg-volf-bg px-3 py-1 text-xs font-medium text-volf-muted hover:text-volf-text hover:border-volf-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
+              aria-label="Copiar comando"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3"></path></svg>
+              Copiar
+            </button>
+          </div>
+          <pre class="mt-2 overflow-x-auto rounded-lg bg-volf-bg border border-volf-border p-3 text-sm text-volf-amber"><code>{project.pkg}</code></pre>
+          <p class="copy-toast hidden mt-2 text-xs text-volf-amber" role="status" aria-live="polite">Copiado ✓</p>
+        </section>
+      )
+    }
+
+    {
+      s && (
+        <div class="mt-8 grid gap-6 md:grid-cols-2">
+          <section aria-labelledby="loc-heading" class="rounded-2xl border border-volf-border bg-volf-surface p-5">
+            <h2 id="loc-heading" class="text-xs tracking-widest text-volf-muted uppercase font-semibold">{t('projects.stats.loc')}</h2>
+            <p class="mt-1 font-mono text-2xl font-black">{locFormatted}</p>
+            <div class="mt-3 space-y-2">
+              {Object.entries(s.languages).map(([l, pct]) => (
+                <div class="flex items-center gap-2 text-xs">
+                  <span class="w-20 text-volf-muted">{l}</span>
+                  <div class="flex-1 h-2.5 rounded-full bg-volf-bg border border-volf-border overflow-hidden" role="progressbar" aria-valuenow={pct as number} aria-valuemin={0} aria-valuemax={100} aria-label={l}>
+                    <div class="h-full bg-gradient-to-r from-volf-orange to-volf-amber" style={`width: ${pct}%`} />
+                  </div>
+                  <span class="w-8 text-right font-mono text-volf-muted">{String(pct)}%</span>
+                </div>
+              ))}
+            </div>
+          </section>
+          <section aria-labelledby="activity-heading" class="rounded-2xl border border-volf-border bg-volf-surface p-5">
+            <h2 id="activity-heading" class="sr-only">{t('projects.stats.commit')}</h2>
+            <CommitActivity commits={s.commits52} label={t('projects.stats.commit')} id={project.slug} />
+            <p class="mt-3 text-xs text-volf-muted-2">{t('projects.stats.commitNote')}</p>
+          </section>
+        </div>
+      )
+    }
+
+    {
+      (prev || next) && (
+        <nav aria-label="Proyectos relacionados" class="mt-10 grid gap-3 md:grid-cols-2">
+          {prev && (
+            <a href={`/proyectos/${prev.slug}`} class="group flex items-center gap-3 rounded-2xl border border-volf-border bg-volf-surface/60 p-4 hover:border-volf-orange/30 hover:bg-volf-surface transition">
+              <span class="text-volf-muted group-hover:text-volf-orange">←</span>
+              <div class="min-w-0">
+                <p class="text-xs tracking-widest text-volf-muted uppercase">Anterior</p>
+                <p class="truncate text-sm font-semibold group-hover:text-volf-orange">{prev.title}</p>
+              </div>
+            </a>
+          )}
+          {next && (
+            <a href={`/proyectos/${next.slug}`} class="group flex items-center gap-3 rounded-2xl border border-volf-border bg-volf-surface/60 p-4 hover:border-volf-orange/30 hover:bg-volf-surface transition md:col-start-2 justify-end text-right">
+              <div class="min-w-0">
+                <p class="text-xs tracking-widest text-volf-muted uppercase">Siguiente</p>
+                <p class="truncate text-sm font-semibold group-hover:text-volf-orange">{next.title}</p>
+              </div>
+              <span class="text-volf-muted group-hover:text-volf-orange">→</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </section>
+
+</BaseLayout>

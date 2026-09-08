@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# AI bots — explicitly allowed for GEO
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: CCBot
+Allow: /
+User-agent: Bytespider
+Allow: /
+
+Sitemap: https://volfread.xyz/sitemap-index.xml

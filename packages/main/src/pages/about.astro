@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getAlternateUrls } from '../i18n/utils'
+import EmailObfuscated from '../components/EmailObfuscated.astro'
+const alternates = getAlternateUrls(Astro.url.pathname)
+---
+
+<BaseLayout title="Sobre mí — Yukiteru" description="Yukiteru (volfread) — desarrollador, sysadmin y activista SL Venezuela. Bitcoiner y poweruser GNU/Linux." lang="es" alternates={alternates}>
+  <section class="mx-auto max-w-3xl px-6 py-12">
+    <h1 class="font-display text-3xl md:text-4xl font-black tracking-tight">Hola, soy Yukiteru</h1>
+    <p class="mt-2 text-sm font-medium tracking-widest text-volf-muted uppercase">Desarrollador de software, sysadmin y activista del software libre en Venezuela.</p>
+
+    <p class="mt-6 text-[15px] leading-relaxed text-volf-muted">
+      Me apasiona construir herramientas de alto rendimiento, librerías open-source y experiencias web interactivas, siempre con un enfoque firme en
+      <span class="text-volf-text">rendimiento</span>, <span class="text-volf-text">accesibilidad</span>,
+      <span class="text-volf-text">seguridad (hardening)</span> y <span class="text-volf-text">construcción comunitaria</span>.
+    </p>
+
+    <h2 class="mt-10 font-display text-xl font-bold tracking-tight">¿Qué hago?</h2>
+    <div class="mt-4 grid gap-3">
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">Desarrollo</p>
+        <p class="mt-1 text-sm leading-relaxed text-volf-muted">Principalmente con <span class="text-volf-orange">Go</span>, <span class="text-volf-orange">Python</span> y <span class="text-volf-orange">TypeScript</span>.</p>
+      </div>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">Infraestructura</p>
+        <p class="mt-1 text-sm leading-relaxed text-volf-muted">Despliegue y optimización de herramientas open-source, CMS y seguridad en sistemas GNU/Linux.</p>
+      </div>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">Ecosistema Tech</p>
+        <p class="mt-1 text-sm leading-relaxed text-volf-muted">Bitcoiner, redactor especializado en contenido técnico y poweruser Linux.</p>
+      </div>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">BSD & Slackware</p>
+        <p class="mt-1 text-sm leading-relaxed text-volf-muted">Miembro de la comunidad y creador de <span class="text-volf-orange">ports</span> en <span class="text-volf-text">FreeBSD</span>, <span class="text-volf-text">OpenBSD</span> y <span class="text-volf-text">Slackware</span> — packaging, hardening y mantenimiento.</p>
+      </div>
+    </div>
+
+    <h2 class="mt-10 font-display text-xl font-bold tracking-tight">Medios y colaboraciones</h2>
+    <div class="mt-4 grid gap-3 md:grid-cols-2">
+      <a
+        href="https://observatorioblockchain.com/author/jose-maldonado/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group rounded-2xl border border-volf-border bg-volf-surface/60 p-4 hover:border-volf-orange/30 hover:bg-volf-surface transition"
+      >
+        <p class="text-sm font-semibold group-hover:text-volf-orange transition">Observatorio Blockchain</p>
+        <p class="mt-1 text-xs text-volf-muted">mar 2019 — actualidad</p>
+        <p class="mt-1 text-xs leading-relaxed text-volf-muted">Análisis y divulgación blockchain — perfil de autor</p>
+        <span class="mt-2 inline-flex text-xs font-medium text-volf-orange">Ver perfil →</span>
+      </a>
+      <a
+        href="https://academy.bit2me.com/author-jose-maldonado/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group rounded-2xl border border-volf-border bg-volf-surface/60 p-4 hover:border-volf-orange/30 hover:bg-volf-surface transition"
+      >
+        <p class="text-sm font-semibold group-hover:text-volf-orange transition">Bit2Me Academy</p>
+        <p class="mt-1 text-xs text-volf-muted">feb 2019 — actualidad</p>
+        <p class="mt-1 text-xs leading-relaxed text-volf-muted">Contenido educativo cripto — perfil de autor</p>
+        <span class="mt-2 inline-flex text-xs font-medium text-volf-orange">Ver perfil →</span>
+      </a>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">Cointelegraph</p>
+        <p class="mt-1 text-xs text-volf-muted">mar 2020 — dic 2021</p>
+        <p class="mt-1 text-xs leading-relaxed text-volf-muted">Colaboración en contenidos</p>
+      </div>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">Criptotendencias</p>
+        <p class="mt-1 text-xs text-volf-muted">nov 2018 — nov 2019</p>
+        <p class="mt-1 text-xs leading-relaxed text-volf-muted">Redacción — 13 artículos</p>
+      </div>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">Bitcobie</p>
+        <p class="mt-1 text-xs text-volf-muted">ene 2019 — jun 2019</p>
+        <p class="mt-1 text-xs leading-relaxed text-volf-muted">Redactor de contenidos — tecnología blockchain</p>
+      </div>
+      <div class="rounded-2xl border border-volf-border bg-volf-surface/60 p-4">
+        <p class="text-sm font-semibold text-volf-text">DesdeLinux</p>
+        <p class="mt-1 text-xs text-volf-muted">mar 2015 — jun 2017</p>
+        <p class="mt-1 text-xs leading-relaxed text-volf-muted">Colaboración en contenidos</p>
+      </div>
+    </div>
+
+    <h3 class="mt-8 text-sm font-semibold tracking-widest uppercase text-volf-muted">Comunidades</h3>
+    <div class="mt-3 flex flex-wrap gap-2">
+      {
+        ['Debian', 'Gentoo', 'FreeBSD', 'OpenBSD', 'Slackware'].map((c) => (
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-volf-glass-border bg-volf-surface/60 backdrop-blur px-3.5 py-1.5 text-xs font-medium text-volf-muted">
+            <span class="h-1.5 w-1.5 rounded-full bg-volf-orange" /> {c}
+          </span>
+        ))
+      }
+    </div>
+
+    <h2 class="mt-10 font-display text-xl font-bold tracking-tight">Contacto</h2>
+    <div class="mt-4 rounded-2xl border border-volf-border bg-volf-surface p-5">
+      <p class="text-xs tracking-widest text-volf-muted uppercase font-semibold">Correo electrónico</p>
+      <div class="mt-3 inline-flex items-center rounded-xl border border-volf-border bg-white px-4 py-3">
+        <EmailObfuscated class="text-volf-bg" />
+      </div>
+      <div class="mt-3">
+        <a
+          href="/publickey.asc"
+          download="yukiteru-volfread.asc"
+          type="application/pgp-keys"
+          class="inline-flex items-center gap-1.5 text-xs font-medium text-volf-orange hover:text-volf-orange-soft hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-1"
+          aria-label="Descargar clave pública PGP"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 15l-4-4h8z"></path><path d="M12 3v12"></path><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"></path></svg>
+          Descarga mi clave pública PGP
+        </a>
+        <span class="ml-2 text-xs text-volf-muted-2">(asc, 1.1K)</span>
+      </div>
+      <p class="mt-2 text-xs text-volf-muted-2">Sin enlace directo para evitar spam. Imagen no copiable.</p>
+    </div>
+
+    <h2 class="mt-10 font-display text-xl font-bold tracking-tight">Mis Proyectos</h2>
+    <p class="mt-3 text-[15px] leading-relaxed text-volf-muted">
+      Con más de 120 repositorios en GitHub, este sitio reúne una selección de mis trabajos más relevantes: desde librerías como
+      <code class="text-volf-amber">fast-levenshtein</code>, herramientas de línea de comandos como <code class="text-volf-amber">koma</code>, hasta proyectos web como
+      <code class="text-volf-amber">EclipseScope</code>. Todo construido para ser ligero, eficiente y desplegado estáticamente en Cloudflare Pages.
+    </p>
+    <div class="mt-6">
+      <a
+        href="/proyectos"
+        class="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-br from-volf-orange to-volf-amber px-8 py-3 text-sm font-bold text-white shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg"
+      >
+        Ver proyectos →
+      </a>
+    </div>
+    <p class="mt-6 text-sm leading-relaxed text-volf-muted">
+      Puedes encontrarme en <a href="https://github.com/yukiteruamano" class="text-volf-orange hover:underline">GitHub</a>, <a href="https://x.com/yukiteru_amano" class="text-volf-orange hover:underline">X</a> y <a href="https://www.linkedin.com/in/jos%C3%A9-maldonado-4520a715a/" class="text-volf-orange hover:underline">LinkedIn</a>.
+    </p>
+  </section>
+</BaseLayout>

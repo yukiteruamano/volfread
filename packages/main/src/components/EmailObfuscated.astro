@@ -1,0 +1,18 @@
+---
+interface Props {
+  class?: string
+}
+const { class: klass = 'text-volf-orange' } = Astro.props
+---
+
+<img
+  src="/email.svg"
+  alt=""
+  width="206"
+  height="18"
+  class={`inline-block align-middle select-none ${klass}`}
+  loading="lazy"
+  decoding="async"
+  aria-hidden="true"
+/>
+<span class="sr-only">Correo electrónico mostrado como imagen no copiable</span>

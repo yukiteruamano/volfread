@@ -1,0 +1,108 @@
+@import './theme.css';
+@import './fonts.css';
+
+html {
+  background: var(--color-volf-bg);
+  color: var(--color-volf-text);
+  scrollbar-gutter: stable;
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-volf-bg);
+  color: var(--color-volf-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus ring volf */
+*:focus-visible {
+  outline: 2px solid var(--color-volf-orange);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-volf-orange);
+  color: white;
+}
+
+/* Scrollbar dark */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-volf-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-volf-border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}
+
+/* Text balancing */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* Motion safe */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* Noise subtle overlay for depth — WebP 2K vs PNG 14K (Lighthouse savings 13 KiB) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: image-set(url('/noise.webp') type('image/webp'), url('/noise.png') type('image/png'));
+  background-repeat: repeat;
+  background-size: 64px 64px;
+  z-index: -1;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  rect {
+    animation: none !important;
+  }
+}

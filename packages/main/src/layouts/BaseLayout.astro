@@ -1,0 +1,147 @@
+---
+import '../styles/global.css'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import { ClientRouter } from 'astro:transitions'
+import { getAlternateUrls } from '../i18n/utils'
+import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url'
+import inter600 from '@fontsource/inter/files/inter-latin-600-normal.woff2?url'
+import space700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url'
+
+interface Props {
+  title: string
+  description?: string
+  lang?: string
+  canonical?: string
+  alternates?: { es: string; en: string }
+  noIndex?: boolean
+  ogImage?: string
+  ogImageAlt?: string
+  ogImageWidth?: number
+  ogImageHeight?: number
+  isArticle?: boolean
+  article?: {
+    publishedTime?: string
+    modifiedTime?: string
+    author?: string
+    tags?: string[]
+  }
+}
+const {
+  title,
+  description = 'volfread — desarrollador, portafolio y blog sobre Go, Python, web y blockchain.',
+  lang = 'es',
+  canonical,
+  alternates: alternatesProp,
+  noIndex = false,
+  ogImage = '/og-default.png',
+  ogImageAlt = title,
+  ogImageWidth = 1200,
+  ogImageHeight = 630,
+  isArticle = false,
+  article,
+} = Astro.props
+
+const site = Astro.site?.toString() ?? 'https://volfread.xyz'
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString()
+const ogUrl = new URL(Astro.url.pathname, site).toString()
+const ogImageUrl = new URL(ogImage, site).toString()
+// hreflang siempre resuelto — nunca dejamos la página sin alternates (Lighthouse exige ≥1 válido)
+const alternates = alternatesProp ?? getAlternateUrls(Astro.url.pathname)
+const hrefEs = new URL(alternates.es, site).toString()
+const hrefEn = new URL(alternates.en, site).toString()
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'volfread.xyz',
+  url: site,
+  inLanguage: lang,
+  publisher: {
+    '@type': 'Organization',
+    name: 'volfread.xyz',
+    logo: { '@type': 'ImageObject', url: new URL('/favicon.svg', site).toString() },
+  },
+}
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Jose Maldonado "Yukiteru Amano"',
+  alternateName: 'Yukiteru Amano',
+  url: 'https://volfread.xyz',
+  sameAs: ['https://github.com/yukiteruamano', 'https://x.com/yukiteru_amano'],
+}
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="es" href={hrefEs} />
+    <link rel="alternate" hreflang="en" href={hrefEn} />
+    <link rel="alternate" hreflang="x-default" href={hrefEs} />
+
+    <meta property="og:type" content={isArticle ? 'article' : 'website'} />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content={String(ogImageWidth)} />
+    <meta property="og:image:height" content={String(ogImageHeight)} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:site_name" content="volfread.xyz" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_ES'} />
+    {alternates && <meta property="og:locale:alternate" content={lang === 'en' ? 'es_ES' : 'en_US'} />}
+    {isArticle && article?.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+    {isArticle && article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+    {isArticle && article?.author && <meta property="article:author" content={article.author} />}
+    {isArticle && article?.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+    {isArticle && <meta property="article:section" content="Blog" />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+    <meta name="twitter:site" content="@yukiteru_amano" />
+    <meta name="twitter:creator" content="@yukiteru_amano" />
+    <meta name="twitter:domain" content="volfread.xyz" />
+    <meta name="twitter:url" content={ogUrl} />
+
+    <link rel="alternate" type="application/rss+xml" title="RSS — volfread.xyz" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="RSS — volfread.xyz (EN)" href="/en/rss.xml" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter600} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={space700} as="font" type="font/woff2" crossorigin />
+    <script is:inline src="/scripts/ui.js" defer></script>
+    <ClientRouter />
+    <title>{title} — volfread.xyz</title>
+
+    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd).replace(/</g, '\\u003c')} is:inline />
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd).replace(/</g, '\\u003c')} is:inline />
+
+    <!-- Cloudflare Web Analytics: activa en CF Dashboard → Web Analytics o descomenta beacon -->
+    <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{\"token\": \"REPLACE_WITH_TOKEN\"}'></script> -->
+  </head>
+  <body class="min-h-screen flex flex-col bg-volf-bg text-volf-text">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] rounded-full bg-volf-orange px-4 py-2 text-sm font-bold text-white"
+      >Saltar al contenido</a
+    >
+    <Header lang={lang} />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

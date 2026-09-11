@@ -1,16 +1,16 @@
 ---
-title: "AppArmor, a powerful security tool"
-description: "Learn how to activate and configure AppArmor on GNU/Linux"
+title: 'AppArmor, a powerful security tool'
+description: 'Learn how to activate and configure AppArmor on GNU/Linux'
 pubDate: 2026-09-08T20:59:15.901Z
 lang: en
-categories: ["security"]
-tags: ["apparmor", "security", "linux"]
-cover: "./cover.webp"
-coverAlt: ""
-translationKey: "apparmor-introduccion"
+categories: ['security']
+tags: ['apparmor', 'security', 'linux']
+cover: './cover.webp'
+coverAlt: ''
+translationKey: 'apparmor-introduccion'
 draft: false
 math: false
-author: "Jose Maldonado \"Yukiteru Amano\""
+author: 'Jose Maldonado "Yukiteru Amano"'
 ---
 
 In the world of computer security, protecting our operating systems is a constant priority. GNU/Linux, known for its robustness, is not exempt from threats. Fortunately, we have powerful tools to help us fortify our distributions. One of them, often underestimated but incredibly effective, is **AppArmor**.
@@ -19,7 +19,7 @@ In the world of computer security, protecting our operating systems is a constan
 
 AppArmor (Application Armor) is a Linux kernel security module that focuses on mandatory access control (MAC). Unlike traditional discretionary access control (DAC) systems (such as user and group permissions), AppArmor allows you to define security policies at the application level.
 
-![AppArmor, a powerful MAC into the Linux kernel](./apparmor-logo.jpg) 
+![AppArmor, a powerful MAC into the Linux kernel](./apparmor-logo.jpg)
 
 In simpler terms, AppArmor lets you tell each specific program what it can and cannot do on your system. This includes:
 
@@ -45,7 +45,7 @@ sudo aa-status
 
 If AppArmor is active, you'll see output similar to this, indicating which application profiles are currently in **Enforcing** or **Complain** mode:
 
-``` bash
+```bash
 apparmor module is loaded.
 1 profile is loaded.
 3 processes are unconfined.
@@ -88,7 +88,6 @@ Modes:
 - **Disabled**: The profile is completely inactive for the application.
 
 When an application configured with AppArmor starts, the kernel checks to see if a profile exists associated with that specific executable. If so, AppArmor begins monitoring the application's actions and applying the rules defined in the profile.
-
 
 ## Configuring and Improving Security with Profiles
 

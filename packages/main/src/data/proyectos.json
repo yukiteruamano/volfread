@@ -220,8 +220,16 @@
     "divulgativaEn": "Ansible playbook that applies basic hardening to Linux servers without hassle. Configures SSH, firewall and users with best practices in one command.",
     "tecnica": "Fork de pyllyukko/harden.yml en Jinja/YAML. Idempotente y modular por roles: sysctl, SSH, auditd, firewall y permisos. Probado en Debian/Ubuntu, ideal para hardening CIS rápido.",
     "tecnicaEn": "Fork of pyllyukko/harden.yml in Jinja/YAML. Idempotent and modular by roles: sysctl, SSH, auditd, firewall and permissions. Tested on Debian/Ubuntu, ideal for quick CIS hardening.",
-    "highlights": ["Idempotente y modular por roles", "SSH, sysctl y firewall listos", "Probado en Debian/Ubuntu"],
-    "highlightsEn": ["Idempotent and modular by roles", "SSH, sysctl and firewall ready", "Tested on Debian/Ubuntu"],
+    "highlights": [
+      "Idempotente y modular por roles",
+      "SSH, sysctl y firewall listos",
+      "Probado en Debian/Ubuntu"
+    ],
+    "highlightsEn": [
+      "Idempotent and modular by roles",
+      "SSH, sysctl and firewall ready",
+      "Tested on Debian/Ubuntu"
+    ],
     "type": "cli",
     "lang": "Ansible",
     "stack": ["Ansible", "Jinja", "YAML"],
@@ -237,8 +245,16 @@
     "divulgativaEn": "Tool that checks if your Linux kernel has recommended security protections enabled. Tells you what is missing to harden.",
     "tecnica": "Fork de a13xp0p0v/kernel-hardening-checker en Python. Analiza kconfig, cmdline y sysctl comparando contra listas CIS. Reporte coloreado por severidad y sugerencias.",
     "tecnicaEn": "Fork of a13xp0p0v/kernel-hardening-checker in Python. Parses kconfig, cmdline and sysctl against CIS lists. Color-coded report by severity with suggestions.",
-    "highlights": ["Audita kconfig, cmdline y sysctl", "Lista CIS con severidades", "Reporte con sugerencias de fix"],
-    "highlightsEn": ["Audits kconfig, cmdline and sysctl", "CIS list with severities", "Report with fix suggestions"],
+    "highlights": [
+      "Audita kconfig, cmdline y sysctl",
+      "Lista CIS con severidades",
+      "Reporte con sugerencias de fix"
+    ],
+    "highlightsEn": [
+      "Audits kconfig, cmdline and sysctl",
+      "CIS list with severities",
+      "Report with fix suggestions"
+    ],
     "type": "cli",
     "lang": "Python",
     "stack": ["Python", "Linux", "CIS"],
@@ -254,8 +270,16 @@
     "divulgativaEn": "Lightweight X11 compositor that makes windows look modern with soft shadows and transparency.",
     "tecnica": "Fork de yshui/picom en C. Gestiona vsync, blur y sombras con Xrender/GLX. Configurable por ventana y backend, usado en desktops OpenBSD/Linux.",
     "tecnicaEn": "Fork of yshui/picom in C. Handles vsync, blur and shadows via Xrender/GLX. Per-window configurable and backend selectable, used on OpenBSD/Linux desktops.",
-    "highlights": ["Transparencias y sombras suaves", "Backend GLX/Xrender configurable", "Ligero y muy configurable"],
-    "highlightsEn": ["Soft transparency and shadows", "Configurable GLX/Xrender backend", "Lightweight and highly configurable"],
+    "highlights": [
+      "Transparencias y sombras suaves",
+      "Backend GLX/Xrender configurable",
+      "Ligero y muy configurable"
+    ],
+    "highlightsEn": [
+      "Soft transparency and shadows",
+      "Configurable GLX/Xrender backend",
+      "Lightweight and highly configurable"
+    ],
     "type": "cli",
     "lang": "C",
     "stack": ["C", "X11", "GLX"],
@@ -289,7 +313,11 @@
     "tecnica": "Fork de doomemacs/doomemacs en Emacs Lisp. Lazy loading, use-package y straight.el con módulos por lenguaje. CLI doom sync para compilar.",
     "tecnicaEn": "Fork of doomemacs/doomemacs in Emacs Lisp. Lazy loading, use-package and straight.el with per-language modules. doom sync CLI to compile.",
     "highlights": ["Lazy loading y módulos por lenguaje", "CLI doom sync", "Muy personalizable"],
-    "highlightsEn": ["Lazy loading and per-language modules", "doom sync CLI", "Highly customizable"],
+    "highlightsEn": [
+      "Lazy loading and per-language modules",
+      "doom sync CLI",
+      "Highly customizable"
+    ],
     "type": "cli",
     "lang": "Emacs Lisp",
     "stack": ["Emacs Lisp", "Emacs"],
@@ -305,7 +333,11 @@
     "divulgativaEn": "List and scripts to prevent Bitcoin Knots nodes from connecting to your node. Useful if you prefer a different network policy.",
     "tecnica": "Fork de aeonBTC/Knots-Banlist en Python. Genera banlist.dat y scripts para bitcoind. Se basa en fingerprints de versión y comportamiento.",
     "tecnicaEn": "Fork of aeonBTC/Knots-Banlist in Python. Generates banlist.dat and scripts for bitcoind. Based on version fingerprints and behavior.",
-    "highlights": ["Genera banlist.dat para bitcoind", "Basado en fingerprints", "Scripts de actualización"],
+    "highlights": [
+      "Genera banlist.dat para bitcoind",
+      "Basado en fingerprints",
+      "Scripts de actualización"
+    ],
     "highlightsEn": ["Generates banlist.dat for bitcoind", "Fingerprint-based", "Update scripts"],
     "type": "cli",
     "lang": "Python",
@@ -373,8 +405,16 @@
     "divulgativaEn": "Collection of Go skills so AI agents write idiomatic, production-ready code.",
     "tecnica": "Fork de samber/cc-skills-golang en Go. Skills destilados de Google/Uber para testing, observabilidad y perf. Compatible con Codex y Claude.",
     "tecnicaEn": "Fork of samber/cc-skills-golang in Go. Skills distilled from Google/Uber for testing, observability and perf. Compatible with Codex and Claude.",
-    "highlights": ["Skills de Google/Uber destilados", "Testing y observabilidad", "Compatible Codex/Claude"],
-    "highlightsEn": ["Google/Uber distilled skills", "Testing and observability", "Codex/Claude compatible"],
+    "highlights": [
+      "Skills de Google/Uber destilados",
+      "Testing y observabilidad",
+      "Compatible Codex/Claude"
+    ],
+    "highlightsEn": [
+      "Google/Uber distilled skills",
+      "Testing and observability",
+      "Codex/Claude compatible"
+    ],
     "type": "lib",
     "lang": "Go",
     "stack": ["Go", "Agent Skills"],

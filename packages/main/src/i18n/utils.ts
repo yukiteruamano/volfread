@@ -24,7 +24,8 @@ export function getRelativeLocaleUrl(locale: Locale, path: string): string {
 
 export function getAlternateUrls(currentPath: string): { es: string; en: string } {
   // Normaliza trailing slash para trailingSlash:'never' (excepto raíz)
-  const normalized = currentPath !== '/' && currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath
+  const normalized =
+    currentPath !== '/' && currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath
 
   // Proyectos es monolingüe: /proyectos <-> /en/projects
   const isProyectosEs = normalized === '/proyectos' || normalized.startsWith('/proyectos/')
@@ -39,7 +40,14 @@ export function getAlternateUrls(currentPath: string): { es: string; en: string 
   }
   // Blog 1:1 ES/EN — generado dinámicamente por scripts/generate-blog-map.mjs
   // Si añades nuevo post con translationKey, ejecuta `node scripts/generate-blog-map.mjs` para regenerar
-  const blogMap: Record<string, string> = {"apparmor-introduction":"apparmor-introduccion","first-steps":"primeros-pasos","apparmor-introduccion":"apparmor-introduction","primeros-pasos":"first-steps"}
+  const blogMap: Record<string, string> = {
+    'apparmor-introduction': 'apparmor-introduccion',
+    'first-steps': 'primeros-pasos',
+    'slackware-pkgcheck-integrity': 'slackware-pkgcheck-integridad',
+    'apparmor-introduccion': 'apparmor-introduction',
+    'primeros-pasos': 'first-steps',
+    'slackware-pkgcheck-integridad': 'slackware-pkgcheck-integrity',
+  }
   // Tag/Category son taxonomías con mismo slug en ambos idiomas — mapeo directo sin blogMap
   const isBlogTagCatEn =
     normalized.startsWith('/en/blog/tag/') ||

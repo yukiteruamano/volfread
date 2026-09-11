@@ -41,16 +41,16 @@ No duplicar `pnpm-lock.yaml` por package. Un solo lock en root. No usar `npm`/`y
 
 ## 3. Proyectos
 
-| slug | tipo | fuente | demo |
-|------|------|--------|------|
-| `eclipsescope` | web | `https://github.com/yukiteruamano/EclipseScope` | `https://eclipse.observatorioblockchain.com/` (alojada en Observatorio Blockchain — Software Libre y Ciencia) |
-| `simulador-blockchain` | web | `https://github.com/yukiteruamano/yukiteruamano.github.io` | `https://yukiteruamano.github.io/#/` |
-| `fast-levenshtein` | lib | Go | ficha + stats |
-| `gache` | lib | Go | ficha |
-| `koma` | cli/tui | Go | ficha |
-| `mangodex` | lib | Go | ficha |
-| `pkgcheck` | cli | Python | ficha |
-| `simple-markdown-crawler` | cli | Python | ficha |
+| slug                      | tipo    | fuente                                                     | demo                                                                                                          |
+| ------------------------- | ------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `eclipsescope`            | web     | `https://github.com/yukiteruamano/EclipseScope`            | `https://eclipse.observatorioblockchain.com/` (alojada en Observatorio Blockchain — Software Libre y Ciencia) |
+| `simulador-blockchain`    | web     | `https://github.com/yukiteruamano/yukiteruamano.github.io` | `https://yukiteruamano.github.io/#/`                                                                          |
+| `fast-levenshtein`        | lib     | Go                                                         | ficha + stats                                                                                                 |
+| `gache`                   | lib     | Go                                                         | ficha                                                                                                         |
+| `koma`                    | cli/tui | Go                                                         | ficha                                                                                                         |
+| `mangodex`                | lib     | Go                                                         | ficha                                                                                                         |
+| `pkgcheck`                | cli     | Python                                                     | ficha                                                                                                         |
+| `simple-markdown-crawler` | cli     | Python                                                     | ficha                                                                                                         |
 
 Fichas no-web: `src/data/proyectos.json` (metadata) + `projects.stats.json` (generado: LOC, languages, commit histogram 52 semanas via `git log` local o GitHub API fallback).
 
@@ -63,9 +63,11 @@ pnpm build                      # main + CSP hashes + copy dist/ (sin builds emb
 pnpm build:main                 # solo Astro
 pnpm build:csp                  # hashes CSP para scripts inline (ClientRouter + JSON-LD)
 ```
-pnpm build:stats                # regenera projects.stats.json
-pnpm --filter main astro check  # typecheck Astro
+
+pnpm build:stats # regenera projects.stats.json
+pnpm --filter main astro check # typecheck Astro
 pnpm build && pnpm --filter main preview # o make build && make preview
+
 ```
 
 Dev con múltiples Astro: si la toolbar falla, añadir `vite.server.fs.allow: [path.resolve('../..')]` en `astro.config.mjs`.
@@ -144,3 +146,4 @@ Fuente: Lighthouse Best Practices + OWASP. Ver `SPECS.md §4.1` y `_headers`.
 - `SPECS.md` — spec funcional/técnica completa
 - `CHANGELOG.md` — historial
 - Context7 IDs usados: `/withastro/docs`, `/websites/pnpm_io`, `/cloudflare/cloudflare-docs`
+```

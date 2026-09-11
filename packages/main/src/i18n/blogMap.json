@@ -1,6 +1,8 @@
 {
   "apparmor-introduction": "apparmor-introduccion",
   "first-steps": "primeros-pasos",
+  "slackware-pkgcheck-integrity": "slackware-pkgcheck-integridad",
   "apparmor-introduccion": "apparmor-introduction",
-  "primeros-pasos": "first-steps"
+  "primeros-pasos": "first-steps",
+  "slackware-pkgcheck-integridad": "slackware-pkgcheck-integrity"
 }

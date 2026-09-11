@@ -10,12 +10,22 @@ import proyectos from '../../data/proyectos.json'
 const t = useTranslations('en')
 const alternates = getAlternateUrls(Astro.url.pathname)
 const featured = proyectos.filter((p) => p.featured).slice(0, 4)
-const posts = (await getCollection('blog', ({ data }) => data.lang === 'en' && (!import.meta.env.PROD || !data.draft)))
+const posts = (
+  await getCollection(
+    'blog',
+    ({ data }) => data.lang === 'en' && (!import.meta.env.PROD || !data.draft)
+  )
+)
   .sort((a, b) => b.data.pubDate!.valueOf() - a.data.pubDate!.valueOf())
   .slice(0, 3)
 ---
 
-<BaseLayout title="Home" description="volfread — portfolio, open-source projects and blog about Go, Python, web and blockchain." lang="en" alternates={alternates}>
+<BaseLayout
+  title="Home"
+  description="volfread — portfolio, open-source projects and blog about Go, Python, web and blockchain."
+  lang="en"
+  alternates={alternates}
+>
   <section class="relative mx-auto max-w-6xl px-6 py-14 md:py-20 overflow-hidden">
     <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
       <div class="absolute -top-32 -left-32 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-volf-orange/20 via-volf-amber/10 to-transparent blur-[100px]"></div>
@@ -25,13 +35,20 @@ const posts = (await getCollection('blog', ({ data }) => data.lang === 'en' && (
     <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-center">
       <div class="max-w-2xl relative">
         <p class="inline-flex items-center gap-2 rounded-full border border-volf-glass-border bg-volf-surface/60 backdrop-blur px-3.5 py-1 text-xs tracking-widest text-volf-muted uppercase">
-          <span class="h-2 w-2 rounded-full bg-volf-orange motion-safe:animate-pulse"></span> Open to collaborations
+          <span class="h-2 w-2 rounded-full bg-volf-orange motion-safe:animate-pulse"></span> Open
+          to collaborations
         </p>
         <h1 class="mt-6 font-display text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-balance">
-          {t('hero.title').split('Yukiteru')[0]}<span class="bg-gradient-to-r from-volf-orange via-volf-orange-soft to-volf-amber bg-clip-text text-transparent">Yukiteru</span>
+          {t('hero.title').split('Yukiteru')[0]}
+          <span class="bg-gradient-to-r from-volf-orange via-volf-orange-soft to-volf-amber bg-clip-text text-transparent">
+            Yukiteru
+          </span>
         </h1>
         <div class="relative mx-auto mt-6 w-[200px] h-[200px] sm:w-[260px] sm:h-[260px] lg:absolute lg:top-1/2 lg:left-full lg:ml-10 lg:-translate-y-1/2 lg:w-[380px] lg:h-[380px] lg:mt-0">
-          <div class="absolute -bottom-4 -right-4 -z-10 h-24 w-24 lg:h-32 lg:w-32 rounded-3xl bg-gradient-to-br from-volf-orange/20 to-volf-amber/10 blur-2xl" aria-hidden="true"></div>
+          <div
+            class="absolute -bottom-4 -right-4 -z-10 h-24 w-24 lg:h-32 lg:w-32 rounded-3xl bg-gradient-to-br from-volf-orange/20 to-volf-amber/10 blur-2xl"
+            aria-hidden="true"
+          ></div>
           <Image
             src={profileImg}
             alt="yukiteru — volfread"
@@ -45,35 +62,36 @@ const posts = (await getCollection('blog', ({ data }) => data.lang === 'en' && (
           />
         </div>
         <p class="mt-6 text-base md:text-lg leading-relaxed text-volf-muted text-pretty">
-          {t('hero.subtitle')} All built with focus on performance, accessibility, clean code and community building.
+          {t('hero.subtitle')} All built with focus on performance, accessibility, clean code and
+          community building.
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
             href="/en/projects"
             class="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-br from-volf-orange to-volf-amber px-8 py-3 text-sm font-bold text-white shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg"
-            >{t('hero.cta.projects')}</a
           >
+            {t('hero.cta.projects')}
+          </a>
           <a
             href="/en/blog"
             class="inline-flex min-h-11 items-center justify-center rounded-full border border-volf-border bg-volf-surface/80 backdrop-blur px-8 py-3 text-sm font-semibold text-volf-text hover:border-volf-border-strong hover:bg-volf-surface transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg"
-            >{t('hero.cta.blog')}</a
           >
+            {t('hero.cta.blog')}
+          </a>
         </div>
         <div class="mt-8 flex flex-wrap gap-2">
-          {
-            [
-              { label: 'Go', icon: '●' },
-              { label: 'Python', icon: '◆' },
-              { label: 'TypeScript', icon: '▲' },
-              { label: 'Astro', icon: '⬣' },
-              { label: 'React', icon: '⬢' },
-              { label: 'Angular', icon: '⬔' },
-            ].map((s) => (
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-volf-glass-border bg-volf-surface/60 backdrop-blur px-3 py-1.5 text-xs font-medium text-volf-muted">
-                <span class="text-volf-orange text-[10px]">{s.icon}</span> {s.label}
-              </span>
-            ))
-          }
+          {[
+            { label: 'Go', icon: '●' },
+            { label: 'Python', icon: '◆' },
+            { label: 'TypeScript', icon: '▲' },
+            { label: 'Astro', icon: '⬣' },
+            { label: 'React', icon: '⬢' },
+            { label: 'Angular', icon: '⬔' },
+          ].map((s) => (
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-volf-glass-border bg-volf-surface/60 backdrop-blur px-3 py-1.5 text-xs font-medium text-volf-muted">
+              <span class="text-volf-orange text-[10px]">{s.icon}</span> {s.label}
+            </span>
+          ))}
         </div>
       </div>
     </div>
@@ -82,10 +100,17 @@ const posts = (await getCollection('blog', ({ data }) => data.lang === 'en' && (
   <section class="mx-auto max-w-6xl px-6 pb-12">
     <div class="flex items-end justify-between gap-4">
       <h2 class="font-display text-2xl md:text-3xl font-bold tracking-tight">Featured projects</h2>
-      <a href="/en/projects" class="text-sm font-medium text-volf-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-2 py-1">View all →</a>
+      <a
+        href="/en/projects"
+        class="text-sm font-medium text-volf-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-2 py-1"
+      >
+        View all →
+      </a>
     </div>
     <div class="mt-6 grid gap-4 md:grid-cols-2 auto-rows-fr">
-      {featured.map((p) => <ProjectCard {...(p as any)} locale="en" />)}
+      {featured.map((p) => (
+        <ProjectCard {...(p as any)} locale="en" />
+      ))}
     </div>
   </section>
 
@@ -93,25 +118,36 @@ const posts = (await getCollection('blog', ({ data }) => data.lang === 'en' && (
     <div class="rounded-3xl border border-volf-glass-border bg-volf-surface/60 backdrop-blur p-6 md:p-8">
       <div class="flex items-center justify-between gap-4">
         <h2 class="font-display text-xl font-bold">Blog</h2>
-        <a href="/en/blog" class="text-sm text-volf-orange hover:underline">View all →</a>
+        <a href="/en/blog" class="text-sm text-volf-orange hover:underline">
+          View all →
+        </a>
       </div>
-      {
-        posts.length === 0 ? (
-          <p class="mt-4 text-sm text-volf-muted">No posts yet.</p>
-        ) : (
-          <div class="mt-6 grid gap-4 md:grid-cols-3">
-            {posts.map((post) => (
-              <a href={`/en/blog/${post.slug.replace(/^en\//, '')}`} class="group rounded-2xl border border-volf-border bg-volf-bg/60 p-4 hover:border-volf-orange/30 hover:bg-volf-surface transition">
-                <p class="text-sm font-semibold group-hover:text-volf-orange transition line-clamp-2">{post.data.title}</p>
-                <p class="mt-1.5 text-xs leading-relaxed text-volf-muted line-clamp-2">{post.data.description}</p>
-                <p class="mt-3 text-xs text-volf-muted-2">
-                  {post.data.pubDate!.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </p>
-              </a>
-            ))}
-          </div>
-        )
-      }
+      {posts.length === 0 ? (
+        <p class="mt-4 text-sm text-volf-muted">No posts yet.</p>
+      ) : (
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          {posts.map((post) => (
+            <a
+              href={`/en/blog/${post.slug.replace(/^en\//, '')}`}
+              class="group rounded-2xl border border-volf-border bg-volf-bg/60 p-4 hover:border-volf-orange/30 hover:bg-volf-surface transition"
+            >
+              <p class="text-sm font-semibold group-hover:text-volf-orange transition line-clamp-2">
+                {post.data.title}
+              </p>
+              <p class="mt-1.5 text-xs leading-relaxed text-volf-muted line-clamp-2">
+                {post.data.description}
+              </p>
+              <p class="mt-3 text-xs text-volf-muted-2">
+                {post.data.pubDate!.toLocaleDateString('en-US', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              </p>
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

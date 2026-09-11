@@ -1,16 +1,16 @@
 ---
-title: "First Steps"
-description: "A new personal space for sharing thouhghs"
+title: 'First Steps'
+description: 'A new personal space for sharing thouhghs'
 pubDate: 2026-09-08T20:38:56.013Z
 lang: en
-categories: ["general"]
-tags: ["personal"]
-cover: "./cover.webp"
-coverAlt: ""
-translationKey: "primeros-pasos"
+categories: ['general']
+tags: ['personal']
+cover: './cover.webp'
+coverAlt: ''
+translationKey: 'primeros-pasos'
 draft: false
 math: false
-author: "Jose Maldonado \"Yukiteru Amano\""
+author: 'Jose Maldonado "Yukiteru Amano"'
 ---
 
 Hello, traveler!

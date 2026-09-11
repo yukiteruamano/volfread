@@ -5,6 +5,7 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 ## [Unreleased]
 
 ### Added
+
 - Estructura monorepo pnpm workspaces (`packages/main`, `eclipsescope`, `simulador-blockchain`)
 - Sitio Astro 5 estático con Tailwind 4 (tema oscuro negro #0A0A0A + naranja #FF6B00)
 - i18n ES (default sin prefijo) + EN (`/en/`) con `prefixDefaultLocale: false`
@@ -18,6 +19,7 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 ## [0.1.0] - 2026-09-06
 
 ### Added
+
 - Bootstrap inicial del repositorio (git, pnpm-workspace.yaml, configs base)
 
 [Unreleased]: https://github.com/yukiteruamano/volfread.xyz/compare/v0.1.0...HEAD

@@ -5,7 +5,10 @@ import BaseLayout from '../../../layouts/BaseLayout.astro'
 import { getAlternateUrls } from '../../../i18n/utils'
 
 const alternates = getAlternateUrls(Astro.url.pathname)
-let posts = await getCollection('blog', ({ data }) => data.lang === 'en' && (!import.meta.env.PROD || !data.draft))
+let posts = await getCollection(
+  'blog',
+  ({ data }) => data.lang === 'en' && (!import.meta.env.PROD || !data.draft)
+)
 posts = posts.sort((a, b) => b.data.pubDate!.valueOf() - a.data.pubDate!.valueOf())
 
 const searchIndex = posts.map((p) => ({
@@ -14,64 +17,116 @@ const searchIndex = posts.map((p) => ({
   url: `/en/blog/${p.slug.replace(/^en\//, '')}`,
   tags: p.data.tags,
   categories: p.data.categories ?? ['general'],
-  cover: typeof p.data.cover === 'string' ? p.data.cover : (p.data.cover as any)?.src ?? null,
+  cover: typeof p.data.cover === 'string' ? p.data.cover : ((p.data.cover as any)?.src ?? null),
 }))
 ---
 
-<BaseLayout title="Blog" description="volfread blog — notes on development, Go, Python, web and blockchain." lang="en" alternates={alternates}>
+<BaseLayout
+  title="Blog"
+  description="volfread blog — notes on development, Go, Python, web and blockchain."
+  lang="en"
+  alternates={alternates}
+>
   <section class="mx-auto max-w-3xl px-6 py-10">
     <h1 class="text-3xl font-black tracking-tight">Blog</h1>
-    <p class="mt-2 text-volf-muted">Notes in English. Also available in <a href="/blog" class="text-volf-orange hover:underline">Spanish →</a></p>
+    <p class="mt-2 text-volf-muted">
+      Notes in English. Also available in{' '}
+      <a href="/blog" class="text-volf-orange hover:underline">
+        Spanish →
+      </a>
+    </p>
 
-    <script type="application/json" id="blog-search-index" set:html={JSON.stringify(searchIndex).replace(/</g, '\u003c')} is:inline />
-
-    {
-      posts.length === 0 ? (
-        <p class="mt-10 rounded-xl border border-dashed border-volf-border bg-volf-surface p-6 text-sm text-volf-muted">No posts yet in this language.</p>
-      ) : (
-        <div class="mt-8 space-y-4" data-post-list>
-          {posts.map((post) => {
-            const postUrl = `/en/blog/${post.slug.replace(/^en\//, '')}`
-            return (
-              <article
-                data-post-card
-                data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${(post.data.categories ?? ['general']).join(' ')}`}
-                class="group flex flex-col rounded-2xl border border-volf-border bg-volf-surface hover:border-volf-orange/40 hover:shadow-[0_0_20px_rgba(255,107,0,0.08)] transition overflow-hidden"
-              >
-                <a href={postUrl} class="flex gap-4 p-4 group/card">
-                  <div class="shrink-0 w-[96px] h-[96px] sm:w-[140px] sm:h-[108px] rounded-xl overflow-hidden border border-volf-glass-border bg-volf-bg">
-                    {post.data.cover ? (
-                typeof post.data.cover === 'string' ? (
-                  <img src={post.data.cover} alt={post.data.coverAlt ?? post.data.title} loading="lazy" decoding="async" class="h-full w-full object-cover group-hover/card:scale-[1.02] transition duration-500" width="280" height="216" />
-                ) : (
-                  <Image src={post.data.cover} alt={post.data.coverAlt ?? post.data.title} width={280} height={216} loading="lazy" decoding="async" class="h-full w-full object-cover group-hover/card:scale-[1.02] transition duration-500" />
-                )
-              ) : (
-                      <div class="h-full w-full grid place-items-center bg-gradient-to-br from-volf-orange/20 to-volf-amber/10 text-volf-orange text-xs font-bold">VOLF</div>
-                    )}
-                  </div>
-                  <div class="min-w-0 flex-1 py-1">
-                    <h2 class="font-semibold text-volf-text line-clamp-2 group-hover/card:text-volf-orange transition">{post.data.title}</h2>
-                    <p class="mt-1 text-sm text-volf-muted line-clamp-2">{post.data.description}</p>
-                    <div class="mt-2 flex items-center gap-2 text-xs text-volf-muted-2">
-                      <time datetime={post.data.pubDate!.toISOString()}>{post.data.pubDate!.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-                      <span class="ml-auto inline-flex items-center justify-center rounded-full bg-volf-glass border border-volf-glass-border w-6 h-6 text-[10px] leading-none group-hover/card:bg-volf-orange group-hover/card:text-white group-hover/card:border-transparent transition">→</span>
+    <script
+      type="application/json"
+      id="blog-search-index"
+      set:html={JSON.stringify(searchIndex).replace(/</g, '\u003c')}
+      is:inline
+    ></script>
+    {posts.length === 0 ? (
+      <p class="mt-10 rounded-xl border border-dashed border-volf-border bg-volf-surface p-6 text-sm text-volf-muted">
+        No posts yet in this language.
+      </p>
+    ) : (
+      <div class="mt-8 space-y-4" data-post-list>
+        {posts.map((post) => {
+          const postUrl = `/en/blog/${post.slug.replace(/^en\//, '')}`
+          return (
+            <article
+              data-post-card
+              data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${(post.data.categories ?? ['general']).join(' ')}`}
+              class="group flex flex-col rounded-2xl border border-volf-border bg-volf-surface hover:border-volf-orange/40 hover:shadow-[0_0_20px_rgba(255,107,0,0.08)] transition overflow-hidden"
+            >
+              <a href={postUrl} class="flex gap-4 p-4 group/card">
+                <div class="shrink-0 w-[96px] h-[96px] sm:w-[140px] sm:h-[108px] rounded-xl overflow-hidden border border-volf-glass-border bg-volf-bg">
+                  {post.data.cover ? (
+                    typeof post.data.cover === 'string' ? (
+                      <img
+                        src={post.data.cover}
+                        alt={post.data.coverAlt ?? post.data.title}
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover group-hover/card:scale-[1.02] transition duration-500"
+                        width="280"
+                        height="216"
+                      />
+                    ) : (
+                      <Image
+                        src={post.data.cover}
+                        alt={post.data.coverAlt ?? post.data.title}
+                        width={280}
+                        height={216}
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover group-hover/card:scale-[1.02] transition duration-500"
+                      />
+                    )
+                  ) : (
+                    <div class="h-full w-full grid place-items-center bg-gradient-to-br from-volf-orange/20 to-volf-amber/10 text-volf-orange text-xs font-bold">
+                      VOLF
                     </div>
-                  </div>
-                </a>
-                <div class="mx-4 mb-3 flex flex-wrap gap-1.5 border-t border-volf-border/60 pt-3">
-                  {(post.data.categories ?? ['general']).slice(0, 2).map((c: string) => (
-                    <a href={`/en/blog/category/${encodeURIComponent(c)}`} class="rounded-full bg-volf-glass border border-volf-glass-border px-2 py-0.5 text-[10px] leading-none text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition">{c}</a>
-                  ))}
-                  {post.data.tags.slice(0, 2).map((t: string) => (
-                    <a href={`/en/blog/tag/${encodeURIComponent(t)}`} class="rounded-full bg-volf-bg border border-volf-border px-2 py-0.5 text-[10px] leading-none text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition">#{t}</a>
-                  ))}
+                  )}
                 </div>
-              </article>
-            )
-          })}
-        </div>
-      )
-    }
+                <div class="min-w-0 flex-1 py-1">
+                  <h2 class="font-semibold text-volf-text line-clamp-2 group-hover/card:text-volf-orange transition">
+                    {post.data.title}
+                  </h2>
+                  <p class="mt-1 text-sm text-volf-muted line-clamp-2">{post.data.description}</p>
+                  <div class="mt-2 flex items-center gap-2 text-xs text-volf-muted-2">
+                    <time datetime={post.data.pubDate!.toISOString()}>
+                      {post.data.pubDate!.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    <span class="ml-auto inline-flex items-center justify-center rounded-full bg-volf-glass border border-volf-glass-border w-6 h-6 text-[10px] leading-none group-hover/card:bg-volf-orange group-hover/card:text-white group-hover/card:border-transparent transition">
+                      →
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <div class="mx-4 mb-3 flex flex-wrap gap-1.5 border-t border-volf-border/60 pt-3">
+                {(post.data.categories ?? ['general']).slice(0, 2).map((c: string) => (
+                  <a
+                    href={`/en/blog/category/${encodeURIComponent(c)}`}
+                    class="rounded-full bg-volf-glass border border-volf-glass-border px-2 py-0.5 text-[10px] leading-none text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition"
+                  >
+                    {c}
+                  </a>
+                ))}
+                {post.data.tags.slice(0, 2).map((t: string) => (
+                  <a
+                    href={`/en/blog/tag/${encodeURIComponent(t)}`}
+                    class="rounded-full bg-volf-bg border border-volf-border px-2 py-0.5 text-[10px] leading-none text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition"
+                  >
+                    #{t}
+                  </a>
+                ))}
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    )}
   </section>
 </BaseLayout>

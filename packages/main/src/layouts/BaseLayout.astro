@@ -73,7 +73,7 @@ const personJsonLd = {
 }
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={lang} class="dark">
   <head>
     <meta charset="utf-8" />
@@ -97,9 +97,15 @@ const personJsonLd = {
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:site_name" content="volfread.xyz" />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_ES'} />
-    {alternates && <meta property="og:locale:alternate" content={lang === 'en' ? 'es_ES' : 'en_US'} />}
-    {isArticle && article?.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
-    {isArticle && article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+    {alternates && (
+      <meta property="og:locale:alternate" content={lang === 'en' ? 'es_ES' : 'en_US'} />
+    )}
+    {isArticle && article?.publishedTime && (
+      <meta property="article:published_time" content={article.publishedTime} />
+    )}
+    {isArticle && article?.modifiedTime && (
+      <meta property="article:modified_time" content={article.modifiedTime} />
+    )}
     {isArticle && article?.author && <meta property="article:author" content={article.author} />}
     {isArticle && article?.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
     {isArticle && <meta property="article:section" content="Blog" />}
@@ -115,7 +121,12 @@ const personJsonLd = {
     <meta name="twitter:url" content={ogUrl} />
 
     <link rel="alternate" type="application/rss+xml" title="RSS — volfread.xyz" href="/rss.xml" />
-    <link rel="alternate" type="application/rss+xml" title="RSS — volfread.xyz (EN)" href="/en/rss.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS — volfread.xyz (EN)"
+      href="/en/rss.xml"
+    />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -126,9 +137,16 @@ const personJsonLd = {
     <ClientRouter />
     <title>{title} — volfread.xyz</title>
 
-    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd).replace(/</g, '\\u003c')} is:inline />
-    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd).replace(/</g, '\\u003c')} is:inline />
-
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteJsonLd).replace(/</g, '\\u003c')}
+      is:inline
+    ></script>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(personJsonLd).replace(/</g, '\\u003c')}
+      is:inline
+    ></script>
     <!-- Cloudflare Web Analytics: activa en CF Dashboard → Web Analytics o descomenta beacon -->
     <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{\"token\": \"REPLACE_WITH_TOKEN\"}'></script> -->
   </head>
@@ -136,8 +154,9 @@ const personJsonLd = {
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] rounded-full bg-volf-orange px-4 py-2 text-sm font-bold text-white"
-      >Saltar al contenido</a
     >
+      Saltar al contenido
+    </a>
     <Header lang={lang} />
     <main id="main" class="flex-1">
       <slot />

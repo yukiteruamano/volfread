@@ -2,14 +2,41 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
-<BaseLayout title="Página no encontrada — 404" description="La página que buscas no existe." lang="es" noIndex={true}>
+<BaseLayout
+  title="Página no encontrada — 404"
+  description="La página que buscas no existe."
+  lang="es"
+  noIndex={true}
+>
   <section class="mx-auto max-w-3xl px-6 py-20 text-center" data-404-root>
-    <p class="inline-flex items-center gap-2 rounded-full border border-volf-border bg-volf-surface px-3 py-1 text-xs tracking-widest text-volf-muted uppercase">Error 404</p>
-    <h1 class="mt-6 font-display text-4xl font-black tracking-tight" data-404-title>Página no encontrada</h1>
-    <p class="mt-4 text-volf-muted" data-404-desc>La ruta <code class="text-volf-amber" data-404-path>{Astro.url.pathname}</code> no existe o fue movida.</p>
+    <p class="inline-flex items-center gap-2 rounded-full border border-volf-border bg-volf-surface px-3 py-1 text-xs tracking-widest text-volf-muted uppercase">
+      Error 404
+    </p>
+    <h1 class="mt-6 font-display text-4xl font-black tracking-tight" data-404-title>
+      Página no encontrada
+    </h1>
+    <p class="mt-4 text-volf-muted" data-404-desc>
+      La ruta{' '}
+      <code class="text-volf-amber" data-404-path>
+        {Astro.url.pathname}
+      </code>{' '}
+      no existe o fue movida.
+    </p>
     <div class="mt-8 flex justify-center gap-3">
-      <a href="/" data-404-home class="inline-flex min-h-11 items-center justify-center rounded-full bg-volf-orange px-6 py-2.5 text-sm font-bold text-white hover:bg-volf-orange-soft">Ir al inicio →</a>
-      <a href="/proyectos" data-404-projects class="inline-flex min-h-11 items-center justify-center rounded-full border border-volf-border bg-volf-surface px-6 py-2.5 text-sm font-semibold hover:border-volf-border-strong">Ver proyectos</a>
+      <a
+        href="/"
+        data-404-home
+        class="inline-flex min-h-11 items-center justify-center rounded-full bg-volf-orange px-6 py-2.5 text-sm font-bold text-white hover:bg-volf-orange-soft"
+      >
+        Ir al inicio →
+      </a>
+      <a
+        href="/proyectos"
+        data-404-projects
+        class="inline-flex min-h-11 items-center justify-center rounded-full border border-volf-border bg-volf-surface px-6 py-2.5 text-sm font-semibold hover:border-volf-border-strong"
+      >
+        Ver proyectos
+      </a>
     </div>
   </section>
   <script is:inline>
@@ -31,8 +58,14 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         desc.childNodes[2].textContent = ' does not exist or was moved.'
       }
       if (pathEl) pathEl.textContent = path
-      if (home) { home.textContent = 'Go home →'; home.setAttribute('href', '/en') }
-      if (projects) { projects.textContent = 'View projects'; projects.setAttribute('href', '/en/projects') }
+      if (home) {
+        home.textContent = 'Go home →'
+        home.setAttribute('href', '/en')
+      }
+      if (projects) {
+        projects.textContent = 'View projects'
+        projects.setAttribute('href', '/en/projects')
+      }
       // Update html title
       document.title = 'Page not found — 404 — volfread.xyz'
     })()

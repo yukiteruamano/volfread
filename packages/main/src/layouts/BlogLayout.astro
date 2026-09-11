@@ -21,12 +21,27 @@ interface Props {
   readingTime?: number
   math?: boolean
 }
-const { title, description, pubDate, updatedDate, lang = 'es', tags = [], categories = ['general'], canonical, alternates, cover, coverAlt, author = 'Jose Maldonado "Yukiteru Amano"', readingTime, math = false } = Astro.props
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  lang = 'es',
+  tags = [],
+  categories = ['general'],
+  canonical,
+  alternates,
+  cover,
+  coverAlt,
+  author = 'Jose Maldonado "Yukiteru Amano"',
+  readingTime,
+  math = false,
+} = Astro.props
 void math
 
 const site = 'https://volfread.xyz'
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString()
-const ogImage = typeof cover === 'string' ? cover : cover?.src ?? '/og-default.png'
+const ogImage = typeof cover === 'string' ? cover : (cover?.src ?? '/og-default.png')
 const ogImageForHead = typeof ogImage === 'string' ? ogImage : '/og-default.png'
 const publishedTime = pubDate.toISOString()
 const modifiedTime = (updatedDate ?? pubDate).toISOString()
@@ -36,7 +51,10 @@ const blogPostingJsonLd = {
   '@type': 'BlogPosting',
   headline: title,
   description,
-  image: new URL(typeof ogImage === 'string' ? ogImage : ogImage.src ?? '/og-default.png', site).toString(),
+  image: new URL(
+    typeof ogImage === 'string' ? ogImage : (ogImage.src ?? '/og-default.png'),
+    site
+  ).toString(),
   datePublished: publishedTime,
   dateModified: modifiedTime,
   author: {
@@ -62,8 +80,18 @@ const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Inicio', item: lang === 'en' ? `${site}/en` : site },
-    { '@type': 'ListItem', position: 2, name: 'Blog', item: lang === 'en' ? `${site}/en/blog` : `${site}/blog` },
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: lang === 'en' ? 'Home' : 'Inicio',
+      item: lang === 'en' ? `${site}/en` : site,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Blog',
+      item: lang === 'en' ? `${site}/en/blog` : `${site}/blog`,
+    },
     { '@type': 'ListItem', position: 3, name: title, item: canonicalUrl },
   ],
 }
@@ -109,11 +137,21 @@ const breadcrumbJsonLd = {
     )}
     <header class="mb-8">
       <div class="flex items-center gap-2 text-xs tracking-widest uppercase text-volf-orange">
-        <a href={lang === 'en' ? '/en/blog' : '/blog'} class="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-1">Blog</a>
+        <a
+          href={lang === 'en' ? '/en/blog' : '/blog'}
+          class="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-1"
+        >
+          Blog
+        </a>
         {categories[0] && categories[0] !== 'general' && (
           <>
             <span class="text-volf-muted-2">·</span>
-            <a href={`${lang === 'en' ? '/en' : ''}/blog/category/${encodeURIComponent(categories[0])}`} class="text-volf-muted hover:text-volf-orange hover:underline">{categories[0]}</a>
+            <a
+              href={`${lang === 'en' ? '/en' : ''}/blog/category/${encodeURIComponent(categories[0])}`}
+              class="text-volf-muted hover:text-volf-orange hover:underline"
+            >
+              {categories[0]}
+            </a>
           </>
         )}
         {(!categories[0] || categories[0] === 'general') && tags[0] && (
@@ -123,7 +161,9 @@ const breadcrumbJsonLd = {
           </>
         )}
       </div>
-      <h1 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-volf-text text-balance">{title}</h1>
+      <h1 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-volf-text text-balance">
+        {title}
+      </h1>
       {description && <p class="mt-3 text-lg text-volf-muted leading-relaxed">{description}</p>}
       <div class="mt-6 flex items-center gap-3 border-y border-volf-border py-4">
         <img
@@ -139,19 +179,26 @@ const breadcrumbJsonLd = {
           <p class="text-sm font-semibold text-volf-text leading-none">{author}</p>
           <p class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-volf-muted-2">
             <time datetime={pubDate.toISOString()}>
-              {pubDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+              {pubDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
             </time>
             {readingTime && (
               <>
                 <span>·</span>
-                <span>{readingTime} {lang === 'en' ? 'min read' : 'min lectura'}</span>
+                <span>
+                  {readingTime} {lang === 'en' ? 'min read' : 'min lectura'}
+                </span>
               </>
             )}
             {updatedDate && (
               <>
                 <span>·</span>
                 <span>
-                  {lang === 'en' ? 'upd.' : 'act.'} {updatedDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-ES')}
+                  {lang === 'en' ? 'upd.' : 'act.'}{' '}
+                  {updatedDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-ES')}
                 </span>
               </>
             )}
@@ -160,34 +207,54 @@ const breadcrumbJsonLd = {
         {(tags.length > 0 || categories.length > 0) && (
           <div class="ml-auto hidden sm:flex flex-wrap gap-1.5 justify-end max-w-[40%]">
             {categories.slice(0, 1).map((c: string) => (
-              <a href={`${lang === 'en' ? '/en' : ''}/blog/category/${encodeURIComponent(c)}`} class="rounded-full border border-volf-orange/20 bg-volf-glass px-2.5 py-0.5 text-xs text-volf-orange hover:bg-volf-orange hover:text-white transition">{c}</a>
+              <a
+                href={`${lang === 'en' ? '/en' : ''}/blog/category/${encodeURIComponent(c)}`}
+                class="rounded-full border border-volf-orange/20 bg-volf-glass px-2.5 py-0.5 text-xs text-volf-orange hover:bg-volf-orange hover:text-white transition"
+              >
+                {c}
+              </a>
             ))}
             {tags.slice(0, 2).map((t: string) => (
-              <a href={`${lang === 'en' ? '/en' : ''}/blog/tag/${encodeURIComponent(t)}`} class="rounded-full border border-volf-border bg-volf-surface px-2.5 py-0.5 text-xs text-volf-muted hover:text-volf-orange">#{t}</a>
+              <a
+                href={`${lang === 'en' ? '/en' : ''}/blog/tag/${encodeURIComponent(t)}`}
+                class="rounded-full border border-volf-border bg-volf-surface px-2.5 py-0.5 text-xs text-volf-muted hover:text-volf-orange"
+              >
+                #{t}
+              </a>
             ))}
           </div>
         )}
       </div>
     </header>
-    <div
-      class="prose-blog prose prose-invert max-w-none prose-headings:text-volf-text prose-a:text-volf-orange prose-a:no-underline hover:prose-a:underline prose-strong:text-volf-text prose-code:text-volf-amber prose-pre:bg-volf-surface prose-pre:border prose-pre:border-volf-border"
-    >
+    <div class="prose-blog prose prose-invert max-w-none prose-headings:text-volf-text prose-a:text-volf-orange prose-a:no-underline hover:prose-a:underline prose-strong:text-volf-text prose-code:text-volf-amber prose-pre:bg-volf-surface prose-pre:border prose-pre:border-volf-border">
       <slot />
     </div>
 
     {(tags.length > 0 || categories.length > 0) && (
       <div class="mt-10 flex flex-wrap gap-2 border-t border-volf-border pt-6">
         {categories.map((c: string) => (
-          <a href={`${lang === 'en' ? '/en' : ''}/blog/category/${encodeURIComponent(c)}`} class="rounded-full border border-volf-orange/20 bg-volf-glass px-3 py-1 text-xs font-medium text-volf-orange hover:bg-volf-orange hover:text-white transition">{c}</a>
+          <a
+            href={`${lang === 'en' ? '/en' : ''}/blog/category/${encodeURIComponent(c)}`}
+            class="rounded-full border border-volf-orange/20 bg-volf-glass px-3 py-1 text-xs font-medium text-volf-orange hover:bg-volf-orange hover:text-white transition"
+          >
+            {c}
+          </a>
         ))}
         {tags.map((t: string) => (
-          <a href={`${lang === 'en' ? '/en' : ''}/blog/tag/${encodeURIComponent(t)}`} class="rounded-full border border-volf-border bg-volf-surface px-3 py-1 text-xs font-medium text-volf-muted hover:text-volf-orange hover:border-volf-orange/30">#{t}</a>
+          <a
+            href={`${lang === 'en' ? '/en' : ''}/blog/tag/${encodeURIComponent(t)}`}
+            class="rounded-full border border-volf-border bg-volf-surface px-3 py-1 text-xs font-medium text-volf-muted hover:text-volf-orange hover:border-volf-orange/30"
+          >
+            #{t}
+          </a>
         ))}
       </div>
     )}
 
     <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-volf-border pt-6">
-      <p class="text-xs tracking-widest uppercase text-volf-muted-2">{lang === 'en' ? 'Share' : 'Compartir'}</p>
+      <p class="text-xs tracking-widest uppercase text-volf-muted-2">
+        {lang === 'en' ? 'Share' : 'Compartir'}
+      </p>
       <div class="flex gap-2">
         <a
           href={`https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(canonicalUrl)}`}
@@ -196,7 +263,9 @@ const breadcrumbJsonLd = {
           aria-label="Share on X"
           class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-volf-border bg-volf-surface text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.6 7.56L23 22h-6.1l-4.78-6.24L6.65 22H3.53l7.06-8.09L3 2h6.27l4.32 5.64L18.9 2z" /></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18.9 2H22l-6.6 7.56L23 22h-6.1l-4.78-6.24L6.65 22H3.53l7.06-8.09L3 2h6.27l4.32 5.64L18.9 2z" />
+          </svg>
         </a>
         <a
           href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
@@ -205,7 +274,9 @@ const breadcrumbJsonLd = {
           aria-label="Share on Facebook"
           class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-volf-border bg-volf-surface text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.76 0-5 2.24-5 5v3H6v4h3v5h4v-5h3l1-4h-4V9c0-.55.45-1 1-1z" /></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M14 8h3V4h-3c-2.76 0-5 2.24-5 5v3H6v4h3v5h4v-5h3l1-4h-4V9c0-.55.45-1 1-1z" />
+          </svg>
         </a>
         <a
           href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(title)}`}
@@ -214,7 +285,9 @@ const breadcrumbJsonLd = {
           aria-label="Share on LinkedIn"
           class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-volf-border bg-volf-surface text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+          </svg>
         </a>
       </div>
     </div>
@@ -236,7 +309,10 @@ const breadcrumbJsonLd = {
             ? 'Developer, sysadmin and free software activist. I build tools, libraries and web experiences on open-source.'
             : 'Desarrollador, sysadmin y activista del software libre. Construyo herramientas, librerías y experiencias web en open-source.'}
         </p>
-        <a href={lang === 'en' ? '/en/about' : '/about'} class="mt-2 inline-flex text-xs font-medium text-volf-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-1">
+        <a
+          href={lang === 'en' ? '/en/about' : '/about'}
+          class="mt-2 inline-flex text-xs font-medium text-volf-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange rounded-full px-1"
+        >
           {lang === 'en' ? 'Read more →' : 'Leer más →'}
         </a>
       </div>
@@ -245,6 +321,14 @@ const breadcrumbJsonLd = {
     <hr class="my-10 border-volf-border" />
     <Giscus lang={lang} />
   </article>
-  <script type="application/ld+json" set:html={JSON.stringify(blogPostingJsonLd).replace(/</g, '\\u003c')} is:inline />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c')} is:inline />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(blogPostingJsonLd).replace(/</g, '\\u003c')}
+    is:inline
+  ></script>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c')}
+    is:inline
+  ></script>
 </BaseLayout>

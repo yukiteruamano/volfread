@@ -1,16 +1,16 @@
 ---
-title: "AppArmor, una poderosa herramienta de seguridad"
-description: "Aprende a como activar y configurar AppArmor en GNU/Linux"
+title: 'AppArmor, una poderosa herramienta de seguridad'
+description: 'Aprende a como activar y configurar AppArmor en GNU/Linux'
 pubDate: 2026-09-08T20:59:15.901Z
 lang: es
-categories: ["seguridad"]
-tags: ["apparmor", "seguridad", "linux"]
-cover: "./cover.webp"
-coverAlt: ""
-translationKey: "apparmor-introduction"
+categories: ['seguridad']
+tags: ['apparmor', 'seguridad', 'linux']
+cover: './cover.webp'
+coverAlt: ''
+translationKey: 'apparmor-introduction'
 draft: false
 math: false
-author: "Jose Maldonado \"Yukiteru Amano\""
+author: 'Jose Maldonado "Yukiteru Amano"'
 ---
 
 En el mundo de la seguridad informática, la protección de nuestros sistemas operativos es una prioridad constante. GNU/Linux, conocido por su robustez, no está exento de amenazas. Afortunadamente, contamos con herramientas poderosas que nos ayudan a fortificar nuestras distribuciones. Una de ellas, a menudo subestimada pero increíblemente efectiva, es **AppArmor**.
@@ -19,7 +19,7 @@ En el mundo de la seguridad informática, la protección de nuestros sistemas op
 
 AppArmor (Application Armor) es un módulo de seguridad del kernel de Linux que se centra en el control de acceso obligatorio (MAC). A diferencia de los sistemas de control de acceso discrecional (DAC) tradicionales (como los permisos de usuario y grupo), AppArmor permite definir políticas de seguridad a nivel de aplicación.
 
-![AppArmor, uno de los MAC más desarrollados dentro del kernel Linux](./apparmor-logo.jpg) 
+![AppArmor, uno de los MAC más desarrollados dentro del kernel Linux](./apparmor-logo.jpg)
 
 En términos más sencillos, AppArmor te permite decirle a cada programa específico qué puede y qué no puede hacer en tu sistema. Esto incluye:
 
@@ -45,7 +45,7 @@ sudo aa-status
 
 Si AppArmor está operativo, verás una salida similar a esta, indicando los perfiles de aplicaciones que están actualmente en modo **Enforcing** o **Complain**:
 
-``` bash
+```bash
 apparmor module is loaded.
 1 profiles are loaded.
 3 processes are unconfined.
@@ -83,7 +83,7 @@ Cada perfil contiene directivas que especifican:
 
 Modos:
 
-- **Enforcing*: Las reglas del perfil se aplican estrictamente. Cualquier intento de violar una regla será bloqueado y registrado.
+- *_Enforcing_: Las reglas del perfil se aplican estrictamente. Cualquier intento de violar una regla será bloqueado y registrado.
 - **Complain**: Las reglas del perfil se validan, pero las violaciones no se bloquean. Solo se registran las violaciones. Esto es útil para depurar perfiles.
 - **Disabled**: El perfil está completamente inactivo para la aplicación.
 
@@ -99,7 +99,7 @@ El resultado es sorprendente. La mayoría de daemons (ej: rpcbind, Docker y libv
 
 ```bash
 # Instalando las dependencias
-sudo apt install apparmor-profiles build-essential \ 
+sudo apt install apparmor-profiles build-essential \
      config-package-dev debhelper golang-go rsync git
 
 # Clonando el repositorio
@@ -117,4 +117,4 @@ Ya con estos pasos tienes +1500 perfiles de AppArmor listos para usar, en lo que
 
 **¿Sirve esto para otros sistemas?** Claro, siempre y cuando tu distro genere un kernel con AppArmor, no tendrás problemas, así que podrás usarlo en Fedora/Red Hat compatibles (si no te gusta SELinux), SUSE (donde ya viene activo por defecto), ArchLinux y derivadas, entre otras.
 
-Lo mejor en todo caso, es que no tendrás que configurar todo a mano con estos perfiles y perfiles de seguridad como Firefox o Chromium (y todos sus derivados), funcionan muy bien tal como están. Esto te da la seguridad, de que incluso siendo atacado, tienes una protección extra para evitar daños al sistema, algo muy útil en servidores o si eres un cuasi-paranoico de la seguridad. La paz mental, que ofrece es única y aprendes mucho sobre la seguridad en Linux. 
+Lo mejor en todo caso, es que no tendrás que configurar todo a mano con estos perfiles y perfiles de seguridad como Firefox o Chromium (y todos sus derivados), funcionan muy bien tal como están. Esto te da la seguridad, de que incluso siendo atacado, tienes una protección extra para evitar daños al sistema, algo muy útil en servidores o si eres un cuasi-paranoico de la seguridad. La paz mental, que ofrece es única y aprendes mucho sobre la seguridad en Linux.

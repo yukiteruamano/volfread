@@ -7,12 +7,21 @@ import proyectos from '../../../data/proyectos.json'
 const alternates = getAlternateUrls(Astro.url.pathname)
 ---
 
-<BaseLayout title="Projects" description="volfread portfolio — webs, libraries and CLIs." lang="en" alternates={alternates}>
+<BaseLayout
+  title="Projects"
+  description="volfread portfolio — webs, libraries and CLIs."
+  lang="en"
+  alternates={alternates}
+>
   <section class="mx-auto max-w-6xl px-6 py-10">
     <h1 class="text-3xl font-black tracking-tight">Projects</h1>
-    <p class="mt-2 max-w-2xl text-volf-muted">Discover my main development projects — interactive webs, libraries and open-source tools.</p>
+    <p class="mt-2 max-w-2xl text-volf-muted">
+      Discover my main development projects — interactive webs, libraries and open-source tools.
+    </p>
     <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {proyectos.map((p) => <ProjectCard {...(p as any)} locale="en" />)}
+      {proyectos.map((p) => (
+        <ProjectCard {...(p as any)} locale="en" />
+      ))}
     </div>
   </section>
 </BaseLayout>

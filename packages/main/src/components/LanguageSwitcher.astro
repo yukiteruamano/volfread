@@ -1,7 +1,9 @@
 ---
 import type { Locale } from '../i18n/ui'
 import { getAlternateUrls } from '../i18n/utils'
-interface Props { lang: Locale }
+interface Props {
+  lang: Locale
+}
 const { lang } = Astro.props
 const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
 ---
@@ -15,7 +17,9 @@ const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
     href={esHref}
     class:list={[
       'rounded-full px-3 py-1.5 font-medium transition min-h-8 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange',
-      lang === 'es' ? 'bg-volf-orange text-white shadow-sm' : 'text-volf-muted hover:text-volf-text',
+      lang === 'es'
+        ? 'bg-volf-orange text-white shadow-sm'
+        : 'text-volf-muted hover:text-volf-text',
     ]}
     aria-current={lang === 'es' ? 'page' : undefined}
     lang="es"
@@ -26,7 +30,9 @@ const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
     href={enHref}
     class:list={[
       'rounded-full px-3 py-1.5 font-medium transition min-h-8 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange',
-      lang === 'en' ? 'bg-volf-orange text-white shadow-sm' : 'text-volf-muted hover:text-volf-text',
+      lang === 'en'
+        ? 'bg-volf-orange text-white shadow-sm'
+        : 'text-volf-muted hover:text-volf-text',
     ]}
     aria-current={lang === 'en' ? 'page' : undefined}
     lang="en"

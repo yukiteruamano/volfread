@@ -12,19 +12,61 @@ const year = new Date().getFullYear()
     <div class="grid gap-8 md:grid-cols-4">
       <div>
         <a href={lang === 'en' ? '/en/' : '/'} class="inline-flex items-center gap-2 font-bold">
-          <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-volf-orange to-volf-amber text-xs font-black text-white">V</span>
-          <span class="text-sm">volfread<span class="text-volf-orange">.xyz</span></span>
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-volf-orange to-volf-amber text-xs font-black text-white">
+            V
+          </span>
+          <span class="text-sm">
+            volfread<span class="text-volf-orange">.xyz</span>
+          </span>
         </a>
-        <p class="mt-3 text-xs leading-relaxed text-volf-muted">Crafted with Astro + Tailwind · Dark · Open-source · {year}</p>
+        <p class="mt-3 text-xs leading-relaxed text-volf-muted">
+          Crafted with Astro + Tailwind · Dark · Open-source · {year}
+        </p>
       </div>
-      <nav aria-label={lang === 'en' ? 'Footer navigation' : 'Navegación pie'} class="flex flex-col gap-2 text-sm">
-        <a href={lang === 'en' ? '/en/projects' : '/proyectos'} class="text-volf-muted hover:text-volf-orange hover:underline w-fit"> {t('nav.projects')} </a>
-        <a href={lang === 'en' ? '/en/blog' : '/blog'} class="text-volf-muted hover:text-volf-orange hover:underline w-fit"> {t('nav.blog')} </a>
-        <a href={lang === 'en' ? '/en/about' : '/about'} class="text-volf-muted hover:text-volf-orange hover:underline w-fit"> {t('nav.about')} </a>
+      <nav
+        aria-label={lang === 'en' ? 'Footer navigation' : 'Navegación pie'}
+        class="flex flex-col gap-2 text-sm"
+      >
+        <a
+          href={lang === 'en' ? '/en/projects' : '/proyectos'}
+          class="text-volf-muted hover:text-volf-orange hover:underline w-fit"
+        >
+          {' '}
+          {t('nav.projects')}{' '}
+        </a>
+        <a
+          href={lang === 'en' ? '/en/blog' : '/blog'}
+          class="text-volf-muted hover:text-volf-orange hover:underline w-fit"
+        >
+          {' '}
+          {t('nav.blog')}{' '}
+        </a>
+        <a
+          href={lang === 'en' ? '/en/about' : '/about'}
+          class="text-volf-muted hover:text-volf-orange hover:underline w-fit"
+        >
+          {' '}
+          {t('nav.about')}{' '}
+        </a>
       </nav>
-      <nav aria-label={lang === 'en' ? 'Tags and categories' : 'Etiquetas y categorías'} class="flex flex-col gap-2 text-sm">
-        <a href={lang === 'en' ? '/en/blog/tags' : '/blog/tags'} class="text-volf-muted hover:text-volf-orange hover:underline w-fit"> {t('nav.tags')} </a>
-        <a href={lang === 'en' ? '/en/blog/categories' : '/blog/categories'} class="text-volf-muted hover:text-volf-orange hover:underline w-fit"> {t('nav.categories')} </a>
+      <nav
+        aria-label={lang === 'en' ? 'Tags and categories' : 'Etiquetas y categorías'}
+        class="flex flex-col gap-2 text-sm"
+      >
+        <a
+          href={lang === 'en' ? '/en/blog/tags' : '/blog/tags'}
+          class="text-volf-muted hover:text-volf-orange hover:underline w-fit"
+        >
+          {' '}
+          {t('nav.tags')}{' '}
+        </a>
+        <a
+          href={lang === 'en' ? '/en/blog/categories' : '/blog/categories'}
+          class="text-volf-muted hover:text-volf-orange hover:underline w-fit"
+        >
+          {' '}
+          {t('nav.categories')}{' '}
+        </a>
       </nav>
       <div class="flex flex-col gap-3">
         <p class="text-xs tracking-widest text-volf-muted uppercase">Connect</p>
@@ -36,7 +78,9 @@ const year = new Date().getFullYear()
             target="_blank"
             rel="noopener noreferrer"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .26.18.58.69.48A10 10 0 0022 12c0-5.52-4.48-10-10-10z"></path></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .26.18.58.69.48A10 10 0 0022 12c0-5.52-4.48-10-10-10z"></path>
+            </svg>
           </a>
           <a
             href="https://x.com/yukiteru_amano"
@@ -45,7 +89,9 @@ const year = new Date().getFullYear()
             target="_blank"
             rel="noopener noreferrer"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.6 7.56L23 22h-6.1l-4.78-6.24L6.65 22H3.53l7.06-8.09L3 2h6.27l4.32 5.64L18.9 2z"></path></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.9 2H22l-6.6 7.56L23 22h-6.1l-4.78-6.24L6.65 22H3.53l7.06-8.09L3 2h6.27l4.32 5.64L18.9 2z"></path>
+            </svg>
           </a>
           <a
             href="https://www.linkedin.com/in/jos%C3%A9-maldonado-4520a715a/"
@@ -54,14 +100,28 @@ const year = new Date().getFullYear()
             target="_blank"
             rel="noopener noreferrer"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+            </svg>
           </a>
           <a
             href="/rss.xml"
             class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-volf-border bg-volf-bg text-volf-muted hover:text-volf-orange hover:border-volf-orange/30 hover:bg-volf-surface transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
             aria-label="RSS"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
           </a>
         </div>
         <p class="text-xs text-volf-muted-2">{t('footer.rights', { year: String(year) })}</p>

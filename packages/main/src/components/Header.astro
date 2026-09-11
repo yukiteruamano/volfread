@@ -32,26 +32,28 @@ const isBlog = path.startsWith('/blog') || path.startsWith('/en/blog')
       class="flex items-center gap-2 font-bold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg rounded-full"
       aria-label="volfread.xyz — inicio"
     >
-      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-volf-orange to-volf-amber text-xs font-black text-white shadow-glow">V</span>
-      <span class="text-[15px] font-display">volfread<span class="text-volf-orange">.xyz</span></span>
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-volf-orange to-volf-amber text-xs font-black text-white shadow-glow">
+        V
+      </span>
+      <span class="text-[15px] font-display">
+        volfread<span class="text-volf-orange">.xyz</span>
+      </span>
     </a>
     <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
-      {
-        nav.map((item) => (
-          <a
-            href={item.href}
-            aria-current={isActive(item.href) ? 'page' : undefined}
-            class:list={[
-              'rounded-full px-3.5 py-2 text-sm font-medium transition inline-flex items-center min-h-9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg',
-              isActive(item.href)
-                ? 'bg-volf-surface text-volf-text border border-volf-border shadow-sm'
-                : 'text-volf-muted hover:text-volf-text hover:bg-volf-surface/80',
-            ]}
-          >
-            {item.label}
-          </a>
-        ))
-      }
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+          class:list={[
+            'rounded-full px-3.5 py-2 text-sm font-medium transition inline-flex items-center min-h-9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg',
+            isActive(item.href)
+              ? 'bg-volf-surface text-volf-text border border-volf-border shadow-sm'
+              : 'text-volf-muted hover:text-volf-text hover:bg-volf-surface/80',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
     </nav>
     <div class="flex items-center gap-2">
       {isBlog && <SearchBox lang={lang} />}
@@ -66,10 +68,28 @@ const isBlog = path.startsWith('/blog') || path.startsWith('/en/blog')
           aria-controls="mobile-menu"
           class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-volf-border bg-volf-surface text-volf-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="menu-icon">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+            class="menu-icon"
+          >
             <path d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="close-icon hidden">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+            class="close-icon hidden"
+          >
             <path d="M6 18L18 6M6 6l12 12"></path>
           </svg>
           <span class="sr-only">{lang === 'en' ? 'Menu' : 'Menú'}</span>
@@ -82,23 +102,22 @@ const isBlog = path.startsWith('/blog') || path.startsWith('/en/blog')
           aria-modal="true"
           aria-label={lang === 'en' ? 'Navigation' : 'Navegación'}
         >
-          <nav aria-label={lang === 'en' ? 'Primary mobile' : 'Principal móvil'} class="flex flex-col gap-1">
-            {
-              nav.map((item) => (
-                <a
-                  href={item.href}
-                  aria-current={isActive(item.href) ? 'page' : undefined}
-                  class="flex items-center min-h-11 rounded-xl px-4 py-2.5 text-sm font-medium text-volf-muted hover:bg-volf-surface-2 hover:text-volf-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
-                >
-                  {item.label}
-                </a>
-              ))
-            }
+          <nav
+            aria-label={lang === 'en' ? 'Primary mobile' : 'Principal móvil'}
+            class="flex flex-col gap-1"
+          >
+            {nav.map((item) => (
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class="flex items-center min-h-11 rounded-xl px-4 py-2.5 text-sm font-medium text-volf-muted hover:bg-volf-surface-2 hover:text-volf-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
         </div>
       </div>
     </div>
   </div>
 </header>
-
-

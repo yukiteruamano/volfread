@@ -21,7 +21,9 @@ let alternates = getAlternateUrls(Astro.url.pathname)
 if (post.data.translationKey) {
   const allPosts = await getCollection('blog', ({ data }) => !import.meta.env.PROD || !data.draft)
   const counterpart = allPosts.find(
-    (p) => p.slug.replace(/^(es|en)\//, '') === post.data.translationKey && p.data.lang !== post.data.lang,
+    (p) =>
+      p.slug.replace(/^(es|en)\//, '') === post.data.translationKey &&
+      p.data.lang !== post.data.lang
   )
   if (counterpart) {
     const enPath = `/en/blog/${counterpart.slug.replace(/^en\//, '')}`

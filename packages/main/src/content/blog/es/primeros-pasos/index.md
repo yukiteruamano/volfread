@@ -1,16 +1,16 @@
 ---
-title: "Primeros Pasos"
-description: "Iniciando un espacio personal para compartir."
+title: 'Primeros Pasos'
+description: 'Iniciando un espacio personal para compartir.'
 pubDate: 2026-09-08T20:38:56.013Z
 lang: es
-categories: ["general"]
-tags: ["personal"]
-cover: "./cover.webp"
-coverAlt: ""
-translationKey: "first-steps"
+categories: ['general']
+tags: ['personal']
+cover: './cover.webp'
+coverAlt: ''
+translationKey: 'first-steps'
 draft: false
 math: false
-author: "Jose Maldonado \"Yukiteru Amano\""
+author: 'Jose Maldonado "Yukiteru Amano"'
 ---
 
 ¡Hola, viajero!
@@ -23,7 +23,7 @@ algo aprenderás sobe Linux, BSD, IA y crypto en general.
 
 **¿Un ejemplo de que podrás ver?** Ideas como desplegar paso a paso infraestructura para IA, sería un interesante
 proyecto, uno que por ejemplo, ya tengo realizado para mi uso personal. Y esa es una idea sencilla, de lo que podrás
-ver por este espacio. 
+ver por este espacio.
 
 Más adelante crearé un espacio en Telegram y YouTube, donde compartir conocimiento audiovisual y compartir
 conocimiento con la comunidad que me siga, pero de momento, estas líneas te dan la bienvenida.

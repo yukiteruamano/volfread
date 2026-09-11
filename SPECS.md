@@ -30,16 +30,16 @@ Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proye
 
 ## 3. Requisitos funcionales
 
-| ID | Requisito | Criterio aceptación |
-|----|-----------|---------------------|
-| RF01 | Home ES/EN | `/` renderiza ES, `/en/` EN; `LanguageSwitcher` persiste preferencia; `hreflang` presentes. |
-| RF02 | Portafolio listado | `/proyectos` lista 8 proyectos, filtro por `type: web/lib/cli` y `lang`; cards con cover, badges `Go/Python/React/Angular`, stats resumidos. |
-| RF03 | Detalle proyecto web | `/proyectos/eclipsescope` y `/proyectos/simulador-blockchain` muestran ficha + CTA externo (`https://eclipse.observatorioblockchain.com/` y `https://yukiteruamano.github.io/#/`) con `target=_blank`. EclipseScope destaca nota "Alojada en Observatorio Blockchain — Software Libre y Ciencia". |
-| RF04 | Ficha proyecto no-web | `/proyectos/<slug>` (ej: `koma`) muestra: descripción, `repo` link, `install` snippet (`go get`/`pip install`), LOC + donut/bar lenguajes, sparkline 52 semanas, badges licencia/stars si disponible. Datos vía `projects.stats.json` generado en build. |
-| RF05 | Blog ES/EN | Collections `blog` con `lang`. `getStaticPaths` genera rutas por idioma. `draft: true` oculto en prod. Paginación `blog/`, `blog/tag/[tag]`. |
-| RF06 | SEO blog | `<html lang>`, `canonical`, `hreflang` alternates, OG tags, sitemap i18n (`/sitemap-index.xml`), RSS `/rss.xml` (ES) y `/en/rss.xml`. |
-| RF07 | Comentarios | Giscus island `client:visible` en post, `lang` dinámico `es/en`, repo Discussions configurado. No carga en listado. |
-| RF08 | Navegación | Header con `Inicio, Proyectos, Blog, About` + `EN/ES` switch; Footer con links sociales + `©`. |
+| ID   | Requisito             | Criterio aceptación                                                                                                                                                                                                                                                                               |
+| ---- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RF01 | Home ES/EN            | `/` renderiza ES, `/en/` EN; `LanguageSwitcher` persiste preferencia; `hreflang` presentes.                                                                                                                                                                                                       |
+| RF02 | Portafolio listado    | `/proyectos` lista 8 proyectos, filtro por `type: web/lib/cli` y `lang`; cards con cover, badges `Go/Python/React/Angular`, stats resumidos.                                                                                                                                                      |
+| RF03 | Detalle proyecto web  | `/proyectos/eclipsescope` y `/proyectos/simulador-blockchain` muestran ficha + CTA externo (`https://eclipse.observatorioblockchain.com/` y `https://yukiteruamano.github.io/#/`) con `target=_blank`. EclipseScope destaca nota "Alojada en Observatorio Blockchain — Software Libre y Ciencia". |
+| RF04 | Ficha proyecto no-web | `/proyectos/<slug>` (ej: `koma`) muestra: descripción, `repo` link, `install` snippet (`go get`/`pip install`), LOC + donut/bar lenguajes, sparkline 52 semanas, badges licencia/stars si disponible. Datos vía `projects.stats.json` generado en build.                                          |
+| RF05 | Blog ES/EN            | Collections `blog` con `lang`. `getStaticPaths` genera rutas por idioma. `draft: true` oculto en prod. Paginación `blog/`, `blog/tag/[tag]`.                                                                                                                                                      |
+| RF06 | SEO blog              | `<html lang>`, `canonical`, `hreflang` alternates, OG tags, sitemap i18n (`/sitemap-index.xml`), RSS `/rss.xml` (ES) y `/en/rss.xml`.                                                                                                                                                             |
+| RF07 | Comentarios           | Giscus island `client:visible` en post, `lang` dinámico `es/en`, repo Discussions configurado. No carga en listado.                                                                                                                                                                               |
+| RF08 | Navegación            | Header con `Inicio, Proyectos, Blog, About` + `EN/ES` switch; Footer con links sociales + `©`.                                                                                                                                                                                                    |
 
 ## 4. Requisitos no funcionales — Best Practices (Lighthouse)
 
@@ -59,15 +59,15 @@ Ver `AGENTS.md §10.1` (fuente única operativa). Resumen:
 
 ## 4. Requisitos no funcionales
 
-| ID | Requisito | Target |
-|----|-----------|--------|
-| RNF01 | Performance | Lighthouse Perf >95, LCP <2.5s (dist estático CF). |
-| RNF02 | Accesibilidad | WCAG 2.2 AA, `axe-core` 0 violaciones. |
-| RNF03 | SEO | Indexable, `hreflang` válido, sitemap/rutas sin duplicados. |
-| RNF04 | Seguridad | **Headers `/*` (ver `AGENTS.md §10.1`):** `Strict-Transport-Security: max-age=31536000; includeSubDomains` (sin `preload`), `Content-Security-Policy` enforcement `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com` + `sha256-…` (ClientRouter + JSON-LD); `style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` , `X-Frame-Options: SAMEORIGIN` + `frame-ancestors`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=()`, `Cross-Origin-Opener-Policy: same-origin`, `X-XSS-Protection: 0`. SRI pin `giscus.app/client.js`; `sourcemap: false`; sin mixed content; `pnpm audit`. Ver `SPECS.md §4.1` detalle. |
-| RNF05 | i18n | `prefixDefaultLocale: false`, URLs canónicas correctas, no redirecciones fantasma. |
-| RNF06 | Mantenibilidad | Monorepo pnpm, un lockfile, CI `pnpm build` determinista. |
-| RNF07 | Privacidad | Sin cookies tracking; analytics CF beacon (sin banner). Giscus requiere auth GitHub opt-in. |
+| ID    | Requisito      | Target                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ----- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RNF01 | Performance    | Lighthouse Perf >95, LCP <2.5s (dist estático CF).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| RNF02 | Accesibilidad  | WCAG 2.2 AA, `axe-core` 0 violaciones.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| RNF03 | SEO            | Indexable, `hreflang` válido, sitemap/rutas sin duplicados.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| RNF04 | Seguridad      | **Headers `/*` (ver `AGENTS.md §10.1`):** `Strict-Transport-Security: max-age=31536000; includeSubDomains` (sin `preload`), `Content-Security-Policy` enforcement `default-src 'self'; script-src 'self' https://giscus.app https://static.cloudflareinsights.com` + `sha256-…` (ClientRouter + JSON-LD); `style-src 'self' 'unsafe-inline' https://giscus.app; font-src 'self' data: https:; img-src 'self' data: https: https://academy.bit2me.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'` , `X-Frame-Options: SAMEORIGIN` + `frame-ancestors`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=(), usb=()`, `Cross-Origin-Opener-Policy: same-origin`, `X-XSS-Protection: 0`. SRI pin `giscus.app/client.js`; `sourcemap: false`; sin mixed content; `pnpm audit`. Ver `SPECS.md §4.1` detalle. |
+| RNF05 | i18n           | `prefixDefaultLocale: false`, URLs canónicas correctas, no redirecciones fantasma.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| RNF06 | Mantenibilidad | Monorepo pnpm, un lockfile, CI `pnpm build` determinista.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| RNF07 | Privacidad     | Sin cookies tracking; analytics CF beacon (sin banner). Giscus requiere auth GitHub opt-in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ## 5. Arquitectura
 
@@ -92,17 +92,17 @@ Build: `pnpm build:main` → `generate-csp` (hashes ClientRouter + JSON-LD + 404
 
 ### 5.3 Routing
 
-| URL | Origen | Idioma |
-|-----|--------|--------|
-| `/` | `src/pages/index.astro` | es |
-| `/about` | `src/pages/about.astro` | es |
-| `/proyectos` | `src/pages/proyectos/index.astro` | es |
-| `/proyectos/<slug>` | `src/pages/proyectos/[slug].astro` (ficha) | es |
-| `/proyectos/eclipsescope` | ficha + CTA → `https://eclipse.observatorioblockchain.com/` + nota Observatorio Blockchain | es |
-| `/proyectos/simulador-blockchain` | ficha + CTA → `https://yukiteruamano.github.io/#/` | es |
-| `/blog`, `/blog/<slug>`, `/blog/tag/<tag>` | `src/pages/blog/...` | es |
-| `/en/`, `/en/about`, `/en/projects`, `/en/projects/<slug>`, `/en/blog/*` | `src/pages/en/...` | en |
-| `/rss.xml`, `/en/rss.xml`, `/sitemap*.xml` | `@astrojs/rss/sitemap` | — |
+| URL                                                                      | Origen                                                                                     | Idioma |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------ |
+| `/`                                                                      | `src/pages/index.astro`                                                                    | es     |
+| `/about`                                                                 | `src/pages/about.astro`                                                                    | es     |
+| `/proyectos`                                                             | `src/pages/proyectos/index.astro`                                                          | es     |
+| `/proyectos/<slug>`                                                      | `src/pages/proyectos/[slug].astro` (ficha)                                                 | es     |
+| `/proyectos/eclipsescope`                                                | ficha + CTA → `https://eclipse.observatorioblockchain.com/` + nota Observatorio Blockchain | es     |
+| `/proyectos/simulador-blockchain`                                        | ficha + CTA → `https://yukiteruamano.github.io/#/`                                         | es     |
+| `/blog`, `/blog/<slug>`, `/blog/tag/<tag>`                               | `src/pages/blog/...`                                                                       | es     |
+| `/en/`, `/en/about`, `/en/projects`, `/en/projects/<slug>`, `/en/blog/*` | `src/pages/en/...`                                                                         | en     |
+| `/rss.xml`, `/en/rss.xml`, `/sitemap*.xml`                               | `@astrojs/rss/sitemap`                                                                     | —      |
 
 ## 6. Modelo de contenido
 
@@ -111,14 +111,16 @@ Build: `pnpm build:main` → `generate-csp` (hashes ClientRouter + JSON-LD + 404
 ```ts
 blog: defineCollection({
   schema: z.object({
-    title: z.string(), description: z.string(),
-    pubDate: z.date(), updatedDate: z.date().optional(),
-    lang: z.enum(['es','en']),
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    updatedDate: z.date().optional(),
+    lang: z.enum(['es', 'en']),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     cover: z.string().optional(),
     author: z.string().default('volfread'),
-  })
+  }),
 })
 ```
 
@@ -132,7 +134,7 @@ Path: `src/content/blog/es/*.mdx` + `en/*.mdx`. `getStaticPaths` filtra `lang`.
   "title": "Koma コマ",
   "description": "CLI/TUI manga downloader (fork mangal)",
   "longDescription": "Más extensa para ficha...",
-  "type": "cli",           // web | lib | cli
+  "type": "cli", // web | lib | cli
   "lang": "Go",
   "repo": "https://github.com/yukiteruamano/koma",
   "pkg": "go install github.com/yukiteruamano/koma@latest",
@@ -153,14 +155,14 @@ Diccionario `ui[es][key]` / `ui[en][key]` + helpers `useTranslations(locale)`, `
 Tokens (`src/styles/theme.css`):
 
 ```css
---color-volf-bg: #0A0A0A;
+--color-volf-bg: #0a0a0a;
 --color-volf-surface: #141414;
 --color-volf-border: #262626;
---color-volf-orange: #FF6B00;
---color-volf-orange-soft: #FF8533;
---color-volf-amber: #FFB84D;
---color-volf-text: #F5F5F5;
---color-volf-muted: #A3A3A3;
+--color-volf-orange: #ff6b00;
+--color-volf-orange-soft: #ff8533;
+--color-volf-amber: #ffb84d;
+--color-volf-text: #f5f5f5;
+--color-volf-muted: #a3a3a3;
 ```
 
 Componentes: `Header` (nav + switch), `Footer`, `ProjectCard` (cover 16:9, badges, sparkline mini), `CommitActivity` (SVG sparkline 52 barras naranja), `Giscus`, `LanguageSwitcher`, `Tag`.
@@ -186,15 +188,15 @@ Tipografía: sans `Inter/Geist`, mono `JetBrains Mono`. Accent: naranja para CTA
 
 ## 10. Roadmap
 
-| Fase | Entregable | Estado |
-|------|------------|--------|
-| F0 | Bootstrap monorepo + AGENTS/SPECS/CHANGELOG | v1 |
-| F1 | Shell + portafolio + dark theme + copy-dist | v1 |
-| F2 | Blog MDX ES/EN + RSS/sitemap + Giscus | v1 |
-| F3 | Stats LOC/sparkline + polish fotos/OG | v1 |
-| F4 | Deploy CF Pages + dominio + analytics | v1 |
-| F5 | Pagefind search, OG imágenes dinámicas | v1.1 |
-| F6 | SSR/worker si newsletter/form | v2 |
+| Fase | Entregable                                  | Estado |
+| ---- | ------------------------------------------- | ------ |
+| F0   | Bootstrap monorepo + AGENTS/SPECS/CHANGELOG | v1     |
+| F1   | Shell + portafolio + dark theme + copy-dist | v1     |
+| F2   | Blog MDX ES/EN + RSS/sitemap + Giscus       | v1     |
+| F3   | Stats LOC/sparkline + polish fotos/OG       | v1     |
+| F4   | Deploy CF Pages + dominio + analytics       | v1     |
+| F5   | Pagefind search, OG imágenes dinámicas      | v1.1   |
+| F6   | SSR/worker si newsletter/form               | v2     |
 
 ## 11. Riesgos
 

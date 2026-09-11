@@ -47,7 +47,8 @@ export const ui = {
     'about.communities': 'Comunidades',
     'footer.rights': '© {year} volfread — Hecho con Astro y mucho café.',
     'comments.title': 'Comentarios',
-    'comments.giscus.note': 'Comentarios vía GitHub Discussions (Giscus). Necesitas cuenta de GitHub.',
+    'comments.giscus.note':
+      'Comentarios vía GitHub Discussions (Giscus). Necesitas cuenta de GitHub.',
     '404.title': 'Página no encontrada',
     '404.subtitle': 'La ruta {path} no existe o fue movida.',
     '404.home': 'Ir al inicio →',

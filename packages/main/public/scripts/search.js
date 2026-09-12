@@ -65,7 +65,7 @@
       if (el) {
         try {
           return JSON.parse(el.textContent)
-        } catch (e) {
+        } catch {
           return []
         }
       }

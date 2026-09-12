@@ -16,9 +16,9 @@
     "build:main": "node scripts/generate-blog-map.mjs && pnpm --filter main build",
     "build:web": "pnpm --filter eclipsescope build && pnpm --filter simulador-blockchain build",
     "build:csp": "node scripts/generate-csp.mjs",
-    "build:stats": "node scripts/collect-project-stats.mjs",
+    "build:stats": "node scripts/collect-project-stats.mjs && prettier --write packages/main/src/data/projects.stats.json",
     "preview": "pnpm --filter main preview",
-    "lint": "pnpm -r lint",
+    "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts,astro,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,astro,json,md}\"",
     "check": "pnpm --filter main astro check",
@@ -33,5 +33,9 @@
     "eslint-plugin-astro": "^3.1.0",
     "opentype.js": "^2.0.0",
     "prettier-plugin-astro": "^1.0.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.6",
+    "typescript-eslint": "^8.70.0"
   }
 }

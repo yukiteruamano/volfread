@@ -150,9 +150,9 @@ preview-main: ## Preview solo main (sin merge)
 
 preview-dist: preview ## Alias de preview
 
-lint: ## Lint workspaces (si existe script lint)
-	$(call banner,lint,pnpm -r lint)
-	$(PNPM) -r lint || echo -e "$(DIM)sin linter o lint falló$(RESET)"
+lint: ## Lint repo (eslint flat: astro + ts)
+	$(call banner,lint,eslint .)
+	$(PNPM) run lint
 
 format: ## Formatea con prettier
 	$(call banner,format,prettier --write)
@@ -215,5 +215,5 @@ log: ## Últimos 10 commits
 
 # ── CI ──────────────────────────────────────────────────────────────────────
 .PHONY: ci
-ci: install stats build check ## Pipeline local CI: install + stats + build + check
+ci: install stats build check lint format-check ## Pipeline local CI: install + stats + build + check + lint + format
 	$(call banner,ci,local pipeline OK)

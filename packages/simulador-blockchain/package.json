@@ -7,7 +7,8 @@
     "dev": "vite --port 5174",
     "build": "vite build",
     "build:real": "node build-real.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "vite": "^8.2.2"

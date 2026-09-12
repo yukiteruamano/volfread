@@ -49,7 +49,7 @@
       if (c) c.classList.toggle('hidden', !open)
       if (open) {
         var a = menu.querySelector('a')
-        a && a.focus()
+        a?.focus()
       }
     }
     btn.addEventListener('click', function () {

@@ -1,4 +1,5 @@
 import { ui, type Locale, type UiKey } from './ui'
+import blogMapJson from './blogMap.json'
 
 export function useTranslations(locale: Locale) {
   return function t(key: UiKey, params?: Record<string, string>): string {
@@ -38,9 +39,9 @@ export function getAlternateUrls(currentPath: string): { es: string; en: string 
     const en = normalized.replace(/^\/proyectos(?=\/|$)/, '/en/projects')
     return { es: normalized, en }
   }
-  // Blog 1:1 ES/EN — generado dinámicamente por scripts/generate-blog-map.mjs
+  // Blog 1:1 ES/EN — generado por scripts/generate-blog-map.mjs en src/i18n/blogMap.json
   // Si añades nuevo post con translationKey, ejecuta `node scripts/generate-blog-map.mjs` para regenerar
-  const blogMap: Record<string, string> = {"apparmor-introduction":"apparmor-introduccion","first-steps":"primeros-pasos","slackware-pkgcheck-integrity":"slackware-pkgcheck-integridad","apparmor-introduccion":"apparmor-introduction","primeros-pasos":"first-steps","slackware-pkgcheck-integridad":"slackware-pkgcheck-integrity"}
+  const blogMap: Record<string, string> = blogMapJson
   // Tag/Category son taxonomías con mismo slug en ambos idiomas — mapeo directo sin blogMap
   const isBlogTagCatEn =
     normalized.startsWith('/en/blog/tag/') ||

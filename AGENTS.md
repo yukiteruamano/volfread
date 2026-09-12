@@ -66,6 +66,8 @@ pnpm build                      # main + webs + merge dist/ (make build usa real
 pnpm build:main                 # solo Astro
 pnpm build:web                  # solo webs (placeholder)
 pnpm build:csp                  # hashes CSP para scripts inline (ClientRouter + JSON-LD)
+pnpm lint                       # eslint . (flat: astro + ts — 0 errores; no-explicit-any en warn)
+pnpm format:check               # prettier --check (verde tras build: generadores conformes)
 make build-real                 # build real eclipsescope+simulador desde EC_SOURCE/SB_SOURCE con --base /app/ (explícito)
 make build                      # auto real si vecinos existen, fallback placeholder en CI
 ```
@@ -120,7 +122,7 @@ Añadir proyecto no-web (ficha): solo paso 3 con `type: 'lib'|'cli'` + `repo`, `
 
 ## 10. Calidad
 
-- Lint: `oxlint` / `eslint` según package. Astro: `pnpm astro check`.
+- Lint: `eslint` flat (`eslint.config.mjs`: `eslint-plugin-astro` recommended + `typescript-eslint` recommended, `no-explicit-any` en warn). Root `pnpm lint` cubre todo el repo; por package `pnpm --filter <pkg> lint`. Astro: `pnpm astro check`.
 - A11y: `scripts/a11y.ts` con `axe-core` si se añade.
 - Lighthouse: objetivo `Perf>95, A11y>95` en `pnpm preview`.
 - No commitear `dist/`, `.astro/`, `.wrangler/`.

@@ -23,6 +23,12 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 ### Removed
 
 - Workflow GitHub de deploy a Pages (integración Git) — el deploy pasa a Wrangler CLI (`make deploy` / `make deploy-dry`)
+- Campo `generatedAt` de `projects.stats.json` (nadie lo consumía; `build:stats` ahora es reproducible)
+
+### Added
+
+- ESLint flat (`eslint.config.mjs`: astro + typescript-eslint) con script `lint` en root y packages; `make ci` incluye `lint` y `format-check`
+- `utils.ts` importa `blogMap.json` en vez de código inyectado — `pnpm build` ya no ensucia el árbol y `format:check` pasa en verde
 
 ## [0.1.0] - 2026-09-06
 

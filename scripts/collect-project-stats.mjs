@@ -18,16 +18,28 @@ const outPath = path.join(root, 'packages/main/src/data/projects.stats.json')
 
 const PROJECTS = [
   { slug: 'eclipsescope', path: '/home/yukiteru/GIT/EclipseCalculator', lang: 'TypeScript' },
-  { slug: 'simulador-blockchain', path: '/home/yukiteru/GIT/yukiteruamano.github.io', lang: 'TypeScript' },
+  {
+    slug: 'simulador-blockchain',
+    path: '/home/yukiteru/GIT/yukiteruamano.github.io',
+    lang: 'TypeScript',
+  },
   { slug: 'fast-levenshtein', path: '/home/yukiteru/GIT/fast-levenshtein', lang: 'Go' },
   { slug: 'gache', path: '/home/yukiteru/GIT/gache', lang: 'Go' },
   { slug: 'koma', path: '/home/yukiteru/GIT/koma', lang: 'Go' },
   { slug: 'mangodex', path: '/home/yukiteru/GIT/mangodex', lang: 'Go' },
   { slug: 'pkgcheck', path: '/home/yukiteru/GIT/pkgcheck', lang: 'Python' },
-  { slug: 'simple-markdown-crawler', path: '/home/yukiteru/GIT/simple-markdown-crawler', lang: 'Python' },
+  {
+    slug: 'simple-markdown-crawler',
+    path: '/home/yukiteru/GIT/simple-markdown-crawler',
+    lang: 'Python',
+  },
   // Top 20 — nuevos (sin vetados)
   { slug: 'harden-yml', path: '/home/yukiteru/GIT/harden.yml', lang: 'Ansible' },
-  { slug: 'kernel-hardening-checker', path: '/home/yukiteru/GIT/kernel-hardening-checker', lang: 'Python' },
+  {
+    slug: 'kernel-hardening-checker',
+    path: '/home/yukiteru/GIT/kernel-hardening-checker',
+    lang: 'Python',
+  },
   { slug: 'picom', path: '/home/yukiteru/GIT/picom', lang: 'C' },
   { slug: 'apparmor-d', path: '/home/yukiteru/GIT/apparmor.d', lang: 'Go' },
   { slug: 'doomemacs', path: '/home/yukiteru/GIT/doomemacs', lang: 'Emacs Lisp' },
@@ -42,7 +54,10 @@ const PROJECTS = [
 
 function tryTokei(dir) {
   try {
-    const out = execSync(`tokei "${dir}" --output json 2>/dev/null`, { encoding: 'utf8', timeout: 8000 })
+    const out = execSync(`tokei "${dir}" --output json 2>/dev/null`, {
+      encoding: 'utf8',
+      timeout: 8000,
+    })
     const data = JSON.parse(out)
     let total = 0
     const langs = {}
@@ -81,7 +96,7 @@ function fallbackLoc(dir, primaryLang) {
     const exts = extMap[primaryLang] ?? ['.go', '.py', '.ts', '.js']
     const out = execSync(
       `find "${dir}" -type f \\( ${exts.map((e) => `-name "*${e}"`).join(' -o ')} \\) -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/dist/*" -not -path "*/.venv/*" | xargs wc -l 2>/dev/null | tail -1`,
-      { encoding: 'utf8', timeout: 5000 },
+      { encoding: 'utf8', timeout: 5000 }
     )
     const n = parseInt(out.trim().split(/\s+/)[0] || '0', 10)
     return { loc: n || 0, languages: { [primaryLang]: 100 } }
@@ -142,12 +157,14 @@ for (const p of PROJECTS) {
     languages: locInfo.languages,
     commits52: commits,
   }
-  console.log(`[stats] ${p.slug}: loc=${locInfo.loc} langs=${JSON.stringify(locInfo.languages)} commits52 sum=${commits.reduce((a, b) => a + b, 0)}`)
+  console.log(
+    `[stats] ${p.slug}: loc=${locInfo.loc} langs=${JSON.stringify(locInfo.languages)} commits52 sum=${commits.reduce((a, b) => a + b, 0)}`
+  )
 }
 
 const out = {
-  _note: 'Generado por scripts/collect-project-stats.mjs — no editar a mano. Ejecuta pnpm build:stats para regenerar.',
-  generatedAt: new Date().toISOString(),
+  _note:
+    'Generado por scripts/collect-project-stats.mjs — no editar a mano. Ejecuta pnpm build:stats para regenerar.',
   projects,
 }
 

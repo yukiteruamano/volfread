@@ -21,7 +21,8 @@ function parseFrontmatter(file) {
     let [, k, v] = kv
     v = v.trim()
     // strip quotes
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1)
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'")))
+      v = v.slice(1, -1)
     data[k] = v
   }
   return data
@@ -61,19 +62,7 @@ for (const [k, v] of Object.entries({ ...map })) {
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true })
 fs.writeFileSync(outPath, JSON.stringify(map, null, 2) + '\n')
-console.log(`[generate-blog-map] ${Object.keys(map).length} entradas → ${path.relative(root, outPath)}`)
+console.log(
+  `[generate-blog-map] ${Object.keys(map).length} entradas → ${path.relative(root, outPath)}`
+)
 if (Object.keys(map).length) console.log(map)
-
-// También parchea src/i18n/utils.ts para que getAlternateUrls use el mapa sin import dinámico
-const utilsPath = path.join(root, 'packages/main/src/i18n/utils.ts')
-if (fs.existsSync(utilsPath)) {
-  let utils = fs.readFileSync(utilsPath, 'utf8')
-  const mapStr = JSON.stringify(map, null, 2).replace(/\n/g, '\n  ')
-  // Reemplaza la línea const blogMap: Record<string, string> = { ... }
-  const newDecl = `const blogMap: Record<string, string> = ${JSON.stringify(map)}`
-  if (utils.includes('const blogMap: Record<string, string> =')) {
-    utils = utils.replace(/const blogMap: Record<string, string> = \{[^}]*\}/, newDecl)
-    fs.writeFileSync(utilsPath, utils)
-    console.log(`[generate-blog-map] parcheado ${path.relative(root, utilsPath)}`)
-  }
-}

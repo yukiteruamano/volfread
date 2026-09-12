@@ -47,18 +47,18 @@ async function prompt(question) {
 function buildContent({ esSlug, enSlug }) {
   const iso = new Date().toISOString()
   const es = `---
-title: "${titleFromSlug(esSlug)}"
-description: "Descripción breve del artículo en español (150 chars)."
+title: '${titleFromSlug(esSlug)}'
+description: 'Descripción breve del artículo en español (150 chars).'
 pubDate: ${iso}
 lang: es
-categories: ["general"]
+categories: ['general']
 tags: []
-cover: "./cover.webp"
-coverAlt: ""
-translationKey: "${enSlug}"
+cover: './cover.webp'
+coverAlt: ''
+translationKey: '${enSlug}'
 draft: true
 math: false
-author: "Jose Maldonado \\"Yukiteru Amano\\""
+author: 'Jose Maldonado "Yukiteru Amano"'
 ---
 
 ¡Hola, viajero!
@@ -79,18 +79,18 @@ $$
 $$
 `
   const en = `---
-title: "${titleFromSlug(enSlug)}"
-description: "Brief description in English (150 chars)."
+title: '${titleFromSlug(enSlug)}'
+description: 'Brief description in English (150 chars).'
 pubDate: ${iso}
 lang: en
-categories: ["general"]
+categories: ['general']
 tags: []
-cover: "./cover.webp"
-coverAlt: ""
-translationKey: "${esSlug}"
+cover: './cover.webp'
+coverAlt: ''
+translationKey: '${esSlug}'
 draft: true
 math: false
-author: "Jose Maldonado \\"Yukiteru Amano\\""
+author: 'Jose Maldonado "Yukiteru Amano"'
 ---
 
 Hello, traveler!
@@ -141,9 +141,9 @@ async function main() {
   let created = 0
   // placeholder cover: usar og-default.png como base webp si existe
   const placeholderSrc = path.join(root, 'packages/main/public/og-default.png')
-  for (const [dir, content, label] of [
-    [esDir, es, 'ES'],
-    [enDir, en, 'EN'],
+  for (const [dir, content] of [
+    [esDir, es],
+    [enDir, en],
   ]) {
     const file = path.join(dir, 'index.md')
     if (fs.existsSync(file)) {

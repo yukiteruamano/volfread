@@ -4,6 +4,10 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 
 ## [Unreleased]
 
+### Fixed
+
+- Restaura apps web embebidas (`packages/eclipsescope`, `packages/simulador-blockchain`) en el build: fichas vuelven a enlazar a `/proyectos/<slug>/app/` interno, `copy-dist.mjs` fusiona `dist/proyectos/<slug>/app/`, SPA fallbacks en `_redirects` y `make build-real` desde fuentes vecinas
+
 ### Added
 
 - Estructura monorepo pnpm workspaces (`packages/main`, `eclipsescope`, `simulador-blockchain`)
@@ -15,6 +19,10 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 - Comentarios Giscus (GitHub Discussions) en posts
 - Cloudflare Pages deploy (`dist`), `_headers`/`_redirects`, analytics beacon
 - Docs: `AGENTS.md`, `SPECS.md`, `README.md`
+
+### Removed
+
+- Workflow GitHub de deploy a Pages (integración Git) — el deploy pasa a Wrangler CLI (`make deploy` / `make deploy-dry`)
 
 ## [0.1.0] - 2026-09-06
 

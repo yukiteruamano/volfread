@@ -1,0 +1,24 @@
+{
+  "name": "eclipsescope",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:real": "node build-real.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "tailwindcss": "catalog:",
+    "vite": "^8.2.2"
+  }
+}

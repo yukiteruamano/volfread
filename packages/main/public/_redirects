@@ -1,3 +1,8 @@
+# SPA fallbacks para proyectos con router — apps viven en /app/
+# Descomentar si el router necesita history fallback (React/Angular). Actualmente apps son estáticas.
+/proyectos/eclipsescope/app/*  /proyectos/eclipsescope/app/index.html  200
+/proyectos/simulador-blockchain/app/*  /proyectos/simulador-blockchain/app/index.html  200
+
 # Compat: redirect slug antiguo eclipsecalculator → eclipsescope
 /proyectos/eclipsecalculator/*  /proyectos/eclipsescope/:splat  301
 /proyectos/eclipsecalculator/app/*  /proyectos/eclipsescope/app/:splat  301

@@ -7,7 +7,7 @@ Sitio personal + portafolio + blog multi-idioma (ES/EN) — Astro estático desp
 ```bash
 pnpm install
 pnpm dev              # main en http://localhost:4321
-pnpm build            # build main → dist/
+pnpm build            # build main + webs + merge dist/
 pnpm build:stats      # regenera src/data/projects.stats.json
 ```
 
@@ -15,10 +15,12 @@ pnpm build:stats      # regenera src/data/projects.stats.json
 
 ```
 packages/main          → Astro (volfread.xyz)
-scripts/copy-dist.mjs  → copia main/dist → dist/
+packages/eclipsescope → Vite+React (→ /proyectos/eclipsescope/app/)
+packages/simulador-blockchain → Angular (→ /proyectos/simulador-blockchain/app/)
+scripts/copy-dist.mjs  → fusiona dist/ (ficha en /proyectos/<slug>/, app en /proyectos/<slug>/app/)
 ```
 
-Proyectos web (EclipseScope, Simulador Blockchain) son fichas con `demoUrl` externa — no hay builds embebidos.
+Flujo recomendado: `make build && make preview` para probar fichas + apps embebidas (dev solo sirve fichas; preview sirve dist fusionado).
 
 ## Deploy
 

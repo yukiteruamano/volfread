@@ -14,9 +14,7 @@ const s = (stats as any).projects?.[project.slug]
 const alternates = getAlternateUrls(Astro.url.pathname)
 const t = useTranslations('en')
 const isWeb = project.type === 'web'
-const demoUrl: string | undefined = (project as any).demoUrl
-const hostingNoteEn: string | undefined = (project as any).hostingNoteEn
-const hostingDescriptionEn: string | undefined = (project as any).hostingDescriptionEn
+const appUrl = `/proyectos/${project.slug}/app/`
 const locFormatted = s ? s.loc.toLocaleString('en-US') : '—'
 const divulgativa: string =
   (project as any).divulgativaEn ??
@@ -76,14 +74,12 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
         </h1>
       </div>
       <div class="flex flex-col gap-2 shrink-0">
-        {isWeb && demoUrl && (
+        {isWeb && (
           <a
-            href={demoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={appUrl}
             class="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-br from-volf-orange to-volf-amber px-6 py-2.5 text-sm font-bold text-white shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange focus-visible:ring-offset-2 focus-visible:ring-offset-volf-bg text-center"
           >
-            Open {project.title} ↗
+            Open {project.title} →
           </a>
         )}
         <a
@@ -96,32 +92,6 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
         </a>
       </div>
     </div>
-
-    {demoUrl && project.slug === 'eclipsescope' && hostingNoteEn && hostingDescriptionEn && (
-      <section
-        aria-labelledby="hosting-heading"
-        class="mt-6 rounded-2xl border border-volf-orange/30 bg-volf-orange/5 backdrop-blur p-5"
-      >
-        <h2
-          id="hosting-heading"
-          class="text-xs tracking-widest text-volf-orange uppercase font-semibold"
-        >
-          {hostingNoteEn}
-        </h2>
-        <p class="mt-2 text-sm leading-relaxed text-volf-muted text-pretty">
-          This app is hosted on{' '}
-          <a
-            href={demoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="font-semibold text-volf-orange hover:underline"
-          >
-            eclipse.observatorioblockchain.com
-          </a>{' '}
-          — {hostingDescriptionEn}
-        </p>
-      </section>
-    )}
 
     <section
       aria-labelledby="divulgativa-heading"

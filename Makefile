@@ -1,5 +1,5 @@
 # Makefile — volfread.xyz
-# Facilita dev, build y deploy del monorepo pnpm + Astro
+# Facilita dev, build y deploy del monorepo pnpm + Astro + webs embebidas
 # Uso: make help
 # Requiere: pnpm >=9, node >=20, wrangler (solo para deploy)
 
@@ -12,6 +12,10 @@ NODE        ?= node
 WRANGLER    ?= npx wrangler
 DIST        := dist
 MAIN_DIST   := packages/main/dist
+
+# Fuentes webs embebidas (para build:real si existen localmente)
+EC_SOURCE   ?= /home/yukiteru/GIT/EclipseCalculator
+SB_SOURCE   ?= /home/yukiteru/GIT/yukiteruamano.github.io
 
 # Colores
 BOLD  := \033[1m
@@ -58,11 +62,23 @@ install-tools: ## Verifica toolchain (node, pnpm, wrangler)
 	@npx astro --version 2>/dev/null | xargs -I{} echo "  astro {}" || echo "  (astro se instala con pnpm install)"
 
 # ── Dev ─────────────────────────────────────────────────────────────────────
-.PHONY: dev dev-main
+.PHONY: dev dev-main dev-scope dev-eclipse dev-blockchain dev-all
 dev: dev-main ## Alias de dev-main (main en :4321)
 dev-main: ## Dev Astro main → http://localhost:4321
 	$(call banner,dev,main :4321)
 	$(PNPM) --filter main dev --host 0.0.0.0
+
+dev-scope dev-eclipse: ## Dev EclipseScope (Vite+React) → :5173
+	$(call banner,dev,eclipsescope :5173)
+	$(PNPM) --filter eclipsescope dev --host 0.0.0.0
+
+dev-blockchain: ## Dev simulador-blockchain (Vite placeholder) → :5174
+	$(call banner,dev,simulador-blockchain :5174)
+	$(PNPM) --filter simulador-blockchain dev --host 0.0.0.0
+
+dev-all: ## Dev main + eclipsescope en paralelo (requiere pnpm -r --parallel)
+	$(call banner,dev,main + eclipsescope en paralelo)
+	$(PNPM) -r --parallel dev
 
 # ── Stats ───────────────────────────────────────────────────────────────────
 .PHONY: stats build-stats
@@ -71,11 +87,23 @@ stats build-stats: ## Regenera projects.stats.json (LOC + git log 52w)
 	$(NODE) scripts/collect-project-stats.mjs
 
 # ── Build ───────────────────────────────────────────────────────────────────
-.PHONY: build build-main check typecheck astro-check
+.PHONY: build build-main build-web build-real check typecheck astro-check
 
-build: ## Build completo: main → dist/ (copy-dist + CSP hashes)
-	$(call banner,build,main + copy-dist + CSP)
+build: ## Build completo: main + webs + merge dist/ (usa real si EC_SOURCE/SB_SOURCE existen; + CSP hashes)
+	$(call banner,build,main + webs + copy-dist + CSP)
 	$(PNPM) run build:main
+	@if [ -d "$(EC_SOURCE)" ] && [ -f "$(EC_SOURCE)/vite.config.ts" ]; then \
+		echo -e "$(DIM)EclipseScope fuente detectada → build real con --base$(RESET)"; \
+		EC_SOURCE="$(EC_SOURCE)" $(PNPM) --filter eclipsescope run build:real; \
+	else \
+		$(PNPM) --filter eclipsescope build; \
+	fi
+	@if [ -d "$(SB_SOURCE)" ] && [ -f "$(SB_SOURCE)/angular.json" ]; then \
+		echo -e "$(DIM)Simulador fuente detectada → build real con --base-href$(RESET)"; \
+		SB_SOURCE="$(SB_SOURCE)" $(PNPM) --filter simulador-blockchain run build:real; \
+	else \
+		$(PNPM) --filter simulador-blockchain build; \
+	fi
 	$(PNPM) run build:csp
 	$(NODE) scripts/copy-dist.mjs
 	@echo -e "$(GREEN)✓$(RESET) dist/ listo → $(BOLD)make preview$(RESET) o $(BOLD)make deploy$(RESET)"
@@ -83,6 +111,21 @@ build: ## Build completo: main → dist/ (copy-dist + CSP hashes)
 build-main: ## Solo Astro main → packages/main/dist
 	$(call banner,build,main)
 	$(PNPM) run build:main
+
+build-web: ## Solo webs embebidas → packages/*/dist
+	$(call banner,build,webs)
+	$(PNPM) run build:web
+
+build-real: ## Build webs desde fuentes reales vecinas (EC_SOURCE / SB_SOURCE)
+	$(call banner,build,webs reales desde fuentes vecinas)
+	@if [ -d "$(EC_SOURCE)" ]; then \
+		echo -e "$(DIM)EclipseScope: $(EC_SOURCE)$(RESET)"; \
+		EC_SOURCE="$(EC_SOURCE)" $(PNPM) --filter eclipsescope run build:real; \
+	else echo "  (skip eclipsescope: $(EC_SOURCE) no existe)"; fi
+	@if [ -d "$(SB_SOURCE)" ]; then \
+		echo -e "$(DIM)Simulador: $(SB_SOURCE)$(RESET)"; \
+		SB_SOURCE="$(SB_SOURCE)" $(PNPM) --filter simulador-blockchain run build:real; \
+	else echo "  (skip simulador-blockchain: $(SB_SOURCE) no existe)"; fi
 
 build-csp: ## Genera hashes CSP para scripts inline (ClientRouter + JSON-LD)
 	$(call banner,build,generate-csp)
@@ -95,8 +138,8 @@ check typecheck astro-check: ## Typecheck Astro (astro check)
 # ── Preview & Quality ───────────────────────────────────────────────────────
 .PHONY: preview preview-main preview-dist lint format format-check
 
-preview: ## Preview dist (requiere pnpm build previo)
-	$(call banner,preview,dist/ en http://localhost:4321)
+preview: ## Preview dist fusionado (requiere pnpm build previo)
+	$(call banner,preview,dist/ fusionado en http://localhost:4321)
 	@if [ ! -d "$(DIST)" ]; then echo -e "$(ORANGE)dist/ no existe — ejecuta make build$(RESET)"; exit 1; fi
 	@echo -e "$(DIM)Sirviendo $(DIST) — Ctrl+C para salir$(RESET)"
 	@npx serve $(DIST) -l 4321 2>/dev/null || $(PNPM) --filter main preview --host 0.0.0.0
@@ -155,7 +198,7 @@ clean: clean-dist ## Limpia dist/ (root + packages)
 	$(call banner,clean,dist/)
 
 clean-dist:
-	rm -rf $(DIST) $(MAIN_DIST) .astro
+	rm -rf $(DIST) $(MAIN_DIST) packages/eclipsescope/dist packages/simulador-blockchain/dist .astro
 
 clean-all nuke: ## Limpia todo: dist + node_modules + .astro + .wrangler
 	$(call banner,nuke,dist + node_modules)

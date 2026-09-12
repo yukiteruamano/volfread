@@ -17,7 +17,7 @@ const searchIndex = posts.map((p) => ({
   url: `/en/blog/${p.slug.replace(/^en\//, '')}`,
   tags: p.data.tags,
   categories: p.data.categories ?? ['general'],
-  cover: typeof p.data.cover === 'string' ? p.data.cover : ((p.data.cover as any)?.src ?? null),
+  cover: typeof p.data.cover === 'string' ? p.data.cover : (p.data.cover?.src ?? null),
 }))
 ---
 

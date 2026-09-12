@@ -2,8 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import ProjectCard from '../../components/ProjectCard.astro'
 import { getAlternateUrls } from '../../i18n/utils'
-import proyectos from '../../data/proyectos.json'
+import proyectosJson from '../../data/proyectos.json'
+import type { Project } from '../../types'
 
+const proyectos = proyectosJson as unknown as Project[]
 const alternates = getAlternateUrls(Astro.url.pathname)
 const all = proyectos
 ---
@@ -23,7 +25,7 @@ const all = proyectos
 
     <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {all.map((p) => (
-        <ProjectCard {...(p as any)} locale="es" />
+        <ProjectCard {...p} locale="es" />
       ))}
     </div>
   </section>

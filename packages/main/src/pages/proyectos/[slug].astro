@@ -2,24 +2,30 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import CommitActivity from '../../components/CommitActivity.astro'
 import { getAlternateUrls, useTranslations } from '../../i18n/utils'
-import proyectos from '../../data/proyectos.json'
-import stats from '../../data/projects.stats.json'
+import proyectosJson from '../../data/proyectos.json'
+import statsJson from '../../data/projects.stats.json'
+import type { Project, ProjectsStatsFile } from '../../types'
 
-export async function getStaticPaths() {
-  return proyectos.map((p) => ({ params: { slug: p.slug }, props: { project: p } }))
+interface Props {
+  project: Project
 }
 
+export async function getStaticPaths() {
+  return proyectosJson.map((p) => ({ params: { slug: p.slug }, props: { project: p } }))
+}
+
+const proyectos = proyectosJson as unknown as Project[]
+const stats = statsJson as unknown as ProjectsStatsFile
 const { project } = Astro.props
-const s = (stats as any).projects?.[project.slug]
+const s = stats.projects?.[project.slug]
 const alternates = getAlternateUrls(Astro.url.pathname)
 const t = useTranslations('es')
 const isWeb = project.type === 'web'
 const appUrl = `/proyectos/${project.slug}/app/`
 const locFormatted = s ? s.loc.toLocaleString('es-ES') : '—'
-const divulgativa: string =
-  (project as any).divulgativa ?? (project as any).longDescription ?? project.description
-const tecnica: string = (project as any).tecnica ?? (project as any).longDescription ?? ''
-const highlights: string[] = (project as any).highlights ?? []
+const divulgativa: string = project.divulgativa ?? project.description
+const tecnica: string = project.tecnica ?? ''
+const highlights: string[] = project.highlights ?? []
 const idx = proyectos.findIndex((p) => p.slug === project.slug)
 const prev = idx > 0 ? proyectos[idx - 1] : null
 const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null

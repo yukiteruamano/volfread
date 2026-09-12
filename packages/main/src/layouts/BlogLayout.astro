@@ -4,6 +4,7 @@ import Giscus from '../components/Giscus.astro'
 import '../styles/blog-markdown.css'
 import 'katex/dist/katex.min.css'
 import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
 
 interface Props {
   title: string
@@ -15,7 +16,7 @@ interface Props {
   categories?: string[]
   canonical?: string
   alternates?: { es: string; en: string }
-  cover?: any
+  cover?: string | ImageMetadata
   coverAlt?: string
   author?: string
   readingTime?: number
@@ -51,10 +52,7 @@ const blogPostingJsonLd = {
   '@type': 'BlogPosting',
   headline: title,
   description,
-  image: new URL(
-    typeof ogImage === 'string' ? ogImage : (ogImage.src ?? '/og-default.png'),
-    site
-  ).toString(),
+  image: new URL(ogImage, site).toString(),
   datePublished: publishedTime,
   dateModified: modifiedTime,
   author: {

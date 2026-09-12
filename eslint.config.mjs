@@ -19,9 +19,9 @@ export default [
   ...eslintPluginAstro.configs.recommended,
   {
     rules: {
-      // El codebase usa `as any` para JSON de datos (proyectos.json, stats) —
-      // se permite mientras se migra a tipos estrictos.
-      '@typescript-eslint/no-explicit-any': 'warn',
+      // Cero `any` en el codebase: los JSON de datos se consumen vía src/types.ts.
+      // En 'error' para que `pnpm lint` falle ante cualquier `any` nuevo.
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
 ]

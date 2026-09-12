@@ -4,6 +4,7 @@ packages:
 allowBuilds:
   esbuild: true
   sharp: true
+  workerd: true
 
 catalog:
   astro: ^5.18.2

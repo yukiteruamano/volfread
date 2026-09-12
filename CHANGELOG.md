@@ -8,6 +8,7 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 
 - Restaura apps web embebidas (`packages/eclipsescope`, `packages/simulador-blockchain`) en el build: fichas vuelven a enlazar a `/proyectos/<slug>/app/` interno, `copy-dist.mjs` fusiona `dist/proyectos/<slug>/app/`, SPA fallbacks en `_redirects` y `make build-real` desde fuentes vecinas
 - Elimina los 37 `no-explicit-any` con tipos reales (`src/types.ts`: `Project`, `ProjectStats`); la regla queda en `error` para que `pnpm lint` falle ante cualquier `any` nuevo
+- Simulador Blockchain compatible con CSP estricta: fuera `<meta CSP>` y JS inline (tema a `assets/theme-init.js`), `optimization.fonts: false` + `inlineCritical: false`; `style-src` suma `https://fonts.googleapis.com`
 
 ### Added
 

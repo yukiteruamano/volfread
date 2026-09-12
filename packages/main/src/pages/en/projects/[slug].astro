@@ -2,28 +2,30 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import CommitActivity from '../../../components/CommitActivity.astro'
 import { getAlternateUrls, useTranslations } from '../../../i18n/utils'
-import proyectos from '../../../data/proyectos.json'
-import stats from '../../../data/projects.stats.json'
+import proyectosJson from '../../../data/proyectos.json'
+import statsJson from '../../../data/projects.stats.json'
+import type { Project, ProjectsStatsFile } from '../../../types'
 
-export async function getStaticPaths() {
-  return proyectos.map((p) => ({ params: { slug: p.slug }, props: { project: p } }))
+interface Props {
+  project: Project
 }
 
+export async function getStaticPaths() {
+  return proyectosJson.map((p) => ({ params: { slug: p.slug }, props: { project: p } }))
+}
+
+const proyectos = proyectosJson as unknown as Project[]
+const stats = statsJson as unknown as ProjectsStatsFile
 const { project } = Astro.props
-const s = (stats as any).projects?.[project.slug]
+const s = stats.projects?.[project.slug]
 const alternates = getAlternateUrls(Astro.url.pathname)
 const t = useTranslations('en')
 const isWeb = project.type === 'web'
 const appUrl = `/proyectos/${project.slug}/app/`
 const locFormatted = s ? s.loc.toLocaleString('en-US') : '—'
-const divulgativa: string =
-  (project as any).divulgativaEn ??
-  (project as any).divulgativa ??
-  (project as any).longDescription ??
-  project.description
-const tecnica: string =
-  (project as any).tecnicaEn ?? (project as any).tecnica ?? (project as any).longDescription ?? ''
-const highlights: string[] = (project as any).highlightsEn ?? (project as any).highlights ?? []
+const divulgativa: string = project.divulgativaEn ?? project.divulgativa ?? project.description
+const tecnica: string = project.tecnicaEn ?? project.tecnica ?? ''
+const highlights: string[] = project.highlightsEn ?? project.highlights ?? []
 const idx = proyectos.findIndex((p) => p.slug === project.slug)
 const prev = idx > 0 ? proyectos[idx - 1] : null
 const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
@@ -31,7 +33,7 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
 
 <BaseLayout
   title={project.title}
-  description={(project as any).descriptionEn ?? project.description}
+  description={project.descriptionEn ?? project.description}
   lang="en"
   alternates={alternates}
 >
@@ -151,7 +153,7 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
       </section>
     )}
 
-    {(project as any).pkg && (
+    {project.pkg && (
       <section
         aria-labelledby="install-heading"
         class="mt-6 rounded-xl border border-volf-border bg-volf-surface p-4"
@@ -165,7 +167,7 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
           </h2>
           <button
             type="button"
-            data-copy={(project as any).pkg}
+            data-copy={project.pkg}
             class="copy-btn inline-flex min-h-8 items-center gap-1.5 rounded-full border border-volf-border bg-volf-bg px-3 py-1 text-xs font-medium text-volf-muted hover:text-volf-text hover:border-volf-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange"
             aria-label="Copy command"
           >
@@ -184,7 +186,7 @@ const next = idx < proyectos.length - 1 ? proyectos[idx + 1] : null
             Copy
           </button>
         </div>
-        <pre class="mt-2 overflow-x-auto rounded-lg bg-volf-bg border border-volf-border p-3 text-sm text-volf-amber"><code>{(project as any).pkg}</code></pre>
+        <pre class="mt-2 overflow-x-auto rounded-lg bg-volf-bg border border-volf-border p-3 text-sm text-volf-amber"><code>{project.pkg}</code></pre>
         <p class="copy-toast hidden mt-2 text-xs text-volf-amber" role="status" aria-live="polite">
           Copied ✓
         </p>

@@ -5,10 +5,12 @@ import { useTranslations, getAlternateUrls } from '../../i18n/utils'
 import { getCollection } from 'astro:content'
 import { Image } from 'astro:assets'
 import profileImg from '../../assets/yukiteru-profile.webp'
-import proyectos from '../../data/proyectos.json'
+import proyectosJson from '../../data/proyectos.json'
+import type { Project } from '../../types'
 
 const t = useTranslations('en')
 const alternates = getAlternateUrls(Astro.url.pathname)
+const proyectos = proyectosJson as unknown as Project[]
 const featured = proyectos.filter((p) => p.featured).slice(0, 4)
 const posts = (
   await getCollection(
@@ -109,7 +111,7 @@ const posts = (
     </div>
     <div class="mt-6 grid gap-4 md:grid-cols-2 auto-rows-fr">
       {featured.map((p) => (
-        <ProjectCard {...(p as any)} locale="en" />
+        <ProjectCard {...p} locale="en" />
       ))}
     </div>
   </section>

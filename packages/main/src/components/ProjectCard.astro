@@ -1,11 +1,13 @@
 ---
 import CommitActivity from './CommitActivity.astro'
-import stats from '../data/projects.stats.json'
+import statsJson from '../data/projects.stats.json'
+import type { ProjectsStatsFile } from '../types'
 
 interface Props {
   slug: string
   title: string
   description: string
+  descriptionEn?: string
   type: 'web' | 'lib' | 'cli'
   lang: string
   stack: string[]
@@ -17,18 +19,17 @@ const {
   slug,
   title,
   description,
+  descriptionEn,
   type,
   lang: progLang,
   stack,
   repo,
   featured,
   locale = 'es',
-} = Astro.props as any
-const s = (stats as any).projects?.[slug]
-const desc =
-  (Astro.props as any).descriptionEn && locale === 'en'
-    ? (Astro.props as any).descriptionEn
-    : description
+} = Astro.props
+const stats = statsJson as unknown as ProjectsStatsFile
+const s = stats.projects?.[slug]
+const desc = descriptionEn && locale === 'en' ? descriptionEn : description
 const href = locale === 'en' ? `/en/projects/${slug}` : `/proyectos/${slug}`
 const typeLabel = type === 'web' ? 'Web' : type === 'lib' ? 'Lib' : 'CLI'
 const typeColor =

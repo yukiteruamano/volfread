@@ -57,7 +57,7 @@ importers:
         version: 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)
       wrangler:
         specifier: ^4.131.0
-        version: 4.131.0
+        version: 4.131.0(@types/node@24.13.3)
 
   packages/_template-static: {}
 
@@ -6580,7 +6580,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  miniflare@5.20260910.0-alpha:
+  miniflare@5.20260910.0-alpha(@types/node@24.13.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       sharp: 0.35.4(@types/node@24.13.3)
@@ -7499,13 +7499,13 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260910.1
       '@cloudflare/workerd-windows-64': 1.20260910.1
 
-  wrangler@4.131.0:
+  wrangler@4.131.0(@types/node@24.13.3):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260910.1)
       blake3-wasm: 2.1.5
       esbuild: 0.28.1
-      miniflare: 5.20260910.0-alpha
+      miniflare: 5.20260910.0-alpha(@types/node@24.13.3)
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20260910.1

@@ -208,6 +208,25 @@ const PROJECTS = [
   { slug: 'cc-skills-golang', path: '/home/yukiteru/GIT/cc-skills-golang', lang: 'Go' },
   { slug: 'manga-tui', path: '/home/yukiteru/GIT/manga-tui', lang: 'Rust' },
   { slug: 'horusec', path: '/home/yukiteru/GIT/horusec', lang: 'Go' },
+  // Contribuciones/forks (sin vetados)
+  { slug: 'geo-seo-claude', path: '/home/yukiteru/GIT/geo-seo-claude', lang: 'Python' },
+  { slug: 'dappwarrior', path: '/home/yukiteru/GIT/dappwarrior', lang: 'JavaScript' },
+  { slug: 'weatherai', path: '/home/yukiteru/GIT/weatherai', lang: 'Python' },
+  { slug: 'openbsd-src', path: '/home/yukiteru/GIT/openbsd-src', lang: 'C' },
+  { slug: 'openbsd-ports', path: '/home/yukiteru/GIT/openbsd-ports', lang: 'Makefile' },
+  { slug: 'freebsd-src', path: '/home/yukiteru/GIT/freebsd-src', lang: 'C' },
+  { slug: 'freebsd-ports', path: '/home/yukiteru/GIT/freebsd-ports', lang: 'Makefile' },
+  { slug: 'mpv', path: '/home/yukiteru/GIT/mpv', lang: 'C' },
+  { slug: 'obs-backgroundremoval', path: '/home/yukiteru/GIT/obs-backgroundremoval', lang: 'C' },
+  { slug: 'crawl4ai', path: '/home/yukiteru/GIT/crawl4ai', lang: 'Python' },
+  { slug: 'awesome', path: '/home/yukiteru/GIT/awesome', lang: 'Lua' },
+  { slug: 'void-packages', path: '/home/yukiteru/GIT/void-packages', lang: 'Shell' },
+  { slug: 'spacemacs', path: '/home/yukiteru/GIT/spacemacs', lang: 'Emacs Lisp' },
+  { slug: 'apheleia', path: '/home/yukiteru/GIT/apheleia', lang: 'Emacs Lisp' },
+  { slug: 'trezord-go', path: '/home/yukiteru/GIT/trezord-go', lang: 'C' },
+  { slug: 'lazygit', path: '/home/yukiteru/GIT/lazygit', lang: 'Go' },
+  { slug: 'wireguard-install', path: '/home/yukiteru/GIT/wireguard-install', lang: 'Shell' },
+  { slug: 'docker-rocm-xtra', path: '/home/yukiteru/GIT/docker-rocm-xtra', lang: 'Docker' },
 ]
 
 function tryTokei(dir) {

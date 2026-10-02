@@ -7,11 +7,23 @@ allowBuilds:
   workerd: true
 
 catalog:
-  astro: ^5.18.2
+  astro: ^7.3.5
   tailwindcss: ^4.3.3
   typescript: ^5.9.0
+
+# Overrides de seguridad (último recurso): transitivas sin fix upstream.
+# Retirar en cada `make maintain` cuando el padre las traiga de serie.
+# NOTA pnpm v11: los overrides viven aquí, no en package.json#pnpm.
+overrides:
+  brace-expansion: '>=5.0.12'
+  devalue: '>=5.9.3'
+  fast-uri: '>=3.1.8'
 
 catalogs:
   react:
     react: ^19.2.8
     react-dom: ^19.2.8
+
+minimumReleaseAgeExclude:
+  - miniflare@5.20261001.0-alpha
+  - wrangler@4.146.0

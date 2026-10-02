@@ -12,6 +12,9 @@ NODE        ?= node
 WRANGLER    ?= npx wrangler
 DIST        := dist
 MAIN_DIST   := packages/main/dist
+# Puerto único para dev/preview (evita choques con otros proyectos Astro).
+# Sobrescribible: make dev PORT=4321
+PORT        ?= 5000
 
 # Fuentes webs embebidas (para build:real si existen localmente)
 EC_SOURCE   ?= /home/yukiteru/GIT/EclipseCalculator
@@ -42,7 +45,7 @@ help: ## Muestra esta ayuda
 	@echo ""
 	@echo -e "$(DIM)Ejemplos:$(RESET)"
 	@echo -e "  make install          # instala todo"
-	@echo -e "  make dev              # main en http://localhost:4321"
+	@echo -e "  make dev              # main en http://localhost:5000"
 	@echo -e "  make build            # build completo + merge dist/"
 	@echo -e "  make preview          # sirve dist fusionado"
 	@echo -e "  make deploy           # wrangler pages deploy dist"
@@ -63,10 +66,10 @@ install-tools: ## Verifica toolchain (node, pnpm, wrangler)
 
 # ── Dev ─────────────────────────────────────────────────────────────────────
 .PHONY: dev dev-main dev-scope dev-eclipse dev-blockchain dev-all
-dev: dev-main ## Alias de dev-main (main en :4321)
-dev-main: ## Dev Astro main → http://localhost:4321
-	$(call banner,dev,main :4321)
-	$(PNPM) --filter main dev --host 0.0.0.0
+dev: dev-main ## Alias de dev-main (main en :5000)
+dev-main: ## Dev Astro main → http://localhost:5000
+	$(call banner,dev,main :5000)
+	$(PNPM) --filter main dev --host 0.0.0.0 --port $(PORT)
 
 dev-scope dev-eclipse: ## Dev EclipseScope (Vite+React) → :5173
 	$(call banner,dev,eclipsescope :5173)
@@ -89,8 +92,9 @@ stats build-stats: ## Regenera projects.stats.json (LOC + git log 52w)
 # ── Build ───────────────────────────────────────────────────────────────────
 .PHONY: build build-main build-web build-real check typecheck astro-check
 
-build: ## Build completo: main + webs + merge dist/ (usa real si EC_SOURCE/SB_SOURCE existen; + CSP hashes)
+build: ## Build completo: stats + main + webs + merge dist/ (usa real si EC_SOURCE/SB_SOURCE existen; + CSP hashes)
 	$(call banner,build,main + webs + copy-dist + CSP)
+	$(PNPM) run build:stats
 	$(PNPM) run build:main
 	@if [ -d "$(EC_SOURCE)" ] && [ -f "$(EC_SOURCE)/vite.config.ts" ]; then \
 		echo -e "$(DIM)EclipseScope fuente detectada → build real con --base$(RESET)"; \
@@ -136,17 +140,21 @@ check typecheck astro-check: ## Typecheck Astro (astro check)
 	$(PNPM) run check
 
 # ── Preview & Quality ───────────────────────────────────────────────────────
-.PHONY: preview preview-main preview-dist lint format format-check
+.PHONY: preview preview-main preview-dist lint format format-check test
+
+test: ## Tests humo (node --test tests/, sin red)
+	$(call banner,test,node --test)
+	$(NODE) --test "tests/**/*.test.mjs"
 
 preview: ## Preview dist fusionado (requiere pnpm build previo)
-	$(call banner,preview,dist/ fusionado en http://localhost:4321)
+	$(call banner,preview,dist/ fusionado en http://localhost:5000)
 	@if [ ! -d "$(DIST)" ]; then echo -e "$(ORANGE)dist/ no existe — ejecuta make build$(RESET)"; exit 1; fi
 	@echo -e "$(DIM)Sirviendo $(DIST) — Ctrl+C para salir$(RESET)"
-	@npx serve $(DIST) -l 4321 2>/dev/null || $(PNPM) --filter main preview --host 0.0.0.0
+	@npx serve $(DIST) -l $(PORT) 2>/dev/null || $(PNPM) --filter main preview --host 0.0.0.0 --port $(PORT)
 
 preview-main: ## Preview solo main (sin merge)
 	$(call banner,preview,main)
-	$(PNPM) --filter main preview --host 0.0.0.0
+	$(PNPM) --filter main preview --host 0.0.0.0 --port $(PORT)
 
 preview-dist: preview ## Alias de preview
 
@@ -213,7 +221,53 @@ status: ## git status corto
 log: ## Últimos 10 commits
 	@git log --oneline -10
 
+# ── Mantenimiento (auditoría + updates) ─────────────────────────────────────
+# Mantener el proyecto mantenible: `make maintain` es el chequeo periódico
+# (solo lectura, salvo `audit` que falla ante vulns moderate+).
+# Aplicar updates con `update` (seguro, rangos semver) o `update-latest`
+# (puede romper: exige `make build && make ci` después + revisión manual).
+.PHONY: audit audit-ci outdated update-check update update-latest update-interactive dedupe-check install-ci licenses maintain
+
+audit: ## Auditoría de vulnerabilidades (falla si hay moderate+)
+	$(call banner,audit,pnpm audit --audit-level moderate)
+	$(PNPM) run audit
+
+audit-ci: install-ci audit ## Paridad CI: lockfile al día + audit fail-closed
+	$(call banner,audit-ci,OK)
+
+outdated update-check: ## Lista dependencias desactualizadas (solo lectura, no falla)
+	$(call banner,outdated,pnpm outdated --recursive)
+	$(PNPM) outdated --recursive || true
+
+update: ## Actualiza dentro de rangos semver + re-audita
+	$(call banner,update,rangos semver + audit)
+	$(PNPM) run update
+
+update-latest: ## Actualiza a latest (puede romper; luego make build && make ci)
+	$(call banner,update-latest,latest + audit)
+	$(PNPM) update --recursive --latest
+	$(PNPM) run audit
+
+update-interactive: ## Actualiza eligiendo versión por versión (requiere TTY)
+	$(call banner,update,interactivo)
+	$(PNPM) update --interactive --recursive
+
+dedupe-check: ## Verifica que el lockfile no tiene duplicados resolubles
+	$(call banner,dedupe,lockfile sano)
+	$(PNPM) dedupe --check
+
+install-ci: ## Instalación reproducible CI (falla si el lock no está al día)
+	$(call banner,install-ci,frozen-lockfile)
+	$(PNPM) install --frozen-lockfile
+
+licenses: ## Inventario de licencias de las dependencias
+	$(call banner,licenses,pnpm licenses list)
+	$(PNPM) licenses list
+
+maintain: outdated audit dedupe-check ## Chequeo periódico de mantenibilidad
+	$(call banner,maintain,upkeep OK)
+
 # ── CI ──────────────────────────────────────────────────────────────────────
 .PHONY: ci
-ci: install stats build check lint format-check ## Pipeline local CI: install + stats + build + check + lint + format
+ci: install stats test format format-check build check lint audit ## Pipeline local CI: install + stats + test + build + check + lint + format + audit
 	$(call banner,ci,local pipeline OK)

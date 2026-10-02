@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config'
+import { unified } from '@astrojs/markdown-remark'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
@@ -15,13 +16,14 @@ export default defineConfig({
     locales: ['es', 'en'],
     routing: {
       prefixDefaultLocale: false,
+      // Explícito: en v6 el defecto cambió a true y rompería `/` servido en ES
+      redirectToDefaultLocale: false,
     },
   },
   integrations: [
-    mdx({
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    }),
+    // remark/rehype (math/KaTeX) viven en markdown.processor (unified);
+    // MDX los hereda automáticamente desde Astro 7
+    mdx(),
     sitemap({
       i18n: {
         defaultLocale: 'es',
@@ -33,8 +35,9 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    // Astro 7 usa Sätteri por defecto; unified() conserva remark/rehype (math/KaTeX).
+    // Los plugins van dentro de unified({...}), no como claves sueltas (deprecado en v7).
+    processor: unified({ remarkPlugins: [remarkMath], rehypePlugins: [rehypeKatex] }),
   },
   prefetch: { prefetchAll: false, defaultStrategy: 'viewport' },
   compressHTML: true,
@@ -54,10 +57,11 @@ export default defineConfig({
       minify: 'esbuild',
       cssMinify: 'lightningcss',
       chunkSizeWarningLimit: 500,
+      // rolldown (Vite 8) exige manualChunks como función, no como objeto
       rollupOptions: {
         output: {
-          manualChunks: {
-            router: ['astro:transitions'],
+          manualChunks: (id) => {
+            if (id.includes('astro:transitions')) return 'router'
           },
         },
       },

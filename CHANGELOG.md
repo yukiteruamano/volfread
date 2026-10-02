@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 
 ## [Unreleased]
 
+### Changed
+
+- Portafolio: 38 fichas (+18 contribuciones/forks: `geo-seo-claude`, `dappwarrior`, `weatherai`, `openbsd-src`, `openbsd-ports`, `freebsd-src`, `freebsd-ports`, `mpv`, `obs-backgroundremoval`, `crawl4ai`, `awesome`, `void-packages`, `spacemacs`, `apheleia`, `trezord-go`, `lazygit`, `wireguard-install`, `docker-rocm-xtra`); `collect-project-stats.mjs` cubre los nuevos (fallback GitHub API sin checkout local)
+
+- Migración Astro 5 → 7 (guías v6+v7, registry verificado): catalog `astro ^7.3.5`, `@astrojs/markdown-remark ^7.3.1` con `markdown.processor: unified()` (Sätteri es el defecto en v7; conserva remark-math/rehype-katex), colecciones a Content Layer API (`glob` loader + `z` de `astro/zod`; `post.slug`→ helper `blogEntrySlug(post.id)`, `post.render()`→`render(post)`), `redirectToDefaultLocale: false` explícito, `compressHTML: true` conservado; Node unificado en 22 (`engines >=22.12.0`, `.nvmrc`, `NODE_VERSION=22` en Pages). URLs generadas idénticas, CSP estable
+- Auditoría `make audit` en verde: bumps mismo-major (`wrangler ^4.146`, `eslint ^10.11`, set lint al latest) + `overrides` quirúrgicos en `pnpm-workspace.yaml` (`brace-expansion ≥5.0.12`, `devalue ≥5.9.3`, `fast-uri ≥3.1.8`) para transitivas sin fix upstream; retirar overrides cuando los padres las traigan
+
 ### Fixed
 
 - Restaura apps web embebidas (`packages/eclipsescope`, `packages/simulador-blockchain`) en el build: fichas vuelven a enlazar a `/proyectos/<slug>/app/` interno, `copy-dist.mjs` fusiona `dist/proyectos/<slug>/app/`, SPA fallbacks en `_redirects` y `make build-real` desde fuentes vecinas

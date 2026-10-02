@@ -16,7 +16,7 @@ Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proye
 - Listado `/proyectos` (ES) + `/en/projects` (EN) + detalle `/proyectos/<slug>` / `/en/projects/<slug>` por cada proyecto.
 - Embebido web estático: `EclipseScope` (React+Vite) en `/proyectos/eclipsescope/app/`, `Simulador Blockchain` (Angular 19) en `/proyectos/simulador-blockchain/app/`.
 - Resto de fichas (`fast-levenshtein`, `gache`, `koma`, `mangodex`, `pkgcheck`, `simple-markdown-crawler`, etc.) — con stats LOC, breakdown lenguajes, commit activity sparkline, repo links.
-- Blog MDX multi-idioma: `/blog/<slug>` (ES) y `/en/blog/<slug>` (EN), paginación, tags, RSS por idioma, sitemap i18n.
+- Blog multi-idioma en Markdown (`.md`): `/blog/<slug>` (ES) y `/en/blog/<slug>` (EN), paginación, tags, RSS por idioma, sitemap i18n.
 - Comentarios: Giscus (GitHub Discussions) en posts.
 - Analytics: Cloudflare Web Analytics beacon.
 - Deploy Cloudflare Pages, `_headers`, `_redirects`, dominio + SSL.
@@ -26,14 +26,14 @@ Sitio personal de **volfread** (`volfread.xyz`) que unifica: portafolio de proye
 - SSR / autenticación / newsletter backend → requiere `@astrojs/cloudflare` + Workers.
 - Buscador full-text (Pagefind) → v1.1 si se pide.
 - Toggle claro/oscuro → dark fijo en v1.
-- CMS headless → MDX en repo es suficiente.
+- CMS headless → Markdown en repo es suficiente.
 
 ## 3. Requisitos funcionales
 
 | ID   | Requisito             | Criterio aceptación                                                                                                                                                                                                                                       |
 | ---- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | RF01 | Home ES/EN            | `/` renderiza ES, `/en/` EN; `LanguageSwitcher` persiste preferencia; `hreflang` presentes.                                                                                                                                                               |
-| RF02 | Portafolio listado    | `/proyectos` lista 8 proyectos, filtro por `type: web/lib/cli` y `lang`; cards con cover, badges `Go/Python/React/Angular`, stats resumidos.                                                                                                              |
+| RF02 | Portafolio listado    | `/proyectos` lista 38 proyectos, filtro por `type: web/lib/cli` y `lang`; cards con cover, badges de stack, stats resumidos (LOC + sparkline 52 semanas).                                                                                                 |
 | RF03 | Detalle proyecto web  | `/proyectos/eclipsescope` y `/proyectos/simulador-blockchain` muestran ficha + CTA `Abrir app → /proyectos/<slug>/app/` (SPA fusionada). `dist/proyectos/<slug>/app/index.html` existe tras `pnpm build`. SPA router fallback vía `_redirects` si aplica. |
 | RF04 | Ficha proyecto no-web | `/proyectos/<slug>` (ej: `koma`) muestra: descripción, `repo` link, `install` snippet (`go get`/`pip install`), LOC + donut/bar lenguajes, sparkline 52 semanas, badges licencia/stars si disponible. Datos vía `projects.stats.json` generado en build.  |
 | RF05 | Blog ES/EN            | Collections `blog` con `lang`. `getStaticPaths` genera rutas por idioma. `draft: true` oculto en prod. Paginación `blog/`, `blog/tag/[tag]`.                                                                                                              |
@@ -110,7 +110,7 @@ Build: `pnpm build:main` + `pnpm build:web` → `generate-csp` (hashes ClientRou
 
 ## 6. Modelo de contenido
 
-### 6.1 Blog Collection (`src/content/config.ts`)
+### 6.1 Blog Collection (`src/content.config.ts`, Content Layer)
 
 ```ts
 blog: defineCollection({
@@ -128,7 +128,7 @@ blog: defineCollection({
 })
 ```
 
-Path: `src/content/blog/es/*.mdx` + `en/*.mdx`. `getStaticPaths` filtra `lang`.
+Path: `src/content/blog/es/<slug>/index.md` + `en/<slug>/index.md` (Markdown `.md`, con `cover.webp` opcional). `getStaticPaths` filtra `lang`.
 
 ### 6.2 Proyectos (`src/data/proyectos.json`)
 
@@ -175,7 +175,7 @@ Tipografía: sans `Inter/Geist`, mono `JetBrains Mono`. Accent: naranja para CTA
 
 ## 8. Infra y Deploy
 
-- **Cloudflare Pages:** Repo GitHub → Build `pnpm install && pnpm build` → Output `dist`. Vars: `NODE_VERSION=20`, `PNPM_VERSION=11`.
+- **Cloudflare Pages:** Repo GitHub → Build `pnpm install && pnpm build` → Output `dist`. Vars: `NODE_VERSION=22`, `PNPM_VERSION=11`.
 - **Workers alternative:** `wrangler.toml` con `assets.directory = "./dist"`, `not_found_handling = "single-page-application"`.
 - **Dominio:** Pages → Custom domain `volfread.xyz` + `www` → SSL auto.
 - **Archivos:** `public/_headers` (cache + security), `public/_redirects` (compat redirects `eclipsecalculator → eclipsescope`, `en/proyectos → en/projects`).

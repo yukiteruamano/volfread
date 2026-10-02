@@ -1,0 +1,7 @@
+---
+// MermaidLoader.astro — carga Mermaid vendoreado solo en posts con diagramas.
+// Ambos scripts son externos (CSP script-src 'self'), con defer y orden garantizado.
+---
+
+<script is:inline src="/scripts/mermaid.min.js?v=1" defer></script>
+<script is:inline src="/scripts/mermaid-loader.js?v=7" defer></script>

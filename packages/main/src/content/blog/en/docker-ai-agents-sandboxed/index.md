@@ -27,11 +27,17 @@ Then there is the serious part. A coding agent needs to read your project, run c
 
 I tried the obvious fixes before building anything. Read-only permissions here, a separate user there, careful `sudo`. All of it was fragile. Each agent has its own config system, its own plugins and its own ways around restrictions that are not well designed. I needed something systematic. A box with real walls.
 
-## Why Docker instead of yet another virtualenv
+## Why Docker instead of a lighter jail
 
-A virtualenv isolates Python dependencies. It isolates nothing else. The agent still sees your whole disk, still runs your system binaries and still litters everywhere. The same goes for `nvm`, `rustup` or any version manager. They are tools for coexistence, not containment.
+The honest comparison is not against version managers. A `venv`, an `nvm` or a `rustup` are tools for coexistence: they organize dependencies, they contain nothing. The agent still sees your whole disk. The comparison that matters is against systems that actually isolate.
 
-Docker gives me three things no language manager gives. First, its own filesystem. The container only sees what I mount explicitly. If I mount `/home/yukiteru/projects/my-app`, that is all that exists for the agent. My `~/.ssh`, my `.env` files and the rest of the system simply are not there. Second, an unprivileged user by construction. The container starts as my UID and GID, with no `sudo`, no Linux capabilities (`--cap-drop=ALL`) and no way to escalate (`no-new-privileges`). Third, throwaway environments. If the environment gets dirty, I rebuild the image and return to a clean state in seconds. The dirt stays inside the box.
+The first is the classic `chroot`. It changes the filesystem root a process sees and little else. It needs root to set up, it isolates neither PID nor network nor mounts, and it carries decades of documented escapes. For an agent running arbitrary commands it is a "do not enter" sign, not a wall.
+
+The second one is serious: `bubblewrap`. Unprivileged namespaces, read-only binds, seccomp, no daemon and less overhead than Docker. If all I wanted was to run one contained throwaway command, `bwrap` would win. I say it plainly because the honest alternative strengthens the decision instead of weakening it.
+
+I chose Docker for everything around the runtime, not for the runtime. A `bwrap` jail isolates a process; it does not version environments, cache layers, share images across machines or manage persistent state. I needed that more than minimalism: the same rebuildable box on any host, with configuration, authentication and sessions living outside the disposable box. That is what the wrappers implement, and rewriting it on top of `bwrap` would have meant reinventing half of Docker to save myself the daemon.
+
+And on the daemon, the nuance that closes the debate. The classic case against Docker is its privileged component. But in this design the agent never touches its socket: it is not mounted except as an explicit opt-in, documented as equivalent to root on the host. No socket, no escalation to the daemon. I pay the daemon's price on the host; the agent does not even know it exists. I chose operational boredom over minimalism.
 
 The classic price of Docker is friction. Hand-made volume mounts, file permission fights, lost authentication on every restart, reconfiguring MCP and plugins every time. That is exactly what my two wrappers eliminate. One command to build, one to authenticate, one to work. All state persists on the host under a single versionable directory. The box is disposable, the state is not.
 
@@ -128,6 +134,10 @@ Nor is it a replacement for caution. I still review what they do, especially wit
 ## The blast radius, measured
 
 I have worked this way for weeks and I am not going back. My host is clean for the first time in years. Projects build the same, tests run the same, git signs the same, MCP servers answer the same. The only difference I notice is the absence of surprises. No ghost `node_modules`, no toolchains I never asked for, no fear when the agent says it is about to run commands.
+
+The trick is not one wall but five layers turning unbounded failures into bounded, reversible ones. First, minimal mounts: the container only sees the project read-write, so a misread `rm -rf .` hurts one directory, not your home. Second, immutable policy: the security configuration travels read-only or inline, so not even a compromised session can relax its own rules. Third, no escalation by construction: no `sudo`, no capabilities, `no-new-privileges` — a mistake never climbs to root. Fourth, out-of-band secrets: they travel in an env file, never on the command line, and references to `.env`, SSH keys or tokens are denied through shell and file tools alike, while SSH and GPG agents forward without keys ever entering. Fifth, traceability: post-session fingerprints, persistent audit and signed updates with rollback. Each layer answers an accident I already lived through or watched up close.
+
+A mistake inside the box costs a one-minute rebuild; the same mistake outside costs an afternoon of cleanup or a leaked token. That is why it pays off: it does not eliminate failures, it puts a ceiling and an exit door on them.
 
 If you use OpenCode or Claude Code daily, try them. The code is open under MIT, setup takes minutes and the first `run` inside the box feels exactly like outside. With one difference. When you are done, your machine is still yours.
 

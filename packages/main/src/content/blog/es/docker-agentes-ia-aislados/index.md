@@ -27,11 +27,17 @@ Y luego está lo serio. Un agente de codificación necesita leer tu proyecto, ej
 
 Probé las soluciones obvias antes de construir nada. Permisos de solo lectura aquí, un usuario aparte allá, `sudo` con cuidado. Todo era frágil. Cada agente tiene su propio sistema de configuración, sus propios plugins y sus propias formas de saltarse las restricciones si no están bien diseñadas. Necesitaba algo sistemático. Una caja con paredes de verdad.
 
-## Por qué Docker y no otro virtualenv más
+## Por qué Docker y no una jaula más ligera
 
-Un virtualenv aísla dependencias de Python. No aísla nada más. El agente sigue viendo todo tu disco, sigue ejecutando binarios de tu sistema y sigue dejando restos por todas partes. Lo mismo vale para `nvm`, `rustup` o cualquier gestor de versiones. Son herramientas de convivencia, no de contención.
+La comparación honesta no es contra gestores de versiones. Un `venv`, un `nvm` o un `rustup` son herramientas de convivencia: ordenan dependencias, no contienen nada. El agente sigue viendo tu disco entero. La comparación que importa es contra sistemas que sí aíslan.
 
-Docker me da tres cosas que ningún gestor de lenguaje da. Primera, un sistema de archivos propio. El contenedor solo ve lo que monto explícitamente. Si monto `/home/yukiteru/proyectos/mi-app`, eso es todo lo que existe para el agente. Mi `~/.ssh`, mis `.env` y el resto del sistema simplemente no están ahí. Segunda, un usuario sin privilegios por construcción. El contenedor arranca con mi UID y GID, sin `sudo`, sin capacidades Linux (`--cap-drop=ALL`) y sin posibilidad de escalar (`no-new-privileges`). Tercera, usar y tirar. Si el entorno se ensucia, reconstruyo la imagen y vuelvo a un estado limpio en segundos. La suciedad se queda dentro de la caja.
+El primero es el clásico `chroot`. Cambia la raíz del filesystem que ve un proceso y poco más. Necesita root para montarse, no aísla PID ni red ni montajes, y acumula décadas de escapes documentados. Para un agente que ejecuta comandos arbitrarios es un cartel de "no pasar", no una pared.
+
+El segundo es serio: `bubblewrap`. Namespaces sin privilegios, binds de solo lectura, seccomp, sin demonio y con menos sobrecarga que Docker. Si lo único que quisiera fuera ejecutar un comando suelto y contenido, `bwrap` ganaría. Lo digo sin rodeos porque la alternativa honesta refuerza la decisión en vez de debilitarla.
+
+Elegí Docker por todo lo que rodea al runtime, no por el runtime. Una jaula `bwrap` aísla un proceso; no versiona entornos, no cachea capas, no comparte imágenes entre máquinas ni gestiona estado persistente. Yo necesitaba eso más que minimalismo: la misma caja reconstruible en cualquier host, con la configuración, la autenticación y las sesiones viviendo fuera de la caja desechable. Eso es lo que implementan los wrappers, y reescribirlo sobre `bwrap` habría sido reinventar medio Docker para ahorrarme el demonio.
+
+Y sobre el demonio, el matiz que cierra el debate. El argumento clásico contra Docker es su componente privilegiado. Pero en este diseño el agente nunca toca su socket: no se monta salvo opt-in explícito, documentado como equivalente a root en el host. Sin socket no hay escalada al demonio. El precio del demonio lo pago yo en el host; el agente ni siquiera sabe que existe. Elegí aburrimiento operativo sobre minimalismo.
 
 El precio clásico de Docker es la fricción. Montar volúmenes a mano, pelear con permisos de archivos, perder la autenticación en cada reinicio, reconfigurar MCP y plugins cada vez. Eso es exactamente lo que mis dos wrappers eliminan. Un comando para construir, un comando para autenticar, un comando para trabajar. Todo el estado persiste en el host bajo un solo directorio versionable. La caja es desechable, el estado no.
 
@@ -128,6 +134,10 @@ Tampoco es un sustituto de la cautela. Sigo revisando lo que hacen, especialment
 ## El radio de explosión, medido
 
 Llevo semanas trabajando así y no vuelvo atrás. Mi host está limpio por primera vez en años. Los proyectos compilan igual, los tests corren igual, el git firma igual y los MCP responden igual. La única diferencia que noto es la ausencia de sorpresas. No hay `node_modules` fantasma, no hay toolchains que no pedí, no hay miedo cuando el agente dice que va a ejecutar comandos.
+
+El truco no es una sola pared, son cinco capas que convierten fallos no acotados en fallos acotados y reversibles. Primera, montajes mínimos: el contenedor solo ve el proyecto en lectura y escritura, así que un `rm -rf .` mal interpretado duele en un directorio, no en tu home. Segunda, política inmutable: la configuración de seguridad viaja en solo lectura o inline, de modo que ni siquiera una sesión comprometida puede relajar sus propias reglas. Tercera, sin escalada por construcción: sin `sudo`, sin capacidades y con `no-new-privileges`, un error nunca sube a root. Cuarta, secretos fuera de banda: viajan en fichero de entorno, nunca en la línea de comandos, y las referencias a `.env`, claves SSH o tokens se deniegan por shell y por herramientas a la vez; los agentes SSH y GPG se reenvían sin que las llaves entren jamás. Quinta, trazabilidad: huellas post-sesión, auditoría persistente y actualizaciones firmadas con rollback. Cada capa responde a un accidente que ya viví o que vi de cerca.
+
+Un error dentro de la caja cuesta un rebuild de un minuto; el mismo error fuera cuesta una tarde de limpieza o un token filtrado. Por eso compensa: no elimina los fallos, les pone techo y puerta de salida.
 
 Si usas OpenCode o Claude Code a diario, pruébalos. El código es abierto bajo MIT, la instalación lleva minutos y el primer `run` dentro de la caja se siente igual que fuera. Con una diferencia. Cuando terminas, tu máquina sigue siendo tuya.
 

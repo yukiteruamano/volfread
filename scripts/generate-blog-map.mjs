@@ -5,7 +5,10 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const root = path.resolve(__dirname, '..')
+// VOLFREAD_ROOT permite redirigir el repo (tests con fixtures en tests/).
+const root = process.env.VOLFREAD_ROOT
+  ? path.resolve(process.env.VOLFREAD_ROOT)
+  : path.resolve(__dirname, '..')
 const contentRoot = path.join(root, 'packages/main/src/content/blog')
 const outPath = path.join(root, 'packages/main/src/i18n/blogMap.json')
 

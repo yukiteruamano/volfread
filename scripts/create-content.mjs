@@ -41,7 +41,12 @@ function parseArgs() {
 
 async function prompt(question) {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-  return new Promise((resolve) => rl.question(question, (ans) => { rl.close(); resolve(ans) }))
+  return new Promise((resolve) =>
+    rl.question(question, (ans) => {
+      rl.close()
+      resolve(ans)
+    })
+  )
 }
 
 function buildContent({ esSlug, enSlug }) {
@@ -147,7 +152,9 @@ async function main() {
   ]) {
     const file = path.join(dir, 'index.md')
     if (fs.existsSync(file)) {
-      const ans = (await prompt(`⚠ ${path.relative(root, file)} ya existe. ¿Sobrescribir? (y/N): `)).trim().toLowerCase()
+      const ans = (await prompt(`⚠ ${path.relative(root, file)} ya existe. ¿Sobrescribir? (y/N): `))
+        .trim()
+        .toLowerCase()
       if (ans !== 'y' && ans !== 's') {
         console.log(`  ↷ Saltando ${path.relative(root, dir)}`)
         continue
@@ -158,7 +165,11 @@ async function main() {
     console.log(`✓ Creado ${path.relative(root, file)}`)
     // crear cover.webp placeholder si no existe
     const coverPath = path.join(dir, 'cover.webp')
-    if (!fs.existsSync(coverPath) && !fs.existsSync(path.join(dir, 'cover.png')) && !fs.existsSync(path.join(dir, 'cover.jpg'))) {
+    if (
+      !fs.existsSync(coverPath) &&
+      !fs.existsSync(path.join(dir, 'cover.png')) &&
+      !fs.existsSync(path.join(dir, 'cover.jpg'))
+    ) {
       try {
         if (fs.existsSync(placeholderSrc)) {
           fs.copyFileSync(placeholderSrc, coverPath)
@@ -177,11 +188,16 @@ async function main() {
   if (created === 0) {
     console.log('— Nada creado.')
   } else {
-    console.log(`\n✓ Scaffold listo. Edita frontmatter y contenido, añade cover.webp en cada carpeta.`)
+    console.log(
+      `\n✓ Scaffold listo. Edita frontmatter y contenido, añade cover.webp en cada carpeta.`
+    )
     console.log(`  ES: ${path.relative(root, path.join(esDir, 'index.md'))}`)
     console.log(`  EN: ${path.relative(root, path.join(enDir, 'index.md'))}`)
-    console.log(`\n  make build && make preview  → http://localhost:4321/blog/${esSlug}`)
+    console.log(`\n  make build && make preview  → http://localhost:5000/blog/${esSlug}`)
   }
 }
 
-main().catch((e) => { console.error(e); process.exit(1) })
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

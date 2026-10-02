@@ -3,7 +3,10 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const root = path.resolve(__dirname, '..')
+// VOLFREAD_ROOT permite redirigir el repo (tests con fixtures en tests/).
+const root = process.env.VOLFREAD_ROOT
+  ? path.resolve(process.env.VOLFREAD_ROOT)
+  : path.resolve(__dirname, '..')
 const out = path.join(root, 'dist')
 const mainDist = path.join(root, 'packages/main/dist')
 
@@ -33,7 +36,9 @@ copyDir(mainDist, out)
 for (const pkg of WEB_PACKAGES) {
   const src = path.join(root, 'packages', pkg, 'dist')
   if (!fs.existsSync(src)) {
-    console.warn(`[copy-dist] WARN: ${pkg} dist not found at ${src} — skipping (run pnpm --filter ${pkg} build)`)
+    console.warn(
+      `[copy-dist] WARN: ${pkg} dist not found at ${src} — skipping (run pnpm --filter ${pkg} build)`
+    )
     continue
   }
   const dst = path.join(out, 'proyectos', pkg, 'app')
@@ -46,7 +51,8 @@ for (const pkg of WEB_PACKAGES) {
     if (!html.includes('hreflang=')) {
       const canonical = `https://volfread.xyz/proyectos/${pkg}/app/`
       const inject = `    <link rel="canonical" href="${canonical}" />\n    <link rel="alternate" hreflang="es" href="${canonical}" />\n    <link rel="alternate" hreflang="x-default" href="${canonical}" />\n`
-      if (html.includes('</title>')) html = html.replace('</title>', `</title>\n${inject.trimEnd()}`)
+      if (html.includes('</title>'))
+        html = html.replace('</title>', `</title>\n${inject.trimEnd()}`)
       else if (html.includes('</head>')) html = html.replace('</head>', `${inject}  </head>`)
       else html = inject + html
       fs.writeFileSync(appHtml, html)

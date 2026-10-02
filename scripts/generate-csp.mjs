@@ -5,7 +5,10 @@ import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const root = path.resolve(__dirname, '..')
+// VOLFREAD_ROOT permite redirigir el repo (tests con fixtures en tests/).
+const root = process.env.VOLFREAD_ROOT
+  ? path.resolve(process.env.VOLFREAD_ROOT)
+  : path.resolve(__dirname, '..')
 const publicHeaders = path.join(root, 'packages/main/public/_headers')
 const distHeaders = path.join(root, 'packages/main/dist/_headers')
 const distRoot = path.join(root, 'packages/main/dist')
@@ -48,7 +51,9 @@ if (hashes.size === 0) {
 const sortedHashes = [...hashes].sort()
 const scriptSrcValue = `script-src 'self' https://giscus.app https://static.cloudflareinsights.com ${sortedHashes.join(' ')}`
 
-console.log(`[generate-csp] Found ${htmlFiles.length} html files, ${inlineCount} inline script (dedup ${hashes.size} hashes)`)
+console.log(
+  `[generate-csp] Found ${htmlFiles.length} html files, ${inlineCount} inline script (dedup ${hashes.size} hashes)`
+)
 
 function patchHeaders(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -71,7 +76,9 @@ const patchedPublic = patchHeaders(publicHeaders)
 const patchedDist = patchHeaders(distHeaders)
 
 if (hashes.size > 60) {
-  console.warn(`[generate-csp] WARN: ${hashes.size} hashes -> header ~${(scriptSrcValue.length / 1024).toFixed(1)} KiB. Cloudflare header limit ~8KB. Consider externalizing JSON-LD if it grows.`)
+  console.warn(
+    `[generate-csp] WARN: ${hashes.size} hashes -> header ~${(scriptSrcValue.length / 1024).toFixed(1)} KiB. Cloudflare header limit ~8KB. Consider externalizing JSON-LD if it grows.`
+  )
 }
 
 console.log(`[generate-csp] script-src length ${(scriptSrcValue.length / 1024).toFixed(2)} KiB`)

@@ -1,8 +1,10 @@
 ---
 title: 'Docker y agentes de IA: cómo mantuve a los míos a raya sin perder capacidades'
 description: 'OpenCode y Claude Code ensuciaban mi entorno con dependencias y acceso sin control. Creé opencode-dockerized y claude-dockerized para aislarlos con Docker sin renunciar a nada.'
-pubDate: 2026-10-02T10:00:00.000Z
+pubDate: 2026-10-02T12:00:00.000Z
 lang: es
+cover: './cover.webp'
+coverAlt: 'Docker y agentes de IA: cómo mantuve a los míos a raya sin perder capacidades'
 categories: ['seguridad']
 tags: ['docker', 'seguridad', 'ia', 'desarrollo']
 translationKey: 'docker-ai-agents-sandboxed'

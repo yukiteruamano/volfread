@@ -1,8 +1,10 @@
 ---
 title: 'Docker and AI agents: how I finally contained mine'
 description: 'OpenCode and Claude Code were polluting my environment with dependencies and unchecked access. I built opencode-dockerized and claude-dockerized to isolate them with Docker.'
-pubDate: 2026-10-02T10:00:00.000Z
+pubDate: 2026-10-02T12:00:00.000Z
 lang: en
+cover: './cover.webp'
+coverAlt: 'Docker and AI agents: how I finally contained mine'
 categories: ['security']
 tags: ['docker', 'security', 'ai', 'development']
 translationKey: 'docker-agentes-ia-aislados'

@@ -1,19 +1,19 @@
 ---
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import BlogLayout from '../../layouts/BlogLayout.astro'
-import { getAlternateUrls } from '../../i18n/utils'
+import { getAlternateUrls, blogEntrySlug } from '../../i18n/utils'
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !import.meta.env.PROD || !data.draft)
   const esPosts = posts.filter((p) => p.data.lang === 'es')
   return esPosts.map((post) => ({
-    params: { slug: post.slug.replace(/^es\//, '') },
+    params: { slug: blogEntrySlug(post.id) },
     props: { post },
   }))
 }
 
 const { post } = Astro.props
-const { Content } = await post.render()
+const { Content } = await render(post)
 // readingTime Casper-style: ~200 wpm
 const readingTime = Math.max(1, Math.round((post.body?.split(/\s+/).length ?? 0) / 200))
 // Blog 1:1 ES/EN via translationKey (hola-mundo <-> hello-world)
@@ -21,17 +21,16 @@ let alternates = getAlternateUrls(Astro.url.pathname)
 if (post.data.translationKey) {
   const allPosts = await getCollection('blog', ({ data }) => !import.meta.env.PROD || !data.draft)
   const counterpart = allPosts.find(
-    (p) =>
-      p.slug.replace(/^(es|en)\//, '') === post.data.translationKey &&
-      p.data.lang !== post.data.lang
+    (p) => blogEntrySlug(p.id) === post.data.translationKey && p.data.lang !== post.data.lang
   )
   if (counterpart) {
-    const enPath = `/en/blog/${counterpart.slug.replace(/^en\//, '')}`
-    const esPath = `/blog/${post.slug.replace(/^es\//, '')}`
+    const enPath = `/en/blog/${blogEntrySlug(counterpart.id)}`
+    const esPath = `/blog/${blogEntrySlug(post.id)}`
     alternates = { es: esPath, en: enPath }
   }
 }
 const canonical = new URL(Astro.url.pathname, Astro.site).toString()
+const hasMermaid = post.body?.includes('```mermaid') ?? false
 ---
 
 <BlogLayout
@@ -49,6 +48,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString()
   author={post.data.author}
   readingTime={readingTime}
   math={post.data.math}
+  hasMermaid={hasMermaid}
 >
   <Content />
 </BlogLayout>

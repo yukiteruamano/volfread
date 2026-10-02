@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import { getAlternateUrls } from '../../i18n/utils'
+import { getAlternateUrls, blogEntrySlug } from '../../i18n/utils'
 import { Image } from 'astro:assets'
 
 const alternates = getAlternateUrls(Astro.url.pathname)
@@ -14,7 +14,7 @@ posts = posts.sort((a, b) => b.data.pubDate!.valueOf() - a.data.pubDate!.valueOf
 const searchIndex = posts.map((p) => ({
   title: p.data.title,
   description: p.data.description,
-  url: `/blog/${p.slug.replace(/^es\//, '')}`,
+  url: `/blog/${blogEntrySlug(p.id)}`,
   tags: p.data.tags,
   categories: p.data.categories ?? ['general'],
   cover: typeof p.data.cover === 'string' ? p.data.cover : (p.data.cover?.src ?? null),
@@ -49,7 +49,7 @@ const searchIndex = posts.map((p) => ({
     ) : (
       <div class="mt-8 space-y-4" data-post-list>
         {posts.map((post) => {
-          const postUrl = `/blog/${post.slug.replace(/^es\//, '')}`
+          const postUrl = `/blog/${blogEntrySlug(post.id)}`
           return (
             <article
               data-post-card

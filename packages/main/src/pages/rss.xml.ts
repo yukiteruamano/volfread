@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss'
 import { getCollection } from 'astro:content'
+import { blogEntrySlug } from '../i18n/utils'
 import type { APIContext } from 'astro'
 
 export async function GET(context: APIContext) {
@@ -16,7 +17,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.pubDate!,
-      link: `/blog/${post.slug.replace(/^es\//, '')}`,
+      link: `/blog/${blogEntrySlug(post.id)}`,
     })),
     customData: '<language>es</language>',
   })

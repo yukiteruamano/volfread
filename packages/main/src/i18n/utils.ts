@@ -17,6 +17,13 @@ export function getLocaleFromUrl(url: URL): Locale {
   return 'es'
 }
 
+// Slug público de un post desde el id del Content Layer.
+// El loader glob no recorta `/index` como hacía el slug legacy:
+// 'es/mi-post/index' -> 'mi-post'. Las URLs generadas no cambian.
+export function blogEntrySlug(id: string): string {
+  return id.replace(/^(es|en)\//, '').replace(/\/index$/, '')
+}
+
 export function getRelativeLocaleUrl(locale: Locale, path: string): string {
   const clean = path.startsWith('/') ? path : `/${path}`
   if (locale === 'es') return clean

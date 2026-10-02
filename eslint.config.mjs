@@ -13,6 +13,8 @@ export default [
       'packages/*/.astro',
       'node_modules/',
       'packages/*/node_modules/',
+      // vendored: bundle de terceros (mermaid), sin lint
+      'packages/main/public/scripts/mermaid.min.js',
     ],
   },
   ...tseslint.configs.recommended,

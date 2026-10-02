@@ -107,7 +107,8 @@ make build-real                 # build real eclipsescope+simulador desde EC_SOU
 make build                      # stats + auto real si vecinos existen, fallback placeholder en CI
 ```
 
-pnpm build:stats # regenera projects.stats.json (auto en build; requiere red/GH_TOKEN para fallback GitHub)
+pnpm build:stats # stats con TTL 7d (reutiliza si projects.stats.stamp.json vigente; requiere red/GH_TOKEN al regenerar)
+pnpm build:stats:force # fuerza regeneración ignorando el stamp
 pnpm --filter main astro check # typecheck Astro
 pnpm build && pnpm --filter main preview # o make build && make preview (recomendado: preview sirve dist fusionado con apps en /app/ — dev solo sirve fichas)
 

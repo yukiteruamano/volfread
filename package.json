@@ -17,6 +17,7 @@
     "build:web": "pnpm --filter eclipsescope build && pnpm --filter simulador-blockchain build",
     "build:csp": "node scripts/generate-csp.mjs",
     "build:stats": "node scripts/collect-project-stats.mjs && prettier --write packages/main/src/data/projects.stats.json",
+    "build:stats:force": "node scripts/collect-project-stats.mjs --force && prettier --write packages/main/src/data/projects.stats.json",
     "preview": "pnpm --filter main preview",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts,astro,json,md}\"",

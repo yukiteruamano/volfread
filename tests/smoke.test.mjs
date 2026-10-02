@@ -135,6 +135,79 @@ describe('scripts con fixtures (VOLFREAD_ROOT)', () => {
   })
 })
 
+describe('stats-cache: timestamping', () => {
+  let cache
+  before(async () => {
+    cache = await import('../scripts/stats-cache.mjs')
+  })
+
+  const base = {
+    now: new Date('2026-10-02T12:00:00.000Z'),
+    stamp: null,
+    statsExists: true,
+    sourceHash: 'sha256:abc',
+    slugs: ['a', 'b'],
+    ttlDays: 7,
+    force: false,
+  }
+  const freshStamp = {
+    generatedAt: '2026-10-01T12:00:00.000Z',
+    ttlDays: 7,
+    sourceHash: 'sha256:abc',
+    slugs: ['b', 'a'],
+  }
+
+  it('reutiliza con stamp vigente', () => {
+    const v = cache.shouldReuse({ ...base, stamp: freshStamp })
+    assert.equal(v.reuse, true)
+  })
+
+  it('regenera con --force aunque esté vigente', () => {
+    const v = cache.shouldReuse({ ...base, stamp: freshStamp, force: true })
+    assert.equal(v.reuse, false)
+  })
+
+  it('regenera si expiró el TTL', () => {
+    const v = cache.shouldReuse({
+      ...base,
+      stamp: { ...freshStamp, generatedAt: '2026-09-20T12:00:00.000Z' },
+    })
+    assert.equal(v.reuse, false)
+  })
+
+  it('regenera si cambió proyectos.json o los slugs', () => {
+    assert.equal(
+      cache.shouldReuse({ ...base, stamp: freshStamp, sourceHash: 'sha256:zzz' }).reuse,
+      false
+    )
+    assert.equal(
+      cache.shouldReuse({ ...base, stamp: { ...freshStamp, slugs: ['a', 'b', 'c'] } }).reuse,
+      false
+    )
+  })
+
+  it('regenera sin stamp, sin stats o con stamp corrupto', () => {
+    assert.equal(cache.shouldReuse({ ...base, stamp: null }).reuse, false)
+    assert.equal(cache.shouldReuse({ ...base, stamp: freshStamp, statsExists: false }).reuse, false)
+    assert.equal(cache.shouldReuse({ ...base, stamp: { basura: 1 } }).reuse, false)
+    assert.equal(cache.readStampText('no-json{{{'), null)
+    assert.equal(cache.readStampText('{"generatedAt":123}'), null)
+  })
+
+  it('sourceHash es estable y buildStamp ordena slugs', () => {
+    assert.equal(cache.sourceHashOf('x'), cache.sourceHashOf('x'))
+    assert.notEqual(cache.sourceHashOf('x'), cache.sourceHashOf('y'))
+    const s = cache.buildStamp({
+      now: base.now,
+      sourceHash: 'sha256:abc',
+      slugs: ['b', 'a'],
+      ttlDays: 7,
+    })
+    assert.deepEqual(s.slugs, ['a', 'b'])
+    assert.equal(s.generatedAt, '2026-10-02T12:00:00.000Z')
+  })
+})
+
 describe('seguridad: _headers', () => {
   let headers
   before(() => {

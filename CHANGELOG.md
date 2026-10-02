@@ -6,6 +6,8 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 
 ### Changed
 
+- Stats con timestamping: `build:stats` reutiliza `projects.stats.json` si `projects.stats.stamp.json` vigente (<`STATS_TTL_DAYS`, defecto 7), mismo hash de `proyectos.json` y mismos slugs; `build:stats:force` (y `make stats-force`) regenera siempre; lógica pura en `scripts/stats-cache.mjs` con tests sin red
+
 - Portafolio: 38 fichas (+18 contribuciones/forks: `geo-seo-claude`, `dappwarrior`, `weatherai`, `openbsd-src`, `openbsd-ports`, `freebsd-src`, `freebsd-ports`, `mpv`, `obs-backgroundremoval`, `crawl4ai`, `awesome`, `void-packages`, `spacemacs`, `apheleia`, `trezord-go`, `lazygit`, `wireguard-install`, `docker-rocm-xtra`); `collect-project-stats.mjs` cubre los nuevos (fallback GitHub API sin checkout local)
 
 - Migración Astro 5 → 7 (guías v6+v7, registry verificado): catalog `astro ^7.3.5`, `@astrojs/markdown-remark ^7.3.1` con `markdown.processor: unified()` (Sätteri es el defecto en v7; conserva remark-math/rehype-katex), colecciones a Content Layer API (`glob` loader + `z` de `astro/zod`; `post.slug`→ helper `blogEntrySlug(post.id)`, `post.render()`→`render(post)`), `redirectToDefaultLocale: false` explícito, `compressHTML: true` conservado; Node unificado en 24 (`engines >=24`, `.nvmrc`, `NODE_VERSION=24` en Pages). URLs generadas idénticas, CSP estable

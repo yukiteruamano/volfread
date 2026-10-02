@@ -10,15 +10,25 @@
  *    (sin token: 60/h — 12 repos × ~4 llamadas ≈ 48, justo pero válido).
  *
  * Uso: pnpm build:stats  |  node scripts/collect-project-stats.mjs
+ *  Forzar regeneración: pnpm build:stats:force  |  node scripts/collect-project-stats.mjs --force
+ *
+ *  CACHE (timestamping): antes de trabajar consulta
+ *  packages/main/src/data/projects.stats.stamp.json. Si el stamp es válido,
+ *  el hash de proyectos.json coincide, los slugs no cambiaron y la edad
+ *  no supera STATS_TTL_DAYS (defecto 7), reutiliza los stats existentes y
+ *  sale sin tocar red ni disco. El stamp se commitea junto a los stats.
  */
 import fs from 'node:fs'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { buildStamp, readStampText, shouldReuse, sourceHashOf } from './stats-cache.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 const outPath = path.join(root, 'packages/main/src/data/projects.stats.json')
+const stampPath = path.join(root, 'packages/main/src/data/projects.stats.stamp.json')
+const proyectosPath = path.join(root, 'packages/main/src/data/proyectos.json')
 
 const GH_TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || ''
 const GH_HEADERS = {
@@ -298,6 +308,35 @@ function commits52(dir) {
   }
 }
 
+const FORCE = process.argv.includes('--force')
+const TTL_DAYS = Number(process.env.STATS_TTL_DAYS || 7)
+
+// Puerta del cache: evita reconstruir (y gastar rate-limit de GitHub)
+// cuando los stats vigentes sirven.
+const proyectosText = fs.readFileSync(proyectosPath, 'utf8')
+const proyectosHash = sourceHashOf(proyectosText)
+const proyectosSlugs = JSON.parse(proyectosText).map((p) => p.slug)
+let stamp = null
+try {
+  stamp = readStampText(fs.readFileSync(stampPath, 'utf8'))
+} catch {
+  stamp = null
+}
+const verdict = shouldReuse({
+  now: new Date(),
+  stamp,
+  statsExists: fs.existsSync(outPath),
+  sourceHash: proyectosHash,
+  slugs: proyectosSlugs,
+  ttlDays: TTL_DAYS,
+  force: FORCE,
+})
+if (verdict.reuse) {
+  console.log(`[stats] Reutilizando stats existentes (${verdict.reason}) — sin red ni escritura`)
+  process.exit(0)
+}
+console.log(`[stats] Regenerando (${verdict.reason})`)
+
 const projects = {}
 for (const p of PROJECTS) {
   const exists = fs.existsSync(p.path)
@@ -351,3 +390,17 @@ const out = {
 fs.mkdirSync(path.dirname(outPath), { recursive: true })
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n')
 console.log(`[stats] Written to ${outPath}`)
+fs.writeFileSync(
+  stampPath,
+  JSON.stringify(
+    buildStamp({
+      now: new Date(),
+      sourceHash: proyectosHash,
+      slugs: proyectosSlugs,
+      ttlDays: TTL_DAYS,
+    }),
+    null,
+    2
+  ) + '\n'
+)
+console.log(`[stats] Stamp written to ${stampPath}`)

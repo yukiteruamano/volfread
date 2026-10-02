@@ -84,10 +84,13 @@ dev-all: ## Dev main + eclipsescope en paralelo (requiere pnpm -r --parallel)
 	$(PNPM) -r --parallel dev
 
 # ── Stats ───────────────────────────────────────────────────────────────────
-.PHONY: stats build-stats
-stats build-stats: ## Regenera projects.stats.json (LOC + git log 52w)
+.PHONY: stats build-stats stats-force
+stats build-stats: ## Stats con TTL 7d (reutiliza si el stamp está vigente)
 	$(call banner,stats,collect-project-stats.mjs)
-	$(NODE) scripts/collect-project-stats.mjs
+	$(PNPM) run build:stats
+stats-force: ## Fuerza regeneración de stats ignorando el stamp
+	$(call banner,stats-force,collect-project-stats.mjs --force)
+	$(PNPM) run build:stats:force
 
 # ── Build ───────────────────────────────────────────────────────────────────
 .PHONY: build build-main build-web build-real check typecheck astro-check

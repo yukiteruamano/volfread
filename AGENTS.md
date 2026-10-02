@@ -150,7 +150,7 @@ Añadir proyecto no-web (ficha): solo paso 3 con `type: 'lib'|'cli'` + `repo`, `
 
 ## 9. Deploy
 
-- **Cloudflare Pages vía Wrangler CLI** (sin integración Git): `make deploy` (build + `wrangler pages deploy dist --project-name volfread-xyz`) o `make deploy-dry` para dry-run. Requiere `wrangler login` una vez (`make cf-login`). Node 22 (`engines >=22.12.0`, `.nvmrc`), `PNPM_VERSION` 11.
+- **Cloudflare Pages vía Wrangler CLI** (sin integración Git): `make deploy` (build + `wrangler pages deploy dist --project-name volfread-xyz`) o `make deploy-dry` para dry-run. Requiere `wrangler login` una vez (`make cf-login`). Node 24 (`engines >=24`, `.nvmrc`), `PNPM_VERSION` 11.
 - La integración Git de Pages está desconectada para evitar deploys duplicados del CLI.
 - **Alternativa Workers Static Assets** (si se activa SSR): `wrangler.toml` con `assets.directory = "./dist"` + `assets.not_found_handling = "single-page-application"`.
 - Dominio: Pages → Custom domain `volfread.xyz` + `www` → CF auto SSL. Registrar `_headers` y `_redirects` desde `packages/main/public/`.

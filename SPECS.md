@@ -175,7 +175,7 @@ Tipografía: sans `Inter/Geist`, mono `JetBrains Mono`. Accent: naranja para CTA
 
 ## 8. Infra y Deploy
 
-- **Cloudflare Pages:** Repo GitHub → Build `pnpm install && pnpm build` → Output `dist`. Vars: `NODE_VERSION=22`, `PNPM_VERSION=11`.
+- **Cloudflare Pages:** Repo GitHub → Build `pnpm install && pnpm build` → Output `dist`. Vars: `NODE_VERSION=24`, `PNPM_VERSION=11`.
 - **Workers alternative:** `wrangler.toml` con `assets.directory = "./dist"`, `not_found_handling = "single-page-application"`.
 - **Dominio:** Pages → Custom domain `volfread.xyz` + `www` → SSL auto.
 - **Archivos:** `public/_headers` (cache + security), `public/_redirects` (compat redirects `eclipsecalculator → eclipsescope`, `en/proyectos → en/projects`).

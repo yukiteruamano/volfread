@@ -61,8 +61,12 @@
   margin-top: 1.25rem;
 }
 @media (min-width: 768px) {
-  .prose-blog h1 { font-size: 2.5rem; }
-  .prose-blog h2 { font-size: 2rem; }
+  .prose-blog h1 {
+    font-size: 2.5rem;
+  }
+  .prose-blog h2 {
+    font-size: 2rem;
+  }
 }
 
 /* Paragraph and links */
@@ -265,6 +269,206 @@
   cursor: pointer;
   font-weight: 600;
   color: var(--color-volf-text);
+}
+
+/* Mermaid — diagramas renderizados en cliente (SVG inline, tema dark volf) */
+.prose-blog figure.mermaid {
+  background: var(--color-volf-surface);
+  border: 1px solid var(--color-volf-border);
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.prose-blog figure.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.prose-blog figure.mermaid text {
+  font-family: var(--font-mono);
+}
+
+/* Mermaid — barra de descarga SVG/PNG (generada por mermaid-loader.js) */
+.prose-blog .mermaid-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-volf-border);
+}
+.prose-blog .mermaid-dl {
+  border: 1px solid var(--color-volf-border);
+  border-radius: 9999px;
+  background: transparent;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-volf-muted);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.prose-blog .mermaid-dl:hover:not(:disabled) {
+  color: var(--color-volf-orange);
+  border-color: rgba(255, 107, 0, 0.4);
+}
+.prose-blog .mermaid-dl:focus-visible {
+  outline: 2px solid var(--color-volf-orange);
+  outline-offset: 2px;
+}
+.prose-blog .mermaid-dl:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Mermaid — SVG clicable (lo abre el lightbox) */
+.prose-blog figure.mermaid svg {
+  cursor: zoom-in;
+}
+
+/* Imágenes del post — clic abre la galería */
+.prose-blog img {
+  cursor: zoom-in;
+}
+
+/* Lightbox — galería (generada por lightbox.js) */
+.volf-lightbox[hidden] {
+  display: none;
+}
+.volf-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.volf-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 4, 4, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.volf-lightbox-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(1100px, 94vw);
+  max-height: 92vh;
+}
+.volf-lightbox-stage {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.volf-lightbox-view {
+  max-width: 100%;
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--color-volf-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  background: var(--color-volf-surface);
+}
+.volf-lightbox-caption {
+  font-size: 0.875rem;
+  color: var(--color-volf-muted);
+  text-align: center;
+  max-width: 90%;
+}
+.volf-lightbox-close,
+.volf-lightbox-prev,
+.volf-lightbox-next {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-volf-border);
+  background: rgba(20, 20, 20, 0.8);
+  color: var(--color-volf-text);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.volf-lightbox-close:hover,
+.volf-lightbox-prev:hover,
+.volf-lightbox-next:hover {
+  color: var(--color-volf-orange);
+  border-color: rgba(255, 107, 0, 0.4);
+}
+.volf-lightbox-close:focus-visible,
+.volf-lightbox-prev:focus-visible,
+.volf-lightbox-next:focus-visible,
+.volf-lightbox-thumb:focus-visible {
+  outline: 2px solid var(--color-volf-orange);
+  outline-offset: 2px;
+}
+.volf-lightbox-close {
+  position: absolute;
+  top: -3rem;
+  right: 0;
+}
+.volf-lightbox-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.volf-lightbox-counter {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-volf-muted);
+}
+.volf-lightbox-thumbs {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+.volf-lightbox-thumb {
+  flex-shrink: 0;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.volf-lightbox-thumb img {
+  display: block;
+  width: 4rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.volf-lightbox-thumb.is-active {
+  border-color: var(--color-volf-orange);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .volf-lightbox * {
+    transition: none;
+  }
 }
 
 /* KaTeX — display math scroll + dark volf */

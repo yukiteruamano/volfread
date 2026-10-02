@@ -73,7 +73,7 @@
     }
     function render(list) {
       if (!results || !empty) return
-      results.innerHTML = ''
+      results.replaceChildren()
       if (list.length === 0) {
         results.classList.add('hidden')
         if (input.value.trim()) empty.classList.remove('hidden')

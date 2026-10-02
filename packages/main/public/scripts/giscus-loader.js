@@ -21,13 +21,36 @@
     !repoId ||
     repoId.indexOf('REPLACE_WITH') !== -1
   ) {
-    var p = document.createElement('p')
-    p.className = 'text-xs text-volf-muted-2 mt-2'
-    p.textContent =
-      'Comentarios desactivados hasta configurar Giscus (repo + Discussions). Ver src/components/Giscus.astro.'
-    container.appendChild(p)
+    showNote(
+      container,
+      lang === 'en'
+        ? 'Comments off until Giscus is configured (repo + Discussions).'
+        : 'Comentarios desactivados hasta configurar Giscus (repo + Discussions).'
+    )
     return
   }
+
+  function showNote(parent, text) {
+    var p = document.createElement('p')
+    p.className = 'text-xs text-volf-muted-2 mt-2'
+    p.textContent = text
+    parent.appendChild(p)
+  }
+
+  // Estado vacío: si giscus no inyecta el iframe (sin discusión creada aún),
+  // invita a abrir la conversación en vez de dejar la caja muerta.
+  window.setTimeout(function () {
+    if (container.querySelector('iframe')) return
+    if (container.querySelector('[data-giscus-empty]')) return
+    var p = document.createElement('p')
+    p.setAttribute('data-giscus-empty', '1')
+    p.className = 'text-xs text-volf-muted-2 mt-2'
+    p.textContent =
+      lang === 'en'
+        ? 'No comments yet — be the first to open the discussion.'
+        : 'Aún no hay comentarios — abre tú la discusión.'
+    container.appendChild(p)
+  }, 12000)
 
   var script = document.createElement('script')
   script.src = 'https://giscus.app/client.js'

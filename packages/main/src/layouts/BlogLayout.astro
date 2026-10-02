@@ -1,6 +1,8 @@
 ---
 import BaseLayout from './BaseLayout.astro'
 import Giscus from '../components/Giscus.astro'
+import Lightbox from '../components/Lightbox.astro'
+import MermaidLoader from '../components/MermaidLoader.astro'
 import '../styles/blog-markdown.css'
 import 'katex/dist/katex.min.css'
 import { Image } from 'astro:assets'
@@ -21,6 +23,7 @@ interface Props {
   author?: string
   readingTime?: number
   math?: boolean
+  hasMermaid?: boolean
 }
 const {
   title,
@@ -37,6 +40,7 @@ const {
   author = 'Jose Maldonado "Yukiteru Amano"',
   readingTime,
   math = false,
+  hasMermaid = false,
 } = Astro.props
 void math
 
@@ -319,6 +323,8 @@ const breadcrumbJsonLd = {
     <hr class="my-10 border-volf-border" />
     <Giscus lang={lang} />
   </article>
+  {hasMermaid && <MermaidLoader />}
+  <Lightbox />
   <script
     type="application/ld+json"
     set:html={JSON.stringify(blogPostingJsonLd).replace(/</g, '\\u003c')}

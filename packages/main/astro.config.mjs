@@ -6,6 +6,39 @@ import tailwindcss from '@tailwindcss/vite'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import { resolve } from 'node:path'
+import blogMap from './src/i18n/blogMap.json' with { type: 'json' }
+
+// Alternos reales ES<->EN para el sitemap. El plugin @astrojs/sitemap solo
+// enlaza URLs que difieren UNICAMENTE en el prefijo de idioma, pero este sitio
+// traduce slugs (/blog/apparmor-introduccion <-> /en/blog/apparmor-introduction)
+// y el segmento base (/proyectos/x <-> /en/projects/x), asi que sin esto la
+// mayoria de URLs salen sin xhtml:link hreflang. Misma fuente que
+// src/i18n/utils.ts#getAlternateUrls + translationKey (via blogMap.json).
+function sitemapAlternates(pathname) {
+  const isEn = pathname === '/en' || pathname.startsWith('/en/')
+  // Fichas e indice de proyectos: mismo slug en ambos idiomas
+  if (pathname === '/proyectos' || pathname.startsWith('/proyectos/')) {
+    const en = pathname.replace(/^\/proyectos(?=\/|$)/, '/en/projects')
+    return { es: pathname, en }
+  }
+  if (pathname === '/en/projects' || pathname.startsWith('/en/projects/')) {
+    const es = pathname.replace(/^\/en\/projects(?=\/|$)/, '/proyectos')
+    return { es, en: pathname }
+  }
+  // Posts del blog: slugs traducidos via blogMap (bidireccional). Se excluyen
+  // indices y taxonomias, que conserva el comportamiento por defecto.
+  const blogEs = pathname.match(/^\/blog\/([^/]+)$/)
+  if (blogEs && !['tags', 'categories', 'tag', 'category'].includes(blogEs[1])) {
+    const enSlug = blogMap[blogEs[1]]
+    if (enSlug && !isEn) return { es: pathname, en: `/en/blog/${enSlug}` }
+  }
+  const blogEn = pathname.match(/^\/en\/blog\/([^/]+)$/)
+  if (blogEn && !['tags', 'categories', 'tag', 'category'].includes(blogEn[1])) {
+    const esSlug = blogMap[blogEn[1]]
+    if (esSlug && isEn) return { es: `/blog/${esSlug}`, en: pathname }
+  }
+  return null
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -31,6 +64,23 @@ export default defineConfig({
           es: 'es',
           en: 'en',
         },
+      },
+      serialize(item) {
+        let parsed
+        try {
+          parsed = new URL(item.url)
+        } catch {
+          return item
+        }
+        const alternates = sitemapAlternates(parsed.pathname)
+        if (!alternates) return item
+        return {
+          ...item,
+          links: [
+            { url: `${parsed.origin}${alternates.es}`, lang: 'es' },
+            { url: `${parsed.origin}${alternates.en}`, lang: 'en' },
+          ],
+        }
       },
     }),
   ],

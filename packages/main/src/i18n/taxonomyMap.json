@@ -1,0 +1,10 @@
+{
+  "es": {
+    "tags": ["apparmor", "desarrollo", "docker", "ia", "linux", "personal", "seguridad"],
+    "categories": ["general", "seguridad", "software"]
+  },
+  "en": {
+    "tags": ["ai", "apparmor", "development", "docker", "linux", "personal", "security"],
+    "categories": ["general", "security", "software"]
+  }
+}

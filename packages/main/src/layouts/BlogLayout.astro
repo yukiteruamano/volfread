@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro'
+import type { AlternateUrls } from '../i18n/utils'
 import Giscus from '../components/Giscus.astro'
 import Lightbox from '../components/Lightbox.astro'
 import MermaidLoader from '../components/MermaidLoader.astro'
@@ -17,7 +18,7 @@ interface Props {
   tags?: string[]
   categories?: string[]
   canonical?: string
-  alternates?: { es: string; en: string }
+  alternates?: AlternateUrls
   cover?: string | ImageMetadata
   coverAlt?: string
   author?: string

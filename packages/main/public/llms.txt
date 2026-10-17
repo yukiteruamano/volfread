@@ -1,43 +1,66 @@
 # volfread.xyz
 
-> Yukiteru (Jose Maldonado "Yukiteru Amano") — Free software activist in Venezuela, Bitcoiner, GNU/Linux power user & Sysadmin, Tech content specialist. Astro 5 static site on Cloudflare Pages, 20 projects, bilingual ES/EN.
+> Personal site of Jose Maldonado "Yukiteru Amano" — free software activist in Venezuela, Bitcoiner, GNU/Linux power user & sysadmin, tech content creator. Static site (Astro 7, Tailwind 4) on Cloudflare Pages. Bilingual: ES default (no prefix), EN under /en/. 38 open-source project profiles, bilingual blog. Last updated: 2026-10-17.
 
 ## About
-- [About (ES)](https://volfread.xyz/about): Activista SL Venezuela, Bitcoiner, poweruser Linux
-- [About (EN)](https://volfread.xyz/en/about): Free software activist, Bitcoiner, GNU/Linux power user
+- [About (ES)](https://volfread.xyz/about): activist, Bitcoiner, Linux power user, sysadmin
+- [About (EN)](https://volfread.xyz/en/about): free software activist, Bitcoiner, GNU/Linux power user
 - Author: Jose Maldonado "Yukiteru Amano" — sameAs: https://github.com/yukiteruamano, https://x.com/yukiteru_amano
 
-## Projects
-- [EclipseScope](https://volfread.xyz/proyectos/eclipsescope): React 19, astronomy-engine, WGS84 — solar eclipse calculator
-- [Simulador Blockchain](https://volfread.xyz/proyectos/simulador-blockchain): Angular 19, SHA-256, PoW, UTXO, ECDSA
-- [Koma](https://volfread.xyz/proyectos/koma): Go, Bubbletea TUI manga downloader, Anilist
-- [pkgcheck](https://volfread.xyz/proyectos/pkgcheck): Python, Slackware integrity checker, ripgrep, ldd
-- [MangoDex](https://volfread.xyz/proyectos/mangodex): Go, MangaDx API v5 typed client
-- [Gache](https://volfread.xyz/proyectos/gache): Go, generic file/memory cache
-- [fast-levenshtein](https://volfread.xyz/proyectos/fast-levenshtein): Go, Myers bit-parallel
-- [simple-markdown-crawler](https://volfread.xyz/proyectos/simple-markdown-crawler): Python, RAG Markdown crawler
-- [harden.yml](https://volfread.xyz/proyectos/harden-yml): Ansible hardening
-- [kernel-hardening-checker](https://volfread.xyz/proyectos/kernel-hardening-checker): Python, kernel CIS
-- [picom](https://volfread.xyz/proyectos/picom): C, X11 compositor
-- [apparmor.d](https://volfread.xyz/proyectos/apparmor-d): Go, 1500 AppArmor profiles
-- [doomemacs](https://volfread.xyz/proyectos/doomemacs): Emacs Lisp, Doom Emacs
-- [Knots-Banlist](https://volfread.xyz/proyectos/knots-banlist): Python, Bitcoin Knots banlist
-- [bearer](https://volfread.xyz/proyectos/bearer): Go, SAST
-- [AppJail](https://volfread.xyz/proyectos/appjail): Shell, FreeBSD jails
-- [OpenRiot](https://volfread.xyz/proyectos/openriot): Go, OpenBSD desktop
-- [cc-skills-golang](https://volfread.xyz/proyectos/cc-skills-golang): Go, agent skills
-- [manga-tui](https://volfread.xyz/proyectos/manga-tui): Rust, terminal manga
-- [horusec](https://volfread.xyz/proyectos/horusec): Go, SAST
+## Projects (38 — ES at /proyectos/<slug>/, EN at /en/projects/<slug>/)
+- [EclipseScope · Calculador de Eclipses](https://volfread.xyz/proyectos/eclipsescope): web app — when and where to see the next 15 solar eclipses
+- [Simulador Blockchain](https://volfread.xyz/proyectos/simulador-blockchain): visual lab to learn blockchain with blocks
+- [fast-levenshtein](https://volfread.xyz/proyectos/fast-levenshtein): text similarity for Go, accents and emoji included
+- [Gache](https://volfread.xyz/proyectos/gache): simple Go cache — in-memory or file, with expiry
+- [Koma コマ](https://volfread.xyz/proyectos/koma): terminal manga downloader (Go, 4 sites)
+- [MangoDex](https://volfread.xyz/proyectos/mangodex): typed MangaDx API client for Go
+- [pkgcheck · Slackware Integrity Checker](https://volfread.xyz/proyectos/pkgcheck): verify installed Slackware packages match disk
+- [simple-markdown-crawler](https://volfread.xyz/proyectos/simple-markdown-crawler): turn websites into Markdown for AI/RAG use
+- [harden.yml](https://volfread.xyz/proyectos/harden-yml): Ansible Linux server hardening playbook
+- [kernel-hardening-checker](https://volfread.xyz/proyectos/kernel-hardening-checker): check Linux kernel hardening options
+- [picom](https://volfread.xyz/proyectos/picom): lightweight X11 compositor
+- [apparmor.d](https://volfread.xyz/proyectos/apparmor-d): ~1500 AppArmor profiles
+- [doomemacs](https://volfread.xyz/proyectos/doomemacs): Emacs framework
+- [Knots-Banlist](https://volfread.xyz/proyectos/knots-banlist): resources to ban Bitcoin Knots nodes
+- [Bearer](https://volfread.xyz/proyectos/bearer): SAST security scanner for code
+- [AppJail](https://volfread.xyz/proyectos/appjail): portable FreeBSD jails
+- [OpenRiot](https://volfread.xyz/proyectos/openriot): functional OpenBSD desktop
+- [cc-skills-golang](https://volfread.xyz/proyectos/cc-skills-golang): Go skills for AI agents
+- [manga-tui](https://volfread.xyz/proyectos/manga-tui): terminal manga reader (Rust)
+- [Horusec](https://volfread.xyz/proyectos/horusec): SAST vulnerability scanner
+- [geo-seo-claude](https://volfread.xyz/proyectos/geo-seo-claude): SEO skill for AI search engines (Claude Code)
+- [dappwarrior](https://volfread.xyz/proyectos/dappwarrior): example DApp to learn from
+- [weatherai](https://volfread.xyz/proyectos/weatherai): AI-analyzed weather forecast
+- [openbsd-src](https://volfread.xyz/proyectos/openbsd-src): OpenBSD src tree mirror
+- [openbsd-ports](https://volfread.xyz/proyectos/openbsd-ports): OpenBSD ports tree
+- [freebsd-src](https://volfread.xyz/proyectos/freebsd-src): FreeBSD src tree mirror
+- [freebsd-ports](https://volfread.xyz/proyectos/freebsd-ports): FreeBSD ports tree
+- [mpv](https://volfread.xyz/proyectos/mpv): command-line video player
+- [obs-backgroundremoval](https://volfread.xyz/proyectos/obs-backgroundremoval): OBS portrait background removal plugin
+- [crawl4ai](https://volfread.xyz/proyectos/crawl4ai): LLM-friendly web crawler
+- [awesome](https://volfread.xyz/proyectos/awesome): awesome window manager
+- [void-packages](https://volfread.xyz/proyectos/void-packages): Void Linux source packages
+- [spacemacs](https://volfread.xyz/proyectos/spacemacs): community Emacs distribution
+- [apheleia](https://volfread.xyz/proyectos/apheleia): non-intrusive Emacs formatter
+- [trezord-go](https://volfread.xyz/proyectos/trezord-go): Trezor communication daemon
+- [lazygit](https://volfread.xyz/proyectos/lazygit): terminal UI for git
+- [wireguard-install](https://volfread.xyz/proyectos/wireguard-install): WireGuard VPN installer
+- [docker-rocm-xtra](https://volfread.xyz/proyectos/docker-rocm-xtra): ROCm Docker images
 
 ## Blog (ES)
-- [Hola, mundo — nace volfread.xyz](https://volfread.xyz/blog/hola-mundo): why static, how built [2026-09-06]
-- [Cómo embeber una SPA Vite en Astro sin dolor](https://volfread.xyz/blog/segundo-post): pnpm workspaces + base + copy-dist [2026-09-05]
+- [AppArmor, una poderosa herramienta de seguridad](https://volfread.xyz/blog/apparmor-introduccion): activate and configure AppArmor on GNU/Linux [2026-09-08]
+- [Docker y agentes de IA: cómo mantuve a los míos a raya](https://volfread.xyz/blog/docker-agentes-ia-aislados): sandboxing OpenCode/Claude Code with Docker [2026-10-02]
+- [Primeros Pasos](https://volfread.xyz/blog/primeros-pasos): personal space launch [2026-09-08]
+- [slackware-pkgcheck, integridad verificada para Slackware Linux](https://volfread.xyz/blog/slackware-pkgcheck-integridad): file integrity auditing on Slackware [2026-09-11]
 
 ## Blog (EN)
-- [Hello, world — volfread.xyz is live](https://volfread.xyz/en/blog/hello-world): why static, how built [2026-09-06]
+- [AppArmor, a powerful security tool](https://volfread.xyz/en/blog/apparmor-introduction) [2026-09-08]
+- [Docker and AI agents: how I finally contained mine](https://volfread.xyz/en/blog/docker-ai-agents-sandboxed) [2026-10-02]
+- [First Steps](https://volfread.xyz/en/blog/first-steps) [2026-09-08]
+- [slackware-pkgcheck, file integrity checks for Slackware Linux](https://volfread.xyz/en/blog/slackware-pkgcheck-integrity) [2026-09-11]
 
 ## Tech
-- Stack: Astro 5, Tailwind 4, pnpm workspaces, Cloudflare Pages, trailingSlash: never, i18n ES (default) / EN (/en/projects)
+- Stack: Astro 7, Tailwind 4, pnpm workspaces, Cloudflare Pages, trailingSlash never, i18n ES default / EN (/en/, /en/projects)
 - Sitemap: https://volfread.xyz/sitemap-index.xml
 - RSS: https://volfread.xyz/rss.xml (ES), https://volfread.xyz/en/rss.xml (EN)
 - Contact: https://github.com/yukiteruamano, https://x.com/yukiteru_amano

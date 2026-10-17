@@ -12,6 +12,22 @@ const root = process.env.VOLFREAD_ROOT
 const contentRoot = path.join(root, 'packages/main/src/content/blog')
 const outPath = path.join(root, 'packages/main/src/i18n/blogMap.json')
 
+function parseList(value) {
+  // "['a', 'b']" | "[a, b]" | "a" -> ['a','b'] (normalizado como content.config.ts)
+  const inner = value.trim().replace(/^\[/, '').replace(/\]$/, '')
+  if (!inner.trim()) return []
+  return inner
+    .split(',')
+    .map((s) =>
+      s
+        .trim()
+        .replace(/^['"]|['"]$/g, '')
+        .toLowerCase()
+        .trim()
+    )
+    .filter(Boolean)
+}
+
 function parseFrontmatter(file) {
   const txt = fs.readFileSync(file, 'utf8')
   const m = txt.match(/^---\s*\n([\s\S]*?)\n---/)
@@ -44,17 +60,42 @@ function walk(dir) {
 
 const files = walk(contentRoot)
 const map = {}
+// Taxonomías y fechas para SEO: qué tags/categorías existen por idioma (evita
+// hreflang hacia 404) y lastmod del sitemap. Solo posts publicables (sin draft/hidden).
+const taxonomy = {
+  es: { tags: new Set(), categories: new Set() },
+  en: { tags: new Set(), categories: new Set() },
+}
+const postDates = {}
 
 for (const file of files) {
   const rel = path.relative(contentRoot, file) // es/primeros-pasos/index.md
   const slug = rel.replace(/\/index\.mdx?$/, '').replace(/\.mdx?$/, '') // es/primeros-pasos
   const data = parseFrontmatter(file)
-  if (!data.translationKey) continue
+  const lang = slug.startsWith('en/') ? 'en' : 'es'
   const key = slug.replace(/^(es|en)\//, '')
-  const target = data.translationKey.trim()
-  // map is bidirectional: current slug -> target, and we will also ensure reverse when processing target file
-  if (key && target) {
-    map[key] = target
+  if (data.translationKey) {
+    const target = data.translationKey.trim()
+    // map is bidirectional: current slug -> target, and we will also ensure reverse when processing target file
+    if (key && target) {
+      map[key] = target
+    }
+  }
+  const isDraft = data.draft === 'true' || data.hidden === 'true'
+  if (!isDraft && taxonomy[lang]) {
+    for (const t of parseList(data.tags ?? '')) taxonomy[lang].tags.add(t)
+    const cats = parseList(data.categories ?? '')
+    if (data.category)
+      cats.push(
+        data.category
+          .trim()
+          .replace(/^['"]|['"]$/g, '')
+          .toLowerCase()
+      )
+    for (const c of cats.length ? cats : ['general']) taxonomy[lang].categories.add(c)
+    const lastmod = data.updatedDate ?? data.pubDate ?? data.date
+    if (key && lastmod && !Number.isNaN(Date.parse(lastmod)))
+      postDates[`${lang}/${key}`] = new Date(lastmod).toISOString()
   }
 }
 
@@ -69,3 +110,22 @@ console.log(
   `[generate-blog-map] ${Object.keys(map).length} entradas → ${path.relative(root, outPath)}`
 )
 if (Object.keys(map).length) console.log(map)
+
+const taxonomyOut = Object.fromEntries(
+  Object.entries(taxonomy).map(([lang, sets]) => [
+    lang,
+    { tags: [...sets.tags].sort(), categories: [...sets.categories].sort() },
+  ])
+)
+const taxonomyPath = path.join(path.dirname(outPath), 'taxonomyMap.json')
+fs.writeFileSync(taxonomyPath, JSON.stringify(taxonomyOut, null, 2) + '\n')
+console.log(
+  `[generate-blog-map] taxonomías → ${path.relative(root, taxonomyPath)} ` +
+    `(es:${taxonomyOut.es.tags.length}t/${taxonomyOut.es.categories.length}c en:${taxonomyOut.en.tags.length}t/${taxonomyOut.en.categories.length}c)`
+)
+
+const datesPath = path.join(path.dirname(outPath), 'postDates.json')
+fs.writeFileSync(datesPath, JSON.stringify(postDates, null, 2) + '\n')
+console.log(
+  `[generate-blog-map] ${Object.keys(postDates).length} fechas → ${path.relative(root, datesPath)}`
+)

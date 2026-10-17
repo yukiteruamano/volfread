@@ -6,6 +6,17 @@ import tailwindcss from '@tailwindcss/vite'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import { resolve } from 'node:path'
+import { getAlternateUrls } from './src/i18n/utils.ts'
+import postDatesJson from './src/i18n/postDates.json'
+
+const postDates = postDatesJson
+// lastmod por post (updatedDate ?? pubDate) — clave 'es/<slug>' o 'en/<slug>'
+function postLastmod(pathname) {
+  const clean = pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+  const m = clean.match(/^\/(en\/)?blog\/([^/]+)$/)
+  if (!m) return undefined
+  return postDates[`${m[1] ? 'en' : 'es'}/${m[2]}`]
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -31,6 +42,22 @@ export default defineConfig({
           es: 'es',
           en: 'en',
         },
+      },
+      // hreflang que el plugin no deduce (slugs traducidos, proyectos↔projects)
+      // + lastmod por post. Sin contraparte válida se respeta el cálculo del plugin.
+      serialize(item) {
+        const pathname = new URL(item.url).pathname
+        const { es, en } = getAlternateUrls(pathname)
+        if (es && en) {
+          const site = item.url.slice(0, item.url.length - pathname.length)
+          item.links = [
+            { url: new URL(es, site).toString(), lang: 'es' },
+            { url: new URL(en, site).toString(), lang: 'en' },
+          ]
+        }
+        const lastmod = postLastmod(pathname)
+        if (lastmod) item.lastmod = lastmod
+        return item
       },
     }),
   ],

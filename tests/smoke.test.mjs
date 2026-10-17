@@ -114,18 +114,23 @@ describe('scripts con fixtures (VOLFREAD_ROOT)', () => {
     const root = tmpRoot('blogmap')
     writeFile(
       path.join(root, 'packages/main/src/content/blog/es/mi-post/index.md'),
-      '---\ntitle: A\ntranslationKey: my-post\n---\n\nHola\n'
+      '---\ntitle: A\ntranslationKey: my-post\nlang: es\ntags: [a, b]\npubDate: 2026-09-01\n---\n\nHola\n'
     )
     writeFile(
       path.join(root, 'packages/main/src/content/blog/en/my-post/index.md'),
-      '---\ntitle: B\ntranslationKey: mi-post\n---\n\nHi\n'
+      '---\ntitle: B\ntranslationKey: mi-post\nlang: en\ntags: [a]\npubDate: 2026-09-02\n---\n\nHi\n'
     )
     runScript('generate-blog-map.mjs', root)
-    const map = JSON.parse(
-      fs.readFileSync(path.join(root, 'packages/main/src/i18n/blogMap.json'), 'utf8')
-    )
+    const i18n = path.join(root, 'packages/main/src/i18n')
+    const map = JSON.parse(fs.readFileSync(path.join(i18n, 'blogMap.json'), 'utf8'))
     assert.equal(map['mi-post'], 'my-post')
     assert.equal(map['my-post'], 'mi-post')
+    const taxonomy = JSON.parse(fs.readFileSync(path.join(i18n, 'taxonomyMap.json'), 'utf8'))
+    assert.deepEqual(taxonomy.es.tags, ['a', 'b'])
+    assert.deepEqual(taxonomy.en.tags, ['a'])
+    const dates = JSON.parse(fs.readFileSync(path.join(i18n, 'postDates.json'), 'utf8'))
+    assert.ok(dates['es/mi-post']?.startsWith('2026-09-01'))
+    assert.ok(dates['en/my-post']?.startsWith('2026-09-02'))
   })
 
   it('todos los scripts pasan node --check', () => {
@@ -220,11 +225,108 @@ describe('seguridad: _headers', () => {
     assert.doesNotMatch(m[0], /unsafe-inline/)
   })
 
-  it('HSTS sin preload e img-src sin blob:', () => {
-    const hsts = headers.match(/Strict-Transport-Security:[^\n]*/)
-    assert.ok(hsts && /max-age=31536000; includeSubDomains/.test(hsts[0]), 'hay HSTS')
-    assert.doesNotMatch(hsts[0], /preload/)
-    const img = headers.match(/img-src[^;]*;/)
-    assert.ok(img && !/blob:/.test(img[0]), 'img-src sin blob:')
+  it('CSP enforcement servible con hashes (post generate-csp)', () => {
+    const csp = headers.match(/Content-Security-Policy:[^\n]*/)
+    assert.ok(csp, 'hay Content-Security-Policy')
+    assert.match(csp[0], /default-src 'self'/) // enforcement, no report-only
+    assert.match(csp[0], /script-src[^;]*'sha256-[A-Za-z0-9+/=]+'/) // hashes generados
+  })
+})
+
+describe('seo: mapas i18n y llms.txt al día', () => {
+  const i18nDir = path.join(REPO, 'packages/main/src/i18n')
+  const contentDir = path.join(REPO, 'packages/main/src/content/blog')
+
+  function walk(dir, out = []) {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name)
+      if (e.isDirectory()) walk(p, out)
+      else if (e.isFile() && p.endsWith('.md')) out.push(p)
+    }
+    return out
+  }
+
+  function frontmatter(file) {
+    const m = fs.readFileSync(file, 'utf8').match(/^---\s*\n([\s\S]*?)\n---/)
+    const data = {}
+    for (const line of (m?.[1] ?? '').split('\n')) {
+      const kv = line.match(/^\s*([A-Za-z0-9_]+)\s*:\s*(.+)\s*$/)
+      if (kv) data[kv[1]] = kv[2].trim().replace(/^['"]|['"]$/g, '')
+    }
+    return data
+  }
+
+  const list = (v) =>
+    v
+      .replace(/^\[/, '')
+      .replace(/\]$/, '')
+      .split(',')
+      .map((s) =>
+        s
+          .trim()
+          .replace(/^['"]|['"]$/g, '')
+          .toLowerCase()
+      )
+      .filter(Boolean)
+
+  let posts
+  before(() => {
+    posts = walk(contentDir).map((file) => {
+      const rel = path.relative(contentDir, file)
+      const lang = rel.startsWith('en/') ? 'en' : 'es'
+      const slug = rel
+        .replace(/\/index\.md$/, '')
+        .replace(/\.md$/, '')
+        .replace(/^(es|en)\//, '')
+      return { lang, slug, data: frontmatter(file) }
+    })
+  })
+
+  it('blogMap cubre todos los translationKey', () => {
+    const map = JSON.parse(fs.readFileSync(path.join(i18nDir, 'blogMap.json'), 'utf8'))
+    for (const p of posts) {
+      if (!p.data.translationKey) continue
+      assert.equal(map[p.slug], p.data.translationKey, `blogMap sin ${p.slug}`)
+    }
+  })
+
+  it('taxonomyMap cubre tags/categorías publicables por idioma', () => {
+    const taxonomy = JSON.parse(fs.readFileSync(path.join(i18nDir, 'taxonomyMap.json'), 'utf8'))
+    for (const lang of ['es', 'en']) {
+      const tags = new Set()
+      const cats = new Set()
+      for (const p of posts.filter((x) => x.lang === lang)) {
+        if (p.data.draft === 'true' || p.data.hidden === 'true') continue
+        for (const t of list(p.data.tags ?? '')) tags.add(t)
+        const cs = list(p.data.categories ?? '')
+        if (p.data.category) cs.push(p.data.category.toLowerCase())
+        for (const c of cs.length ? cs : ['general']) cats.add(c)
+      }
+      assert.deepEqual(new Set(taxonomy[lang].tags), tags, `tags ${lang}`)
+      assert.deepEqual(new Set(taxonomy[lang].categories), cats, `categories ${lang}`)
+    }
+  })
+
+  it('postDates cubre todos los posts publicables', () => {
+    const dates = JSON.parse(fs.readFileSync(path.join(i18nDir, 'postDates.json'), 'utf8'))
+    for (const p of posts) {
+      if (p.data.draft === 'true' || p.data.hidden === 'true') continue
+      assert.ok(dates[`${p.lang}/${p.slug}`], `postDates sin ${p.lang}/${p.slug}`)
+    }
+  })
+
+  it('llms.txt menciona proyectos, posts y stack vigente', () => {
+    const llms = fs.readFileSync(path.join(REPO, 'packages/main/public/llms.txt'), 'utf8')
+    const proyectos = JSON.parse(
+      fs.readFileSync(path.join(REPO, 'packages/main/src/data/proyectos.json'), 'utf8')
+    )
+    assert.match(llms, /Astro 7/)
+    for (const p of proyectos)
+      assert.ok(llms.includes(`/proyectos/${p.slug}`), `llms sin ${p.slug}`)
+    for (const p of posts) {
+      if (p.data.draft === 'true' || p.data.hidden === 'true') continue
+      const prefix = p.lang === 'en' ? '/en/blog/' : '/blog/'
+      assert.ok(llms.includes(`${prefix}${p.slug}`), `llms sin ${prefix}${p.slug}`)
+    }
   })
 })

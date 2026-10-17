@@ -21,7 +21,7 @@ volfread.xyz/ (root private, pnpm-workspace.yaml: packages/*)
 ├── scripts/
 │   ├── copy-dist.mjs               # fusiona dist/ (main + webs)
 │   ├── generate-csp.mjs            # hashes CSP para scripts inline (ClientRouter + JSON-LD)
-│   ├── generate-blog-map.mjs       # mapa ES↔EN desde translationKey → i18n/blogMap.json
+│   ├── generate-blog-map.mjs       # mapas i18n desde contenido → blogMap.json + taxonomyMap.json + postDates.json
 │   └── collect-project-stats.mjs   # LOC + git log → projects.stats.json
 ├── tests/
 │   └── smoke.test.mjs              # humo sin red (`pnpm test`, `make test`)
@@ -35,7 +35,7 @@ volfread.xyz/ (root private, pnpm-workspace.yaml: packages/*)
     │       │   ├── pages/{index,about,proyectos/[slug],blog/[...slug],en/{projects/[slug],blog/[...slug]}}.astro
     │   │   ├── content/blog/{es,en}/<slug>/index.md (+ cover.webp opcional)
     │   │   ├── data/{proyectos.json, projects.stats.json}
-    │   │   ├── i18n/{ui.ts, utils.ts}
+    │   │   ├── i18n/{ui.ts, utils.ts} (+ blogMap/taxonomyMap/postDates.json generados)
     │   │   └── styles/{global.css, theme.css, blog-markdown.css}
     │   └── public/{favicon.svg, _headers, _redirects, scripts/*.js}
     ├── eclipsescope/               # Vite+React — base /proyectos/eclipsescope/app/

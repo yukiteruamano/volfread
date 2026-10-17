@@ -5,7 +5,10 @@ interface Props {
   lang: Locale
 }
 const { lang } = Astro.props
+// Sin contraparte traducida el switch lleva al índice del otro idioma (nunca a un 404)
 const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
+const esTarget = esHref ?? '/blog'
+const enTarget = enHref ?? '/en/blog'
 ---
 
 <div
@@ -14,7 +17,7 @@ const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
   aria-label={lang === 'en' ? 'Language' : 'Idioma'}
 >
   <a
-    href={esHref}
+    href={esTarget}
     class:list={[
       'rounded-full px-3 py-1.5 font-medium transition min-h-8 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange',
       lang === 'es'
@@ -27,7 +30,7 @@ const { es: esHref, en: enHref } = getAlternateUrls(Astro.url.pathname)
     ES
   </a>
   <a
-    href={enHref}
+    href={enTarget}
     class:list={[
       'rounded-full px-3 py-1.5 font-medium transition min-h-8 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volf-orange',
       lang === 'en'

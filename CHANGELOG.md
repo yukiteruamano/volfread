@@ -15,6 +15,7 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 
 ### Fixed
 
+- hreflang válido en todo el sitio: `getAlternateUrls()` ya no genera alternates hacia URLs inexistentes (tags/categorías sin contraparte como `/blog/tag/desarrollo` o `/en/blog/tag/ai` emiten solo su idioma + `x-default`); `LanguageSwitcher` cae al índice del otro idioma en vez de a un 404; `og:image:type` dinámico (los covers `.webp` declaraban `image/png`)
 - Restaura apps web embebidas (`packages/eclipsescope`, `packages/simulador-blockchain`) en el build: fichas vuelven a enlazar a `/proyectos/<slug>/app/` interno, `copy-dist.mjs` fusiona `dist/proyectos/<slug>/app/`, SPA fallbacks en `_redirects` y `make build-real` desde fuentes vecinas
 - Elimina los 37 `no-explicit-any` con tipos reales (`src/types.ts`: `Project`, `ProjectStats`); la regla queda en `error` para que `pnpm lint` falle ante cualquier `any` nuevo
 - Simulador Blockchain compatible con CSP estricta: fuera `<meta CSP>` y JS inline (tema a `assets/theme-init.js`), `optimization.fonts: false` + `inlineCritical: false`; `style-src` suma `https://fonts.googleapis.com`
@@ -28,6 +29,7 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 - Blog MDX `src/content/blog/{es,en}` con RSS/sitemap por idioma
 - Portafolio `/proyectos` — fichas web embebidas (`/proyectos/<slug>/`) + fichas lib/cli con stats LOC y sparkline 52 semanas
 - Scripts `copy-dist.mjs` (fusión dist) y `collect-project-stats.mjs` (LOC + git log)
+- SEO/GEO: sitemap con `hreflang` es/en en posts (slugs traducidos vía `blogMap.json`) y en las 76 fichas `proyectos↔projects` + `lastmod` por post (`postDates.json`); `generate-blog-map.mjs` emite además `taxonomyMap.json` (validez de alternates); `llms.txt` regenerado (Astro 7, 38 proyectos, 8 posts, fecha); RSS sin trailing slash (`trailingSlash: false`, igual que el canonical); titles home descriptivos; 5 tests humo anti-rot (CSP enforcement, frescura de mapas, cobertura de `llms.txt`)
 - Comentarios Giscus (GitHub Discussions) en posts
 - Cloudflare Pages deploy (`dist`), `_headers`/`_redirects`, analytics beacon
 - Docs: `AGENTS.md`, `SPECS.md`, `README.md`

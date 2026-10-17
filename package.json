@@ -13,7 +13,7 @@
     "dev:main": "pnpm --filter main dev",
     "dev:eclipse": "pnpm --filter eclipsescope dev",
     "build": "pnpm build:stats && pnpm build:main && pnpm build:web && pnpm build:csp && node scripts/copy-dist.mjs",
-    "build:main": "node scripts/generate-blog-map.mjs && pnpm --filter main build",
+    "build:main": "node scripts/generate-blog-map.mjs && prettier --write packages/main/src/i18n/blogMap.json packages/main/src/i18n/taxonomyMap.json packages/main/src/i18n/postDates.json && pnpm --filter main build",
     "build:web": "pnpm --filter eclipsescope build && pnpm --filter simulador-blockchain build",
     "build:csp": "node scripts/generate-csp.mjs",
     "build:stats": "node scripts/collect-project-stats.mjs && prettier --write packages/main/src/data/projects.stats.json",

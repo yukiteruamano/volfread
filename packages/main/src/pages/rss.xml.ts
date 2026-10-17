@@ -13,6 +13,8 @@ export async function GET(context: APIContext) {
     title: 'volfread.xyz — Blog',
     description: 'Notas sobre desarrollo, Go, Python, web y blockchain.',
     site: context.site ?? 'https://volfread.xyz',
+    // trailingSlash:'never' en astro.config.mjs — el RSS debe canonalizar igual
+    trailingSlash: false,
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,

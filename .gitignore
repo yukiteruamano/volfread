@@ -1,6 +1,7 @@
 # Deps
 node_modules/
 .pnpm-store/
+.pi/
 
 # Builds
 dist/

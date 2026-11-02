@@ -24,6 +24,8 @@ Todos los cambios notables de este proyecto se documentan aquí. Formato basado 
 
 ### Added
 
+- Blog ES/EN: «Pi, el arnés de IA donde vivo, y lo que arregló la 1.4.0» / «Pi is the AI harness I live in, and 1.4.0 is the polish I wanted» (`blog/pi-harness-ia` ↔ `en/blog/pi-ai-harness` con `translationKey` cruzado y portada propia); CSP regenerada (37 → 45 hashes) por el JSON-LD de las páginas nuevas
+
 - Estructura monorepo pnpm workspaces (`packages/main`, `eclipsescope`, `simulador-blockchain`)
 - Sitio Astro 5 estático con Tailwind 4 (tema oscuro negro #0A0A0A + naranja #FF6B00)
 - i18n ES (default sin prefijo) + EN (`/en/`) con `prefixDefaultLocale: false`

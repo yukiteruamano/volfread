@@ -4,10 +4,12 @@
  * Genera packages/main/src/data/projects.stats.json con:
  *  - LOC + breakdown por lenguaje (tokei si disponible, fallback conteo de extensiones)
  *  - histograma commits últimos 52 semanas (git log local o placeholders)
- *  - FALLBACK GitHub API: si el checkout local no existe, estima LOC vía
- *    tree recursivo (bytes de código / 45) y commits vía commit history.
- *    Requiere red; con GH_TOKEN/GITHUB_TOKEN el rate limit sube a 5000/h
- *    (sin token: 60/h — 12 repos × ~4 llamadas ≈ 48, justo pero válido).
+ *  - FALLBACK clon: si el checkout local no existe, clona bare + blobless +
+ *    shallow (52 semanas) en un cache temporal y saca los commits de ahí: 0
+ *    llamadas a la API. El LOC se reutiliza del stats anterior o de
+ *    /languages (1 llamada).
+ *  - ÚLTIMO RECURSO GitHub API: tree recursivo (bytes de código / 45) y
+ *    commit history. Sin token el rate limit es 60/h, por eso va al final.
  *
  * Uso: pnpm build:stats  |  node scripts/collect-project-stats.mjs
  *  Forzar regeneración: pnpm build:stats:force  |  node scripts/collect-project-stats.mjs --force
@@ -19,6 +21,7 @@
  *  sale sin tocar red ni disco. El stamp se commitea junto a los stats.
  */
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
@@ -145,6 +148,46 @@ function bucketWeeks(dates, now = new Date()) {
   return { weeks, thisMonday }
 }
 
+// Clon bare superficial: los commits de 52 semanas sin gastar rate limit de la API.
+// Ojo: --filter=blob:none deja los blobs fuera; nada que lea contenidos (ls-tree -l,
+// cat-file) sobre este clon, porque los descargaría uno a uno.
+const CLONE_ROOT = path.join(os.tmpdir(), 'volfread-stats-clones')
+const CLONE_TTL_MS = 6 * 60 * 60 * 1000 // reutiliza el clon si tiene menos de 6 h
+
+function cloneRepo(ownerRepo, slug) {
+  const dir = path.join(CLONE_ROOT, slug)
+  if (fs.existsSync(dir)) {
+    if (Date.now() - fs.statSync(dir).mtimeMs < CLONE_TTL_MS) return dir
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+  fs.mkdirSync(CLONE_ROOT, { recursive: true })
+  const url = `https://github.com/${ownerRepo}.git`
+  // 53 semanas: cubre la ventana de 52 que grafica bucketWeeks
+  const since = new Date(Date.now() - 53 * 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  let err = null
+  // Algunos repos rechazan --shallow-since ("error processing shallow info");
+  // el reintento por --depth cuenta commits en vez de semanas: si el repo tiene
+  // más de 1500 commits en 52 semanas, ese repo se queda corto (solo en el reintento).
+  for (const shallowFlag of [`--shallow-since=${since}`, '--depth 1500']) {
+    try {
+      execSync(
+        `git clone --bare --filter=blob:none ${shallowFlag} --single-branch ${url} "${dir}"`,
+        { stdio: 'ignore', timeout: 180000 }
+      )
+      return dir
+    } catch (e) {
+      err = e
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
+  }
+  throw err
+}
+
+// Breakdown oficial de bytes por lenguaje (1 sola llamada)
+async function githubLanguages(ownerRepo) {
+  return langBreakdown(await githubJson(`https://api.github.com/repos/${ownerRepo}/languages`))
+}
+
 // Estimación rápida vía GitHub API: tree recursivo (bytes->LOC) + commits 52 semanas
 async function githubStats(ownerRepo) {
   const repo = await githubJson(`https://api.github.com/repos/${ownerRepo}`)
@@ -191,6 +234,9 @@ const PROJECTS = [
     path: '/home/yukiteru/GIT/yukiteruamano.github.io',
     lang: 'TypeScript',
   },
+  { slug: 'pi-dockerized', path: '/home/yukiteru/GIT/pi-dockerized', lang: 'Shell' },
+  { slug: 'claude-dockerized', path: '/home/yukiteru/GIT/claude-dockerized', lang: 'Shell' },
+  { slug: 'opencode-dockerized', path: '/home/yukiteru/GIT/opencode-dockerized', lang: 'Shell' },
   { slug: 'fast-levenshtein', path: '/home/yukiteru/GIT/fast-levenshtein', lang: 'Go' },
   { slug: 'gache', path: '/home/yukiteru/GIT/gache', lang: 'Go' },
   { slug: 'koma', path: '/home/yukiteru/GIT/koma', lang: 'Go' },
@@ -337,40 +383,75 @@ if (verdict.reuse) {
 }
 console.log(`[stats] Regenerando (${verdict.reason})`)
 
+// Stats vigentes: fuente barata del LOC cuando el checkout no está en esta máquina
+let prevStats = {}
+try {
+  prevStats = JSON.parse(fs.readFileSync(outPath, 'utf8')).projects || {}
+} catch {
+  prevStats = {}
+}
+
 const projects = {}
 for (const p of PROJECTS) {
-  const exists = fs.existsSync(p.path)
+  const src = []
   let locInfo = null
   let commits = null
-  let source = 'tokei'
-  if (exists) {
+  if (fs.existsSync(p.path)) {
     locInfo = tryTokei(p.path)
-    if (!locInfo) {
+    if (locInfo) src.push('tokei')
+    else {
       locInfo = fallbackLoc(p.path, p.lang)
-      source = 'fallback'
+      src.push('fallback')
     }
     commits = commits52(p.path)
   } else {
-    // Sin checkout local -> GitHub API (repo derivado de proyectos.json)
+    // Sin checkout local -> clon superficial (commits) y API solo como último recurso
     const ownerRepo = REPO_MAP[p.slug]
     if (ownerRepo) {
       try {
-        const g = await githubStats(ownerRepo)
-        if (Object.keys(g.locInfo.languages).length) locInfo = g.locInfo
-        commits = g.weeks
-        source = 'github'
+        commits = commits52(cloneRepo(ownerRepo, p.slug))
+        src.push('clone')
       } catch (e) {
-        console.log(`[stats] ${p.slug}: GitHub fallback falló (${e.message})`)
+        console.log(`[stats] ${p.slug}: clon falló (${e.message})`)
+      }
+      const prev = prevStats[p.slug]
+      if (prev?.loc > 0 && Object.keys(prev.languages || {}).length) {
+        locInfo = { loc: prev.loc, languages: prev.languages }
+        src.push('prev-loc') // shortcut: LOC se reutiliza del stats anterior, revisar si se necesita recuento real
+      } else {
+        try {
+          const l = await githubLanguages(ownerRepo)
+          if (Object.keys(l.languages).length) {
+            locInfo = l
+            src.push('languages')
+          }
+        } catch (e) {
+          console.log(`[stats] ${p.slug}: /languages falló (${e.message})`)
+        }
+      }
+      if (!locInfo || !commits) {
+        try {
+          const g = await githubStats(ownerRepo)
+          if (!locInfo && Object.keys(g.locInfo.languages).length) locInfo = g.locInfo
+          if (!commits) commits = g.weeks
+          src.push('github')
+        } catch (e) {
+          console.log(`[stats] ${p.slug}: GitHub fallback falló (${e.message})`)
+        }
       }
     } else {
       console.log(`[stats] ${p.slug}: sin path local ni repo mapeado`)
     }
-    if (!locInfo) {
-      locInfo = { loc: 0, languages: { [p.lang]: 100 } }
-      source = commits ? 'github-partial' : 'zero'
-    }
-    if (!commits) commits = Array(52).fill(0)
   }
+  if (!locInfo) {
+    locInfo = { loc: 0, languages: { [p.lang]: 100 } }
+    src.push('no-loc')
+  }
+  if (!commits) {
+    commits = Array(52).fill(0)
+    src.push('no-commits')
+  }
+  const source = src.join('+') || 'zero'
   projects[p.slug] = {
     loc: locInfo.loc,
     languages: locInfo.languages,

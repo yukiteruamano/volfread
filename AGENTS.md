@@ -45,12 +45,15 @@ volfread.xyz/ (root private, pnpm-workspace.yaml: packages/*)
 
 No duplicar `pnpm-lock.yaml` por package. Un solo lock en root. No usar `npm`/`yarn` nunca. No nombrar bindings `ASSETS` (reservado CF).
 
-## 3. Proyectos (38 fichas en `proyectos.json`)
+## 3. Proyectos (41 fichas en `proyectos.json`)
 
 | slug                       | tipo | lang       | build                                                       |
 | -------------------------- | ---- | ---------- | ----------------------------------------------------------- |
 | `eclipsescope`             | web  | TypeScript | `vite build` con `base: '/proyectos/eclipsescope/app/'`     |
 | `simulador-blockchain`     | web  | TypeScript | `ng build --base-href /proyectos/simulador-blockchain/app/` |
+| `pi-dockerized`            | cli  | Shell      | ficha + stats (no embebido)                                 |
+| `claude-dockerized`        | cli  | Shell      | ficha + stats (no embebido)                                 |
+| `opencode-dockerized`      | cli  | Shell      | ficha + stats (no embebido)                                 |
 | `fast-levenshtein`         | lib  | Go         | ficha + stats (no embebido)                                 |
 | `gache`                    | lib  | Go         | ficha + stats (no embebido)                                 |
 | `koma`                     | cli  | Go         | ficha + stats (no embebido)                                 |

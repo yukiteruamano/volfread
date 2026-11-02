@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-02T16:41:57.996Z",
+  "generatedAt": "2026-11-01T20:04:54.476Z",
   "ttlDays": 7,
-  "sourceHash": "sha256:b6c0e78945d8f43af486c5d7fc24d44427ff9aefca2cbc73ab6f4f52ecaa06ae",
+  "sourceHash": "sha256:28403203994fd482f5b1fbba4e30231a75d1baa232d12da2ae7ca91aa2c7eac3",
   "slugs": [
     "apheleia",
     "apparmor-d",
@@ -9,6 +9,7 @@
     "awesome",
     "bearer",
     "cc-skills-golang",
+    "claude-dockerized",
     "crawl4ai",
     "dappwarrior",
     "docker-rocm-xtra",
@@ -31,7 +32,9 @@
     "obs-backgroundremoval",
     "openbsd-ports",
     "openbsd-src",
+    "opencode-dockerized",
     "openriot",
+    "pi-dockerized",
     "picom",
     "pkgcheck",
     "simple-markdown-crawler",

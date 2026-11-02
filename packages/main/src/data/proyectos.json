@@ -50,6 +50,81 @@
     "featured": true
   },
   {
+    "slug": "pi-dockerized",
+    "title": "Pi Dockerized",
+    "description": "Sandbox Docker aislado para el agente de código Pi.",
+    "descriptionEn": "Isolated Docker sandbox for the Pi coding agent.",
+    "divulgativa": "Ejecuta el agente de código Pi dentro de un contenedor que solo ve la carpeta de tu proyecto, así que puedes darle un agente de IA sin darle tu home, tus claves ni tu sistema.",
+    "divulgativaEn": "Runs the Pi coding agent inside a container that only sees your project folder, so you can hand it an AI agent without exposing your home, your keys or your system.",
+    "tecnica": "Wrapper en Shell sobre Docker (Debian digest-pinned + Node/NVM, pnpm, uv y Pi) que arranca como el UID/GID del host con --cap-drop=ALL y no-new-privileges. La enforcement vive en una extensión de seguridad horneada read-only en la imagen (patrones de opencode-policy más backstops de secretos y comandos destructivos) en modos strict/balanced/off: el guard se autocomprueba antes de cada sesión y falla cerrado. Config, skills, MCP y Pi Packages se montan read-only desde el host, con log de auditoría de llamadas bloqueadas.",
+    "tecnicaEn": "Shell wrapper over Docker (digest-pinned Debian + Node/NVM, pnpm, uv and Pi) that starts as the host UID/GID with --cap-drop=ALL and no-new-privileges. Enforcement lives in a security extension baked read-only into the image (opencode-policy patterns plus secret and destructive-command backstops) in strict/balanced/off modes: the guard self-tests before every session and fails closed. Config, skills, MCP and Pi Packages are mounted read-only from the host, with an audit log of blocked calls.",
+    "highlights": [
+      "Agente sin acceso a $HOME, claves ni socket Docker",
+      "Guard horneado read-only con modos strict/balanced/off",
+      "Extensiones, skills y MCP gestionados desde el host en read-only"
+    ],
+    "highlightsEn": [
+      "Agent with no access to $HOME, keys or the Docker socket",
+      "Baked read-only guard with strict/balanced/off modes",
+      "Extensions, skills and MCP managed read-only from the host"
+    ],
+    "type": "cli",
+    "lang": "Shell",
+    "stack": ["Shell", "Docker", "Debian", "Pi", "Node.js"],
+    "repo": "https://github.com/yukiteruamano/pi-dockerized",
+    "featured": false
+  },
+  {
+    "slug": "claude-dockerized",
+    "title": "Claude Dockerized",
+    "description": "Sandbox Docker aislado para Claude Code, sin instalarlo en el host.",
+    "descriptionEn": "Isolated Docker sandbox for Claude Code, without installing it on the host.",
+    "divulgativa": "Ejecuta Claude Code dentro de un contenedor que solo ve la carpeta de tu proyecto. Tu login, sesiones, MCP y plugins se guardan en tu máquina y sobreviven a reinicios y rebuilds.",
+    "divulgativaEn": "Runs Claude Code inside a container that only sees your project folder. Your login, sessions, MCP servers and plugins stay on your machine and survive restarts and rebuilds.",
+    "tecnica": "Wrapper en Shell sobre Docker (Debian trixie-slim + Node/NVM, pnpm, uv y binario nativo de Claude Code pinneado) que corre como tu UID/GID con --cap-drop=ALL y no-new-privileges. La política se genera en el host y entra read-only como /etc/claude-code/managed-settings.json (permissions.deny/ask, hooks PreToolUse y patrones de opencode-policy) en modos strict/balanced/none; los updates exigen releases firmados verificados contra claves pinneadas, con rollback de imagen y checkout. Perfiles de hardening opcionales y comparación de fingerprints de las rutas persistentes tras cada sesión.",
+    "tecnicaEn": "Shell wrapper over Docker (trixie-slim Debian + Node/NVM, pnpm, uv and a pinned native Claude Code binary) running as your UID/GID with --cap-drop=ALL and no-new-privileges. The policy is generated on the host and reaches the container read-only as /etc/claude-code/managed-settings.json (permissions.deny/ask, PreToolUse hooks and opencode-policy patterns) in strict/balanced/none modes; updates require signed releases verified against pinned keys, with image and checkout rollback. Opt-in hardening profiles plus a fingerprint diff of the persistent paths after every session.",
+    "highlights": [
+      "Política managed-settings.json read-only que los settings de usuario no pueden relajar",
+      "Updates firmados con rollback de imagen y checkout",
+      "Auth, sesiones, MCP y plugins persisten bajo ~/.config/claude-dockerized/home"
+    ],
+    "highlightsEn": [
+      "Read-only managed-settings.json that user settings cannot relax",
+      "Signed updates with image and checkout rollback",
+      "Auth, sessions, MCP and plugins persist under ~/.config/claude-dockerized/home"
+    ],
+    "type": "cli",
+    "lang": "Shell",
+    "stack": ["Shell", "Docker", "Debian", "Claude Code", "Node.js"],
+    "repo": "https://github.com/yukiteruamano/claude-dockerized",
+    "featured": false
+  },
+  {
+    "slug": "opencode-dockerized",
+    "title": "OpenCode Dockerized",
+    "description": "Sandbox Docker aislado para OpenCode V2.",
+    "descriptionEn": "Isolated Docker sandbox for OpenCode V2.",
+    "divulgativa": "Ejecuta OpenCode dentro de un contenedor que solo ve la carpeta de tu proyecto: una orden destructiva no puede tocar el resto de tu sistema.",
+    "divulgativaEn": "Runs OpenCode inside a container that only sees your project folder — a destructive command cannot reach the rest of your system.",
+    "tecnica": "Fork de glennvdv/opencode-dockerized en Shell, reconstruido sobre OpenCode V2: los permisos viajan inline por OPENCODE_CONFIG_CONTENT y config, plugins y reglas entran como un único mount read-only, así ninguna sesión relaja su propio sandbox. Hooks de seguridad versionados (plugins/security-guard.js) evalúan los patrones unsafe/injection de opencode-policy en strict, balanced u off, con resolución de escapes por symlink, confinamiento del proyecto y backstops de secretos (claves SSH/GPG, .env, .npmrc, auth.json). Forward de agentes SSH y GPG sin copiar claves privadas.",
+    "tecnicaEn": "Shell fork of glennvdv/opencode-dockerized rebuilt around OpenCode V2: permissions travel inline via OPENCODE_CONFIG_CONTENT and config, plugins and rules arrive as a single read-only mount, so no session can relax its own sandbox. Versioned security hooks (plugins/security-guard.js) evaluate the opencode-policy unsafe/injection patterns in strict, balanced or off, with symlink-escape resolution, project confinement and secret backstops (SSH/GPG keys, .env, .npmrc, auth.json). SSH and GPG agent forwarding without copying private keys.",
+    "highlights": [
+      "Permisos inline por entorno, nunca desde un fichero escribible",
+      "Guard versionado con modos strict/balanced/off y backstops de secretos",
+      "Forward de agentes SSH y GPG sin claves privadas en el contenedor"
+    ],
+    "highlightsEn": [
+      "Inline permissions from the environment, never a writable file",
+      "Versioned guard with strict/balanced/off modes and secret backstops",
+      "SSH and GPG agent forwarding without private keys in the container"
+    ],
+    "type": "cli",
+    "lang": "Shell",
+    "stack": ["Shell", "Docker", "Debian", "OpenCode", "Node.js"],
+    "repo": "https://github.com/yukiteruamano/opencode-dockerized",
+    "featured": false
+  },
+  {
     "slug": "fast-levenshtein",
     "title": "fast-levenshtein",
     "description": "Mide cuánto se parecen dos textos, incluso con acentos y emojis.",
